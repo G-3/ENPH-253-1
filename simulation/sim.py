@@ -1,4 +1,4 @@
-import pygame
+from Tkinter import *
 from nodes import Graph
 import json
 
@@ -7,19 +7,15 @@ with open('resources/graph.json') as data_file:
 print graph_data
 b_graph = Graph.fromData(graph_data)
 
-pygame.init()
+master = Tk()
 
-board = pygame.image.load('resources/board.png')
-screen = pygame.display.set_mode(board.get_rect().size)
-board = board.convert()
+board = PhotoImage(file='resources/board.gif')
 
+w = Canvas(master, width=board.width(), height=board.height())
+w.pack()
+w.update()
 
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-    screen.blit(board, (0,0))
-    b_graph.draw(screen)
-    pygame.display.flip()
+w.create_image(board.width()/2, board.height()/2, image=board)
+b_graph.draw(w)
 
-pygame.quit()
+master.mainloop()

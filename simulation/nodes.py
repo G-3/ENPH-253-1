@@ -1,4 +1,5 @@
-import pygame
+from Tkinter import *
+import tkFont
 import json
 
 class Graph(object):
@@ -12,6 +13,9 @@ class Graph(object):
     def draw(self, screen):
         for _,node in self.nodes.items():
             node.draw(screen)
+            for link in node.links:
+                node2 = self.nodes.get(link)
+                screen.create_line()
 
 class Node(object):
     """
@@ -29,8 +33,15 @@ class Node(object):
         return cls(**data)
 
     def draw(self, screen):
-        width, height = screen.get_size()
-        pygame.draw.circle(screen, (0, 0, 0),(int(self.x*width), int(self.y*height)),14,0)
+        width = screen.winfo_width()
+        height = screen.winfo_height()
+        cx = int(self.x*width)
+        cy = int(self.y*height)
+        print cx
+        print cy
+        screen.create_oval(cx-7, cy-7, cx+7, cy+7)
+        helv18 = tkFont.Font(family='Helvetica', size=18, weight='bold')
+        screen.create_text(cx+7, cy-7, text=self.name, activefill='green', font=helv18)
 
     def position():
         return (self.x, self.y)
