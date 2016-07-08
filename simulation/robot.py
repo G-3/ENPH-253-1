@@ -1,4 +1,4 @@
-class Robot(object):
+lass Robot(object):
     def __init__(curr_node, dest_node = None):
         self.curr_node=curr_node
         self.dest_node = dest_node
