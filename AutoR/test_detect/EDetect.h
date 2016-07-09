@@ -1,6 +1,7 @@
 #ifndef __EDETECT_H_INCLUDED__
 #define __EDETECT_H_INCLUDED__
 
+#include "LLRobot.h"
 
 class EDetect{
     private:
