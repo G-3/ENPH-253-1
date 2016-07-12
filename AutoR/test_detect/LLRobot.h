@@ -7,8 +7,8 @@
 namespace LLRobot{
     enum DMot {DML, DMR};
     enum TF {TFLF, TFRF, TFLB, TFRB};
-    static int readQRD(TF position);
-    bool driveMotor(DMot motorpos, int16_t speed);
+    int readQRD(LLRobot::TF position);
+    bool driveMotor(LLRobot::DMot motorpos, int16_t speed);
 };
 
 
