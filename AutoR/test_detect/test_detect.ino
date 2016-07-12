@@ -3,9 +3,9 @@
 
 #include <phys253.h>
 
-#include "EDetect.h"
-#include "LLRobot.h"
-#include "Controller.h"
+#include "Ai/EDetect.h"
+#include "Ai/LLRobot.h"
+#include "Ai/Control/Controller.h"
 
 #define ledPin 13
 
@@ -34,11 +34,11 @@ void loop()
 }
 
 void testQRDs(){
-    int valueLF = LLRobot::readQRD(LLRobot::TFLF);
-    int valueRF = LLRobot::readQRD(LLRobot::TFRF);
+    int valueLF = LLRobot::readQRD(LLRobot::TFLF, false);
+    int valueRF = LLRobot::readQRD(LLRobot::TFRF, false);
     delay(100);
-    int valueLB = LLRobot::readQRD(LLRobot::TFLB);
-    int valueRB = LLRobot::readQRD(LLRobot::TFRB);
+    int valueLB = LLRobot::readQRD(LLRobot::TFLB, false);
+    int valueRB = LLRobot::readQRD(LLRobot::TFRB, false);
     LCD.clear(); LCD.home();
     LCD.print("LF:"); LCD.print(valueLF);
     LCD.print(" RF:"); LCD.print(valueRF);
