@@ -1,12 +1,15 @@
 #pragma once
 
-class PidControl;
-
-#include "Ai/Control/ControlMode.h"
+#include "ControlMode.h"
 
 namespace Control{
-    class TapeFollow : ControlMode{
+    class PidControl;
+}
+namespace Control{
+    class TapeFollow : public ControlMode{
         private:
+            const int dt = 10;
+            int counter = 0;
             int err;
             bool dir;
             PidControl* controlProcess;

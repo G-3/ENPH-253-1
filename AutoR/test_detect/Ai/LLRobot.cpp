@@ -1,4 +1,4 @@
-#include "Ai/LLRobot.h"
+#include "LLRobot.h"
 #include <phys253.h>
 
 namespace LLRobot{
@@ -7,20 +7,17 @@ namespace LLRobot{
         enum DOut {pinMPQRD=8};
         enum MOut {pinDML=0, pinDMR=1};
         enum DIn {};
-        int qrdThresh(){
-            switch
-        }
         // Current Multiplexer States
         static const bool MPQRD_state = 0;
     }   
 
-    int threshQRD(QRD position){
+    int threshQRD(LLRobot::QRD position){
         return QRD_THRESH[position];
     }
     
-    int readQRD(QRD position, bool applyThresh){
+    int readQRD(LLRobot::QRD position, bool applyThresh){
+        int val = -1;
         switch(position){
-            int val = -1;
             case TFLF:
                 if(!MPQRD_state){
                     digitalWrite(pinMPQRD, 1);
@@ -89,8 +86,13 @@ namespace LLRobot{
         switch(motorpos){
             case DML:
                 motor.speed(pinDML, speed);
+                return true;
             case DMR:
                 motor.speed(pinDMR, speed);
+                return true;
+            default:
+                return false;
         } 
+        return false;
     }
 }

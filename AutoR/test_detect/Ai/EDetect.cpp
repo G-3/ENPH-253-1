@@ -1,5 +1,5 @@
-#include "Ai/EDetect.h"
-#include "Ai/LLRobot.h"
+#include "EDetect.h"
+#include "LLRobot.h"
 
 namespace Event{
     void EDetect::step(){
@@ -12,6 +12,8 @@ namespace Event{
     namespace Intersect{
 
         void checkIntersect(bool dir){
+            int interL = 0;
+            int interR = 0;
 	    if(dir){
 		interL = LLRobot::readQRD(LLRobot::IDLF, true);
 	        interR = LLRobot::readQRD(LLRobot::IDRF, true);	
