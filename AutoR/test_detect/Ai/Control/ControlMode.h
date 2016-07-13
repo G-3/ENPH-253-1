@@ -3,6 +3,6 @@
 namespace Control{
     class ControlMode{
         public:
-            void step(){};
+            virtual void step() = 0;
     };
 ;}

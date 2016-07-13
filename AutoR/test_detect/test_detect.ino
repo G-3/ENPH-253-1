@@ -22,15 +22,35 @@ Control::Controller *mainController;
 void setup()
 {
     #include <phys253setup.txt>
+    Serial.begin(9600);
+    
     pinMode(8, OUTPUT);
+    
+    Serial.println("Test");
+    
+    LCD.clear(); LCD.home();
+    LCD.print("Starting up...3");
+    delay(1000);
+    
+    Serial.println("Starting"); 
+    LCD.clear(); LCD.home();
+    LCD.print("Starting up...2");
+    delay(1000);
+    
+    Serial.println("Starting");
+    LCD.clear(); LCD.home();
+    LCD.print("Starting up...1");
+    delay(1000);
+    
     mainController = new Control::Controller();
 }
  
 void loop()
 {
-    //mainController->step();
-    testQRDs();
-    
+    Serial.println("Starting");
+    mainController->step();
+    delay(100);
+    //testQRDs();
 }
 
 void testQRDs(){

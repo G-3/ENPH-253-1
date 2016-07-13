@@ -1,5 +1,7 @@
-#include "Ai/Control/TapeFollow.h"
-#include "Ai/Control/PidControl.h"
+#include "TapeFollow.h"
+#include "PidControl.h"
+#include "../LLRobot.h"
+#include <phys253.h>
 
 namespace Control{
     /*
@@ -61,5 +63,32 @@ namespace Control{
 
         LLRobot::driveMotor(LLRobot::DML, powerL);
         LLRobot::driveMotor(LLRobot::DMR, powerR);
+	counter+=1;
+	
+        LCD.clear();
+        LCD.home();
+        LCD.print(counter);
+    
+	if(counter%20==0){
+	    Serial.println("~~~~~~~~~");
+	    Serial.println(powerR);
+	    Serial.println(powerL);
+	    Serial.println("-       -");
+	    Serial.println(sensorL);
+	    Serial.println(sensorR);
+	    Serial.println("~~~~~~~~~");
+	    Serial.println();  
+	    counter = 0;
+	    LCD.clear();
+            LCD.home();
+	    LCD.print(sensorL);
+	    LCD.print(" | ");
+	    LCD.print(powerL);
+	    LCD.setCursor(0,1);
+	    LCD.print(sensorR);
+	    LCD.print(" | ");
+	    LCD.print(Vc);
+	}
+	delay(10);
     }
 }

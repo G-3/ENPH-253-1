@@ -1,4 +1,4 @@
-#include "Ai/EHandler.h"
+#include "EHandler.h"
 
 namespace EHandler{
     void intersect(bool left, bool right){

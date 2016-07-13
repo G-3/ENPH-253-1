@@ -1,6 +1,9 @@
 #pragma once
 
-class ControlMode;
+namespace Control{
+    class ControlMode;
+};
+
 
 namespace Control{
     class Controller{
