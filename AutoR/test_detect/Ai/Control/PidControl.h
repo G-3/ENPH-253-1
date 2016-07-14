@@ -3,7 +3,7 @@
 namespace Control{
     class PidControl{
         private:
-	    double G;
+	    int G;
             int P;
             int I;
             int D;
@@ -13,6 +13,6 @@ namespace Control{
         public:
             PidControl(int g=1, int p=1, int i=0, int d=1) : G(g), P(p), I(i), D(d){};
             ~PidControl(){};
-            int step(int error);
+            double step(int error);
     };
 } 

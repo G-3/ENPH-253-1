@@ -3,9 +3,10 @@
 
 namespace LLRobot{
     namespace{
-        enum AIn {pinTFL=0, pinTFR=1, pinIDL=2, pinIDR=3};
+        // TODO: Add the pin placement for the back as well, maybe have a lookup table instead of enum
+        enum AIn {pinTFL=3, pinTFR=2, pinIDL=4, pinIDR=1, pinIAL=0, pinIAR=5};
         enum DOut {pinMPQRD=8};
-        enum MOut {pinDML=0, pinDMR=1};
+        enum MOut {pinDML=2, pinDMR=1};
         enum DIn {};
         // Current Multiplexer States
         static const bool MPQRD_state = 0;
@@ -88,7 +89,7 @@ namespace LLRobot{
                 motor.speed(pinDML, speed);
                 return true;
             case DMR:
-                motor.speed(pinDMR, speed);
+                motor.speed(pinDMR, -speed);
                 return true;
             default:
                 return false;

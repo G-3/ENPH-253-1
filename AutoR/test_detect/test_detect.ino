@@ -16,6 +16,7 @@ motorClass motor ;
 ServoTINAH RCServo0;    // declare variables for up to eight     servos.   Replaced old Servo253 implementation 2015Jan2
 ServoTINAH RCServo1; 
 ServoTINAH RCServo2;
+ServoTINAH RCServo3;
 
 Control::Controller *mainController;
 
@@ -49,7 +50,6 @@ void loop()
 {
     Serial.println("Starting");
     mainController->step();
-    delay(100);
     //testQRDs();
 }
 
