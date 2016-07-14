@@ -8,9 +8,12 @@ namespace Control{
 namespace Control{
     class TapeFollow : public ControlMode{
         private:
-            const int dt = 10;
+            const int dt = 1;
             int counter = 0;
             int err;
+            int errp;
+            int errpp;
+            int maxdiff;
             bool dir;
             PidControl* controlProcess;
         public:
