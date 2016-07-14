@@ -1,8 +1,7 @@
 #include "EHandler.h"
 
 namespace EHandler{
-    void intersect(bool left, bool right){
-                
-    
+    void intersect(bool left, bool right){                
+        
     }
 } 

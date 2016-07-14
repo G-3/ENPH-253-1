@@ -11,6 +11,10 @@ namespace Control{
 namespace Control{
     class IntersectNav : public ControlMode{
         private:
+            Node &intersection;
+            Node &destination;
+            Node &start;
+
             TapeFollow* tapeFollower;
         public:
             IntersectNav();

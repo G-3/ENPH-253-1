@@ -30,51 +30,34 @@ namespace Control{
 
         if (sensorR < THLD2) r = 0;
         else r = 1;
-        
-        if (l == 0 && r == 0){
-            if (dir == 0){
-                err = -1000;
-            } else {
-                err = 1000;
-            }
-        }
 
-        else{
-            if (l == 1 && r == 0){
-                dir = 1;
-            }else if(l==0 && r==1){
-                dir = 0;
-            } 
-
-            err = -sensorR+sensorL;
-        }
-        /*if (l == 0 && r == 1){
-            err = -10;
+        //Determine the new error signal
+        if (l == 0 && r == 1){
+            err -= 1;
             dir = 0;
         } else if (l == 1 && r == 0){
-            err = 10;
-            dir = 10;
+            err += 1;
+            dir = 1;
         } else if (l == 0 && r == 0){
         if (dir == 0){
-            err = -50;
+            err -= 5;
         } else {
-            err = 50;
+            err += 5;
         }
         } else if (l == 1 && r == 1){
             err = 0;
-        }*/
+        }
 
-        double Vc = controlProcess->step(err); 
+        int Vc = controlProcess->step(err); 
         
-        double G = knob(6)/1024.;
-        int base = knob(7)/6;
+        v = knob(7)/4.;
         // With a positive reaction needed, we need to increase the left motor.
-        int powerL = base - G*Vc*base;
+        int powerL = v*(base + Vc);
         if (powerL > 255) powerL = 255;
         if (powerL < 0) powerL = 0;
 
         // With a positive reaction needed, we need to decrease the right motor.
-        int powerR = base + G*Vc*base;
+        int powerR = v*(base - Vc);
         if (powerR > 255) powerR = 255;
         if (powerR < 0) powerR = 0;
 
@@ -82,7 +65,11 @@ namespace Control{
         LLRobot::driveMotor(LLRobot::DMR, powerR);
 	counter+=1;
 	
-	if(counter%10==0){
+        LCD.clear();
+        LCD.home();
+        LCD.print(counter);
+    
+	if(counter%20==0){
 	    Serial.println("~~~~~~~~~");
 	    Serial.println(powerR);
 	    Serial.println(powerL);
@@ -99,9 +86,7 @@ namespace Control{
 	    LCD.print(powerL);
 	    LCD.setCursor(0,1);
 	    LCD.print(sensorR);
-	    LCD.print("|");
-            LCD.print(powerR);
-	    LCD.print("|");
+	    LCD.print(" | ");
 	    LCD.print(Vc);
 	}
 	delay(10);

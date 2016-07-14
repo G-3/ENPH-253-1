@@ -10,4 +10,6 @@ namespace Event{
     };
 
     void checkIntersect();
+
+    void checkBumpers();
 };

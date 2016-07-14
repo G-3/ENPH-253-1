@@ -18,5 +18,6 @@ namespace Control{
     // Note error is defined in the x direction with a robot to the right
     // of the tape having positive error.
     void IntersectNav::step(){
+        
     }
 }
