@@ -5,7 +5,7 @@ namespace Control{
     // Vc is defined as the reaction needed to counteract the error and is also
     // defined in the x direction with a robot to the right of the tape having
     // negative Vc.
-    double PidControl::step(int error){
+    double PidControl::step(int error, float derivative){
         while (startbutton()){
 	    LCD.clear(); LCD.home();
 	    while(!stopbutton()){
@@ -53,7 +53,7 @@ namespace Control{
         if (errsum < -errsummax) errsum = -errsummax;
 
 
-        double Vc = -(P*error + I*errsum + D*(error - errp)/dt)/100.;
+        double Vc = -(P*error + I*errsum + D*derivative/10.)/10.;
 
         errp = error;
 
