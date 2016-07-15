@@ -5,15 +5,22 @@
 
 namespace Control{
     Controller::Controller(){
-       curMode = new TapeFollow(); 
+        curController= new TapeFollow();
+        HLRobot::curMode = HLRobot::TAPE_FOLLOW;
     } 
 
     Controller::~Controller(){
-       delete curMode; 
+        delete curController; 
     } 
 
     void Controller::step(){
         Serial.println("Controller");
-        curMode->step();
+        curController->step();
+    }
+
+    void Controller::swapController(ControlMode *newController){
+        // delete the old controller
+        delete curController;
+        curController = newController;
     }
 }
