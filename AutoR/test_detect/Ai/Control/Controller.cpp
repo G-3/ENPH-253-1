@@ -13,7 +13,6 @@ namespace Control{
     } 
 
     void Controller::step(){
-        Serial.println("Controller");
         curMode->step();
     }
 }

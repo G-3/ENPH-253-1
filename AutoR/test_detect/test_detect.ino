@@ -48,17 +48,16 @@ void setup()
  
 void loop()
 {
-    Serial.println("Starting");
     mainController->step();
     //testQRDs();
 }
 
 void testQRDs(){
-    int valueLF = LLRobot::readQRD(LLRobot::TFLF, false);
-    int valueRF = LLRobot::readQRD(LLRobot::TFRF, false);
+    int valueLF = LLRobot::Rel::readQRD(LLRobot::Rel::TFLF, false);
+    int valueRF = LLRobot::Rel::readQRD(LLRobot::Rel::TFRF, false);
     delay(100);
-    int valueLB = LLRobot::readQRD(LLRobot::TFLB, false);
-    int valueRB = LLRobot::readQRD(LLRobot::TFRB, false);
+    int valueLB = LLRobot::Rel::readQRD(LLRobot::Rel::TFLB, false);
+    int valueRB = LLRobot::Rel::readQRD(LLRobot::Rel::TFRB, false);
     LCD.clear(); LCD.home();
     LCD.print("LF:"); LCD.print(valueLF);
     LCD.print(" RF:"); LCD.print(valueRF);

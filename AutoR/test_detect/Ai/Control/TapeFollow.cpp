@@ -29,8 +29,8 @@ namespace Control{
     // of the tape having positive error.
     void TapeFollow::step(){
         
-        int sensorL = LLRobot::readQRD(LLRobot::TFLF, false);
-        int sensorR = LLRobot::readQRD(LLRobot::TFRF, false);
+        int sensorL = LLRobot::Rel::readQRD(LLRobot::Rel::TFLF, false);
+        int sensorR = LLRobot::Rel::readQRD(LLRobot::Rel::TFRF, false);
         int diff = sensorL-sensorR; 
         int l,r;
         if (sensorL < THLD1) l = 0;
@@ -41,9 +41,9 @@ namespace Control{
         if (l == 0 && r == 0){
             //Both off
             if (dir == 0){
-                err = -1000;
+                err = -500;
             } else {
-                err = 1000;
+                err = 500;
             }
         }
         else{
@@ -51,12 +51,11 @@ namespace Control{
 
             if (l == 0 && r == 1){
                 dir = 0;
-                err = -500;
+                err = -300;
             }else if(l == 1 && r == 0){
                 dir = 1;
-                err = 500;
+                err = 300;
             }
-            
             if (err>0){
                 dir = 1;
             }
@@ -99,19 +98,19 @@ namespace Control{
         if (powerR > 255) powerR = 255;
         if (powerR < 0) powerR = 0;
 
-        LLRobot::driveMotor(LLRobot::DML, powerL);
-        LLRobot::driveMotor(LLRobot::DMR, powerR);
+        LLRobot::Rel::driveMotor(LLRobot::Rel::DML, powerL);
+        LLRobot::Rel::driveMotor(LLRobot::Rel::DMR, powerR);
 	counter+=1;
 	
 	if(counter%10==0){
-	    Serial.println("~~~~~~~~~");
+	    /*jSerial.println("~~~~~~~~~");
 	    Serial.println(powerR);
 	    Serial.println(powerL);
 	    Serial.println("-       -");
 	    Serial.println(sensorL);
 	    Serial.println(sensorR);
 	    Serial.println("~~~~~~~~~");
-	    Serial.println();  
+	    Serial.println();  */
 	    counter = 0;
 	    LCD.clear();
             LCD.home();
