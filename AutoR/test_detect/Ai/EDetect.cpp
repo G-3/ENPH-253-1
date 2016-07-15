@@ -13,11 +13,12 @@ namespace Event{
         int interL = 0;
         int interR = 0;
         if(dir){
-            interL = LLRobot::readQRD(LLRobot::IDLF, true);
-            interR = LLRobot::readQRD(LLRobot::IDRF, true);	
-        } else{
-            interL = LLRobot::readQRD(LLRobot::IDLB, true);
-            interR = LLRobot::readQRD(LLRobot::IDRB, true);	
+            interL = LLRobot::Rel::readQRD(LLRobot::Rel::IDLF, true);
+            interR = LLRobot::Rel::readQRD(LLRobot::Rel::IDRF, true);	
+        } 
+        else{
+            interL = LLRobot::Rel::readQRD(LLRobot::Rel::IDLB, true);
+            interR = LLRobot::Rel::readQRD(LLRobot::Rel::IDRB, true);	
         }
 
         if(interL || interR) {}

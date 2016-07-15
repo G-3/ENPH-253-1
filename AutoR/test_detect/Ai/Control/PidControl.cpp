@@ -43,8 +43,7 @@ namespace Control{
         if (errsum > errsummax) errsum = errsummax;
         if (errsum < -errsummax) errsum = -errsummax;
 
-        G = knob(6)/100.;
-        double Vc = -(P*error + I*errsum + D*derivative/10.)/10.;
+        double Vc = -(P*error + I*errsum + D*derivative*10.)/10.;
 
         errp = error;
 

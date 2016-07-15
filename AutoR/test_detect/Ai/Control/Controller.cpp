@@ -14,7 +14,6 @@ namespace Control{
     } 
 
     void Controller::step(){
-        Serial.println("Controller");
         curController->step();
     }
 
