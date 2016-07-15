@@ -16,7 +16,6 @@ motorClass motor ;
 ServoTINAH RCServo0;    // declare variables for up to eight     servos.   Replaced old Servo253 implementation 2015Jan2
 ServoTINAH RCServo1; 
 ServoTINAH RCServo2;
-ServoTINAH RCServo3;
 
 Control::Controller *mainController;
 
@@ -48,16 +47,18 @@ void setup()
  
 void loop()
 {
+    Serial.println("Starting");
     mainController->step();
+    delay(100);
     //testQRDs();
 }
 
 void testQRDs(){
-    int valueLF = LLRobot::Rel::readQRD(LLRobot::Rel::TFLF, false);
-    int valueRF = LLRobot::Rel::readQRD(LLRobot::Rel::TFRF, false);
+    int valueLF = LLRobot::readQRD(LLRobot::TFLF, false);
+    int valueRF = LLRobot::readQRD(LLRobot::TFRF, false);
     delay(100);
-    int valueLB = LLRobot::Rel::readQRD(LLRobot::Rel::TFLB, false);
-    int valueRB = LLRobot::Rel::readQRD(LLRobot::Rel::TFRB, false);
+    int valueLB = LLRobot::readQRD(LLRobot::TFLB, false);
+    int valueRB = LLRobot::readQRD(LLRobot::TFRB, false);
     LCD.clear(); LCD.home();
     LCD.print("LF:"); LCD.print(valueLF);
     LCD.print(" RF:"); LCD.print(valueRF);
