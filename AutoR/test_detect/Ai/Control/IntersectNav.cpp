@@ -1,6 +1,8 @@
 #include "IntersectNav.h"
 #include "TapeFollow.h"
 
+using namespace LLRobot::Rel;
+
 namespace Control{
     /*
      * Tape Following Mode
@@ -30,8 +32,8 @@ namespace Control{
         switch (curPhase):
             case INIT_ALIGN:
                 // Align the intersection detectors after detection 
-                bool l = LLRobot::readRelQ
-                bool r = LLRobot::readRelQ
+                bool l = readQRD(IDLF, true);
+                bool r = readQRD(IDRF, true);
                 
 
                 if(!(xl||xr)){
@@ -63,9 +65,8 @@ namespace Control{
             case DRIVE_THRU:
                 // Drive until we activate our aligners
                 // Read the alligners
-                bool l = LLRobot::readRelQ
-                bool r = LLRobot::Rel::readRelQ
-               
+                bool l = readQRD(INL, true);
+                bool r = readQRD(INR, true);               
                 
                 if(xlr){
                     if(l || r){
@@ -98,9 +99,7 @@ namespace Control{
                         falseIntersect();
                     }
                 }    
-                
-                LLRobot::Rel::driveMotor(LLRobotspeed);
-                LLRobot::driveMotor(speed);
+                driveMotors(speed, speed);                
 
             case INTER_ALIGN:
                 // Align the intersection aligners
@@ -122,6 +121,7 @@ namespace Control{
                         curPhase = TRIP_FOLLOW;
                     }
 
+                    LLRobot::driveMotors(speed, -speed);
                 }
                 else if(destDir == World::DirR){
                     // turning right 
@@ -130,11 +130,7 @@ namespace Control{
                         // We tripped, move on
                         curPhase = TRIP_FOLLOW;
                     }
- 
-                    LLRobot::driveMotor(speed);
-                    LLRobot::driveMotor(speed);
-
-
+                    LLRobot::driveMotors(-speed, speed);
                 }
                 else{
                     //What?
@@ -144,29 +140,27 @@ namespace Control{
                 // Turn until we trip the tape followers
                 if(destDir == World::DirL){
                     // Check if we trip the TF
-                    bool l = LLRobot::read
+                    bool l = LLRobot::readQRD(TFLF, true);
                     if(l){
                         //Gottem we are done
                         currPhase = END;
                         return;
                     }
                     else{ 
-                        LLRobot::driveMotor(speed);
-                        LLRobot::driveMotor(speed);
+                        LLRobot::driveMotors(speed, -speed);
                     }
 
                 }
                 else if(destDir == World::DirR){
                     // Check if we trip the TF
-                    bool l = LLRobot::read
-                    if(l){
+                    bool r = LLRobot::readQRD(TFRF, true);
+                    if(r){
                         //Gottem we are done
                         currPhase = END;
                         return;
                     }
                     else{ 
-                        LLRobot::driveMotor(speed);
-                        LLRobot::driveMotor(speed);
+                        LLRobot::driveMotors(-speed, speed);
                     }
                 }
             

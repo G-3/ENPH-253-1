@@ -17,7 +17,6 @@ ServoTINAH RCServo0;    // declare variables for up to eight     servos.   Repla
 ServoTINAH RCServo1; 
 ServoTINAH RCServo2;
 
-Control::Controller *mainController;
 
 void setup()
 {
@@ -41,8 +40,6 @@ void setup()
     LCD.clear(); LCD.home();
     LCD.print("Starting up...1");
     delay(1000);
-    
-    mainController = new Control::Controller();
 }
  
 void loop()
