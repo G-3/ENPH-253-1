@@ -15,7 +15,7 @@ namespace Control{
             Node *dest;
             Node *start;
             bool[4] expectTapeDir = {};
-            enum Phase{INIT_ALIGN, DRIVE_THRU, TRIP_INTER, TRIP_FOLLOW, END};
+            enum Phase{INIT_ALIGN, DRIVE_THRU, INTER_ALIGN, TRIP_INTER, TRIP_FOLLOW, END};
             Phase curPhase;
             int speed;
             TapeFollow* tapeFollower;

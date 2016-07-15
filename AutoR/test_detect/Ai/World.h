@@ -2,6 +2,7 @@
 
 namespace World{
     void setup();
+    enum Dir{DirINVALID=-1, DirB=0,DirR=1,DirF=2,DirL=3};
     
     // links describes all edges on the 
     Node *nodes[3] = {};
@@ -18,6 +19,6 @@ namespace World{
             Node() : deadEnd(false) {};
             Node *linked[4]={};
             void relLinkDirs(bool[] expectTapeDir, Node *start, Node *end);
-            HLRobot::Dir relDestDir(Node *dest, Node *base);`
+            Dir relDestDir(Node *dest, Node *base);
     }
 }

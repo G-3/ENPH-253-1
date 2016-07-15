@@ -16,23 +16,23 @@ namespace World{
             // relative to the start node
             int dir = links[i][2];
             switch(dir){
-                case HLRobot::DirB: 
+                case DirB: 
                     // The neighbor nodes array follows uses
                     // same convention for indexing
-                    nodes[startID]->linked[HLRobot::DirB] = nodes[endID];
-                    nodes[endID]->linked[HLRobot::DirF] = nodes[startID];
+                    nodes[startID]->linked[DirB] = nodes[endID];
+                    nodes[endID]->linked[DirF] = nodes[startID];
 
-                case HLRobot::DirR: 
-                    nodes[startID]->linked[HLRobot::DirR] = nodes[endID];
-                    nodes[endID]->linked[HLRobot::DirL] = nodes[startID];
+                case DirR: 
+                    nodes[startID]->linked[DirR] = nodes[endID];
+                    nodes[endID]->linked[DirL] = nodes[startID];
 
-                case HLRobot::DirF: 
-                    nodes[startID]->linked[HLRobot::DirF] = nodes[endID];
-                    nodes[endID]->linked[HLRobot::DirB] = nodes[startID];
+                case DirF: 
+                    nodes[startID]->linked[DirF] = nodes[endID];
+                    nodes[endID]->linked[DirB] = nodes[startID];
 
-                case HLRobot::DirL: 
-                    nodes[startID]->linked[HLRobot::DirL] = nodes[endID];
-                    nodes[endID]->linked[HLRobot::DirR] = nodes[startID];           
+                case DirL: 
+                    nodes[startID]->linked[DirL] = nodes[endID];
+                    nodes[endID]->linked[DirR] = nodes[startID];           
             }
         }
     }
@@ -48,16 +48,34 @@ namespace World{
         for(int i=0; i<4; i++){
             if(linked[i]){
                 //This shifts the directions by startDir
-                expectTapeDir[(startDir+i)%4] = 1;
+                expectTapeDir[rotate(i, startDir)] = 1;
+            }
+            else{
+                expectTapeDir[rotate(i, startDir)] = 0; 
             }
         }
     }
 
-    HLRobot::Dir Node::relDestDir(Node *dest){
+    Dir Node::relDestDir(Node *dest, Node *start){
+        Dir startDir = DirINVALID;
         for(int i=0; i<4; i++){
-            if(linked[i]==dest){
-                return i;
+            if(linked[i]==start){
+                startDir = i;
+                break;
             }
         }
+        if (startDir == DirINVALID){
+            return DirINVALID;
+        }
+        for(int i=0; i<4; i++){
+            if(linked[i]==dest){
+                return rotate(i, startDir);
+            }
+        }
+        return DirINVALID;
+    }
+
+    Dir rotate(Dir direction, int rotations){
+        return (direction + rotations)%4;
     }
 }
