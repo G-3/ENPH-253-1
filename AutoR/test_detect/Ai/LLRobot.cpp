@@ -117,15 +117,9 @@ namespace LLRobot{
         bool driveMotor(DMot motorpos, int16_t speed){
             switch(motorpos){
                 case DML:
-                    Serial.println(pinDML);
-                    Serial.println(speed);
-                    Serial.println("~~~~");
                     motor.speed(pinDML, speed);
                     return true;
                 case DMR:
-                    Serial.println(pinDMR);
-                    Serial.println(-speed);
-                    Serial.println("~~~~");
                     motor.speed(pinDMR, -speed);
                     return true;
             } 
@@ -137,16 +131,20 @@ namespace LLRobot{
                 switch(arm){
                     case AR:
                         servos[AMR].write(ExtendRight);
+                        break;
                     case AL:
                         servos[AML].write(ExtendLeft);
+                        break;
                 }
             }
             else{
                 switch(arm){
                     case AR:
                         servos[AMR].write(RetractRight);
+                        break;
                     case AL:
                         servos[AML].write(RetractLeft);
+                        break;
                 }
             }
 
@@ -158,16 +156,20 @@ namespace LLRobot{
                 switch(claw){
                     case CR:
                         servos[CR].write(OpenRight);
+                        break;
                     case CL:
                         servos[CL].write(OpenLeft);
+                        break;
                 }
             }
             else{
                 switch(claw){
                     case CR:
                         servos[AMR].write(CloseRight);
+                        break;
                     case CL:
                         servos[AMR].write(CloseLeft);
+                        break;
                 }
             }
 
@@ -199,40 +201,56 @@ namespace LLRobot{
             switch(position){
                 case Rel::TFLF:
                     newPos = Abs::TFLF;
+                    break;
                 case Rel::TFRF:
                     newPos = Abs::TFRF;
+                    break;
                 case Rel::TFLB:
                     newPos = Abs::TFLB;
+                    break;
                 case Rel::TFRB:
                     newPos = Abs::TFRB;
+                    break;
                 case Rel::IDLF:
                     newPos = Abs::IDLF;
+                    break;
                 case Rel::IDRF:
                     newPos = Abs::IDRF;
+                    break;
                 case Rel::IDLB:
                     newPos = Abs::IDLB;
+                    break;
                 case Rel::IDRB:
                     newPos = Abs::IDRB;
+                    break;
             }
         }
         else{
             switch(position){
                 case Rel::TFLF:
                     newPos = Abs::TFRB;
+                    break;
                 case Rel::TFRF:
                     newPos = Abs::TFLB;
+                    break;
                 case Rel::TFLB:
                     newPos = Abs::TFRF;
+                    break;
                 case Rel::TFRB:
                     newPos = Abs::TFLF;
+                    break;
                 case Rel::IDLF:
                     newPos = Abs::IDRB;
+                    break;
                 case Rel::IDRF:
                     newPos = Abs::IDLB;
+                    break;
                 case Rel::IDLB:
                     newPos = Abs::IDRF;
+                    break;
                 case Rel::IDRB:
                     newPos = Abs::IDLF;
+                    break;
             }
         }
         return newPos;
@@ -244,40 +262,56 @@ namespace LLRobot{
             switch(position){
                 case Rel::IRLF:
                     newPos = Abs::IRLF;
+                    break;
                 case Rel::IRLM:
                     newPos = Abs::IRLM;
+                    break;
                 case Rel::IRLB:
                     newPos = Abs::IRLB;
+                    break;
                 case Rel::IRLU:
                     newPos = Abs::IRLU;
+                    break;
                 case Rel::IRRF:
                     newPos = Abs::IRRF;
+                    break;
                 case Rel::IRRM:
                     newPos = Abs::IRRM;
+                    break;
                 case Rel::IRRB:
                     newPos = Abs::IRRB;
+                    break;
                 case Rel::IRRU:
                     newPos = Abs::IRRU;
+                    break;
             }
         }
         else{
             switch(position){
                 case Rel::IRLF:
                     newPos = Abs::IRLF;
+                    break;
                 case Rel::IRLM:
                     newPos = Abs::IRLM;
+                    break;
                 case Rel::IRLB:
                     newPos = Abs::IRLB;
+                    break;
                 case Rel::IRLU:
                     newPos = Abs::IRLU;
+                    break;
                 case Rel::IRRF:
                     newPos = Abs::IRRF;
+                    break;
                 case Rel::IRRM:
                     newPos = Abs::IRRM;
+                    break;
                 case Rel::IRRB:
                     newPos = Abs::IRRB;
+                    break;
                 case Rel::IRRU:
                     newPos = Abs::IRRU;
+                    break;
             }
         }
 
@@ -288,16 +322,20 @@ namespace LLRobot{
             switch(motor){
                 case Rel::DMR:
                     newMot = Abs::DMR;
+                    break;
                 case Rel::DML:
                     newMot = Abs::DML;
+                    break;
             }
 
         }else{
             switch(motor){
                 case Rel::DMR:
                     newMot = Abs::DML;
+                    break;
                 case Rel::DML:
                     newMot = Abs::DMR;
+                    break;
             }
         }
         return newMot;
@@ -308,16 +346,20 @@ namespace LLRobot{
             switch(arm){
                 case Rel::AR:
                     newArm = Abs::AR;
+                    break;
                 case Rel::AL:
                     newArm = Abs::AL;
+                    break;
             }
 
         }else{
             switch(arm){
                 case Rel::AR:
                     newArm = Abs::AL;
+                    break;
                 case Rel::AL:
                     newArm = Abs::AR;
+                    break;
             }
         }
         return newArm;
@@ -328,16 +370,20 @@ namespace LLRobot{
             switch(armTrip){
                 case Rel::ATR:
                     newAT = Abs::ATR;
+                    break;
                 case Rel::ATL:
                     newAT = Abs::ATL;
+                    break;
             }
 
         }else{
             switch(armTrip){
                 case Rel::AR:
                     newAT = Abs::ATL;
+                    break;
                 case Rel::AL:
                     newAT = Abs::ATR;
+                    break;
             }
         }
 
@@ -348,16 +394,20 @@ namespace LLRobot{
             switch(bumper){
                 case Rel::BF:
                     newBump = Abs::BF;
+                    break;
                 case Rel::BB:
                     newBump = Abs::BB;
+                    break;
             }
 
         }else{
             switch(bumper){
                 case Rel::BF:
                     newBump = Abs::BB;
+                    break;
                 case Rel::BB:
                     newBump = Abs::BF;
+                    break;
             }
         }
         return newBump;
@@ -369,16 +419,20 @@ namespace LLRobot{
             switch(claw){
                 case Rel::CR:
                     newClaw = Abs::CR;
+                    break;
                 case Rel::CL:
                     newClaw = Abs::CL;
+                    break;
             }
 
         }else{
             switch(claw){
                 case Rel::CR:
                     newClaw = Abs::CL;
+                    break;
                 case Rel::CL:
                     newClaw = Abs::CR;
+                    break;
             }
         }
         return newClaw;
@@ -418,9 +472,7 @@ namespace LLRobot{
         }
 
         bool driveMotor(DMot motorPos, int16_t speed){
-            Serial.println(motorPos);
             Abs::DMot absMot = relToAbsDM(motorPos);
-            Serial.println(absMot);
             return Abs::driveMotor(absMot,speed);
         }
 
