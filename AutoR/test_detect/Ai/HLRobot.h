@@ -1,6 +1,6 @@
 #pragma once
 
 namespace HLRobot{
-    bool direction; //{Back=0, Front=1};
+    enum Dir{DirB=0,DirR=1,DirF=2,DirL=3};
 }
 

@@ -17,5 +17,7 @@ namespace World{
             bool deadEnd;
             Node() : deadEnd(false) {};
             Node *linked[4]={};
+            void relLinkDirs(bool[] expectTapeDir, Node *start, Node *end);
+            HLRobot::Dir relDestDir(Node *dest, Node *base);`
     }
 }
