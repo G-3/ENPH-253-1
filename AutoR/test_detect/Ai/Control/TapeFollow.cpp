@@ -86,6 +86,7 @@ namespace Control{
         
         double Vc = controlProcess->step(err, derivative); 
         
+		int G = knob(6) / 100;
         v = knob(7)/4.;
         // With a positive reaction needed, we need to increase the left motor.
         int powerL = base - G*Vc;

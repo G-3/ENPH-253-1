@@ -1,20 +1,29 @@
 #include "World.h"
+#include "Config.h"
 
 namespace World{
+	Node *nodes[3] = {};
+
+	// Rotates the specified direction 90 degrees counterclockwise
+	// and returns the resulting direction
+	Dir rotate(Dir direction, int rotations) {
+		return (Dir) ((direction + rotations) % 4);
+	}
+
     Board::Board(){
-        for (int i=0; i<::Config::linksSize; i++;){
-            int startID = links[i][0];
+        for (int i=0; i<Config::linksSize; i++){
+            int startID = Config::links[i][0];
             if(!nodes[startID]){
                 nodes[startID] = new Node();
             }
-            int endID = links[i][1];
+            int endID = Config::links[i][1];
             if(!nodes[endID]){
                 nodes[endID] = new Node();
             }
             
             // here dir is the direction of the end note
             // relative to the start node
-            int dir = links[i][2];
+            int dir = Config::links[i][2];
             switch(dir){
                 case DirB: 
                     // The neighbor nodes array follows uses
@@ -37,7 +46,7 @@ namespace World{
         }
     }
 
-    void Node::relLinkDirs(bool[] expectTapeDir, Node *start){
+    void Node::relLinkDirs(bool expectTapeDir[4], Node *start){
         int startDir;
         for(int i=0; i<4; i++){
             if(linked[i]==start){
@@ -48,10 +57,10 @@ namespace World{
         for(int i=0; i<4; i++){
             if(linked[i]){
                 //This shifts the directions by startDir
-                expectTapeDir[rotate(i, startDir)] = 1;
+                expectTapeDir[rotate((Dir)i, startDir)] = 1;
             }
             else{
-                expectTapeDir[rotate(i, startDir)] = 0; 
+                expectTapeDir[rotate((Dir)i, startDir)] = 0; 
             }
         }
     }
@@ -60,7 +69,7 @@ namespace World{
         Dir startDir = DirINVALID;
         for(int i=0; i<4; i++){
             if(linked[i]==start){
-                startDir = i;
+                startDir = (Dir) i;
                 break;
             }
         }
@@ -69,13 +78,9 @@ namespace World{
         }
         for(int i=0; i<4; i++){
             if(linked[i]==dest){
-                return rotate(i, startDir);
+                return rotate( (Dir) i, startDir);
             }
         }
         return DirINVALID;
-    }
-
-    Dir rotate(Dir direction, int rotations){
-        return (direction + rotations)%4;
     }
 }
