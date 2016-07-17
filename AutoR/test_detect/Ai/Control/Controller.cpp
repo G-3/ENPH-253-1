@@ -5,7 +5,7 @@
 #include <phys253.h>
 
 namespace Control{
-	Controller Controller::*main_instance = 0;
+	Controller *Controller::main_instance = 0;
 
 	Controller *Controller::getInstance() {
 		if (!main_instance)
