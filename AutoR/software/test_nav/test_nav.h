@@ -3,11 +3,11 @@
 
 #include <phys253.h>
 
-#include "Ai/Debug.h"
+#include "../Ai/Debug.h"
 
-#include "Ai/EDetect.h"
-#include "Ai/LLRobot.h"
-#include "Ai/Control/Controller.h"
+#include "../Ai/EDetect.h"
+#include "../Ai/LLRobot.h"
+#include "../Ai/Control/Controller.h"
 
 #define ledPin 13
 
@@ -20,7 +20,7 @@ ServoTINAH RCServo1;
 ServoTINAH RCServo2;
 ServoTINAH RCServo3;
 
-void setup()
+void setup_m()
 {
     #include <phys253setup.txt>
     Serial.begin(9600);
@@ -44,7 +44,7 @@ void setup()
     delay(1000);
 }
  
-void loop()
+void loop_m()
 {
     Event::EDetect::getInstance()->step();
     Control::Controller::getInstance()->step();
