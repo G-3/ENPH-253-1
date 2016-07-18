@@ -8,12 +8,16 @@ namespace Control{
 namespace Control{
     class Controller{
         private:
-            ControlMode *curMode;
+            Controller();
+			~Controller();
+            static Controller *main_instance;
+            ControlMode *curController;
             int count = 0;
 
+
         public:
-            Controller();
-	    ~Controller();
+			static Controller *getInstance();
             void step();
+            void swapController(ControlMode *newController);
     }; 
 };

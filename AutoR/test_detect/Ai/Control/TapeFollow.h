@@ -17,8 +17,8 @@ namespace Control{
             bool dir;
             PidControl* controlProcess;
         public:
-            const int THLD1 = 100;
-            const int THLD2 = 100;
+            const int THLD1 = 200;
+            const int THLD2 = 200;
             double v = 0; //The speed scaling factor
             double base = 255; //The base speed of the motor
             TapeFollow();

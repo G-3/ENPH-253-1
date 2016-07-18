@@ -12,10 +12,7 @@ namespace Control{
 		LCD.clear();
 		LCD.print("Set P = ");
 		LCD.print(knob(6)/10);
-                LCD.setCursor(0, 1);
-		LCD.print("Prev: ");
-                LCD.print(P);
-		delay(50);
+		delay(10);
 	    }
 	    P = knob(6)/10;
 	    delay(500);
@@ -25,10 +22,7 @@ namespace Control{
 		LCD.clear();
 		LCD.print("Set I = ");
 		LCD.print(knob(6)/10);
-                LCD.setCursor(0, 1);
-		LCD.print("Prev: ");
-                LCD.print(I);
-		delay(50);
+		delay(10);
 	    }
 	    I = knob(6)/10;
 	    delay(500);
@@ -38,10 +32,7 @@ namespace Control{
 		LCD.clear();
 		LCD.print("Set D = ");
 		LCD.print(knob(6)/10);
-                LCD.setCursor(0, 1);
-		LCD.print("Prev: ");
-                LCD.print(D);
-		delay(50);
+		delay(10);
 	    }
 	    D = knob(6)/10;
 	    delay(500);
@@ -51,7 +42,6 @@ namespace Control{
 
         if (errsum > errsummax) errsum = errsummax;
         if (errsum < -errsummax) errsum = -errsummax;
-
 
         double Vc = -(P*error + I*errsum + D*derivative*10.)/10.;
 

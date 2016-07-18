@@ -3,7 +3,7 @@
 namespace Control{
     class PidControl{
         private:
-	    int G;
+	    double G;
             int P;
             int I;
             int D;

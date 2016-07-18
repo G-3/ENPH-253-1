@@ -476,6 +476,10 @@ namespace LLRobot{
             return Abs::driveMotor(absMot,speed);
         }
 
+        bool driveMotors(int16_t left, int16_t right){
+            return driveMotor(DML, left) & driveMotor(DMR, right);
+        }
+
         bool extendArm(Arm arm, bool pos){
             Abs::Arm absArm = relToAbsArm(arm);
             return Abs::extendArm(absArm, pos);
@@ -495,6 +499,5 @@ namespace LLRobot{
             Abs::Bumper absBump = relToAbsBumper(bumper);
             return Abs::readBumper(absBump);
         }
-
     }
 }

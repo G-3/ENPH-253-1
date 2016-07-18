@@ -1,28 +1,44 @@
 #include "EDetect.h"
+
+#include <phys253.h>
+
 #include "LLRobot.h"
+#include "EHandler.h"
+
+#include "Debug.h"
 
 namespace Event{
-    void EDetect::step(){
-	count+=1;
-	if(count%2==0){
-		 
-	}
-    }
+    EDetect *EDetect::main_instance = 0;
     
-    namespace Intersect{
+    EDetect *EDetect::getInstance(){
+        if(!main_instance){
+            main_instance = new EDetect;
+        }
+        return main_instance;
+    }
 
-        void checkIntersect(bool dir){
-            int interL = 0;
-            int interR = 0;
-	    if(dir){
-		interL = LLRobot::Rel::readQRD(LLRobot::Rel::IDLF, true);
-	        interR = LLRobot::Rel::readQRD(LLRobot::Rel::IDRF, true);	
-	    } else{
-                interL = LLRobot::Rel::readQRD(LLRobot::Rel::IDLB, true);
-	        interR = LLRobot::Rel::readQRD(LLRobot::Rel::IDRB, true);	
-            }
+    void EDetect::step(){
+        count+=1;
+        if(count%2==0){
+                checkIntersect();
+        }
+    }
 
-            if(interL || interR) {}
+    void checkIntersect(){
+        bool interL = 0;
+        bool interR = 0;
+
+        interL = LLRobot::Rel::readQRD(LLRobot::Rel::IDLF, true);
+        interR = LLRobot::Rel::readQRD(LLRobot::Rel::IDRF, true);	
+        
+        if(interL || interR) {
+            char msg [100];
+            sprintf(msg, "checkIntersect OK - R: %s L: %s", (interL?"true":"false"), (interR?"true":"false") );
+            Debug::serialPrint(msg, Debug::EDETECT);
+            EHandler::intersect(interL, interR);
+        }
+        else{
+            Debug::serialPrint("checkIntersect SKIP - No intersection", Debug::EDETECT);
         }
     }
 }

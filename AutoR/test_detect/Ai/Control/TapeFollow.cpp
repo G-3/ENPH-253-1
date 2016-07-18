@@ -86,8 +86,8 @@ namespace Control{
         
         double Vc = controlProcess->step(err, derivative); 
         
-        double G = knob(6)/1024.;
-        int base = knob(7)/6;
+		int G = knob(6) / 100;
+        v = knob(7)/4.;
         // With a positive reaction needed, we need to increase the left motor.
         int powerL = base - G*Vc;
         if (powerL > 255) powerL = 255;
@@ -119,9 +119,7 @@ namespace Control{
 	    LCD.print(powerL);
 	    LCD.setCursor(0,1);
 	    LCD.print(sensorR);
-	    LCD.print("|");
-            LCD.print(powerR);
-	    LCD.print("|");
+	    LCD.print(" | ");
 	    LCD.print(Vc);
 	}
         errp = err;
