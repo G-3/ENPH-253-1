@@ -6,8 +6,9 @@ namespace Control{
     class TurnAround : public ControlMode{
         private:
             enum Phase {SETUP,FIND_LEFT,FIND_RIGHT};
+            Phase currentPhase;
         public:
-            double rotationSpeed = 50; //The speed scaling factor
+            const double ROTATION_SPEED = 50; //The speed scaling factor
             TurnAround();
             ~TurnAround();
 	    void step();
