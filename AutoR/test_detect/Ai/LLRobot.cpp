@@ -17,9 +17,6 @@ namespace LLRobot{
 
         enum QRDFront {pinTFLF=3,pinTFRF=2,pinIDLF=4,pinIDRF=1};
         enum QRDBack  {pinTFLB=3,pinTFRB=2,pinIDLB=4,pinIDRB=1};
-        
-        enum ArmValues {ExtendRight = 100, ExtendLeft = 100, RetractRight = 30, RetractLeft = 30};
-        enum ClawValues {OpenRight = 100, OpenLeft = 100, CloseRight = 30, CloseLeft = 30};
 
         // Digital Out
         enum DOut {pinQSTReset = 4,pinMPQSD0 = 5, pinMPQSD1 = 6, pinMPQSD2 = 7, pinMPQRD=8};
@@ -30,14 +27,12 @@ namespace LLRobot{
         ServoTINAH servos[] = {RCServo0,RCServo1,RCServo2,RCServo3};
         // Digital In
         enum DIn {pinATR=8,pinATL=9,pinBF=10,pinBB=11};
+
+        //Current orientation
+        Orientation orientation = FORWARDS; 
+
         // Current Multiplexer States
-        Orientation orientation = Forwards;
         bool MPQRD_state = orientation;
-
-        //Start off with both arms retracted
-        bool RightArmState = 0;
-        bool LeftArmState = 0;
-
     }   
     
     int multiplexReadQrd(Orientation direction,int pin){
@@ -48,8 +43,24 @@ namespace LLRobot{
         int val = analogRead(pin);
         return val;
     }
+
+    void flip(){
+        switch(orientation){
+            case FORWARDS:
+                orientation = BACKWARDS;
+                break;
+            case BACKWARDS:
+                orientation = FORWARDS;
+                break;
+        }
+    }
     
     namespace Abs{
+        enum ArmValues {ExtendRight = 100, ExtendLeft = 100, RetractRight = 30, RetractLeft = 30};
+        enum ClawValues {OpenRight = 100, OpenLeft = 100, CloseRight = 30, CloseLeft = 30};
+
+
+
         int threshQRD(QRD position){
             return QRD_THRESH[position];
         }
@@ -70,35 +81,35 @@ namespace LLRobot{
             int val = -1;
             switch(position){
                 case TFLF:
-                    val = multiplexReadQrd(Forwards,pinTFLF);
+                    val = multiplexReadQrd(FORWARDS,pinTFLF);
                     break;
 
                 case TFRF:
-                    val = multiplexReadQrd(Forwards,pinTFRF);
+                    val = multiplexReadQrd(FORWARDS,pinTFRF);
                     break;
 
                 case TFLB:
-                    val = multiplexReadQrd(Backwards,pinTFLB);
+                    val = multiplexReadQrd(BACKWARDS,pinTFLB);
                     break;
 
                 case TFRB:
-                    val = multiplexReadQrd(Backwards,pinTFRB);
+                    val = multiplexReadQrd(BACKWARDS,pinTFRB);
                     break;
 
                 case IDLF:
-                    val = multiplexReadQrd(Forwards,pinIDLF);
+                    val = multiplexReadQrd(FORWARDS,pinIDLF);
                     break;
 
                 case IDRF:
-                    val = multiplexReadQrd(Forwards,pinIDRF);
+                    val = multiplexReadQrd(FORWARDS,pinIDRF);
                     break;
 
                 case IDLB:
-                    val = multiplexReadQrd(Backwards,pinIDLB);
+                    val = multiplexReadQrd(BACKWARDS,pinIDLB);
                     break;
 
                 case IDRB:
-                    val = multiplexReadQrd(Backwards,pinIDRB);
+                    val = multiplexReadQrd(BACKWARDS,pinIDRB);
                     break;
                 
                 default:
@@ -197,7 +208,7 @@ namespace LLRobot{
     
     Abs::QRD relToAbsQRD(Rel::QRD position){
         Abs::QRD newPos;
-        if (orientation == Forwards){
+        if (orientation == FORWARDS){
             switch(position){
                 case Rel::TFLF:
                     newPos = Abs::TFLF;
@@ -258,7 +269,7 @@ namespace LLRobot{
     }
     Abs::QSD relToAbsQSD(Rel::QSD position){
         Abs::QSD newPos;
-        if (orientation == Forwards){
+        if (orientation == FORWARDS){
             switch(position){
                 case Rel::IRLF:
                     newPos = Abs::IRLF;
@@ -318,7 +329,7 @@ namespace LLRobot{
     }
     Abs::DMot relToAbsDM(Rel::DMot motor){
         Abs::DMot newMot;
-        if (orientation == Forwards){
+        if (orientation == FORWARDS){
             switch(motor){
                 case Rel::DMR:
                     newMot = Abs::DMR;
@@ -342,7 +353,7 @@ namespace LLRobot{
     }
     Abs::Arm relToAbsArm(Rel::Arm arm){
         Abs::Arm newArm;
-        if (orientation == Forwards){
+        if (orientation == FORWARDS){
             switch(arm){
                 case Rel::AR:
                     newArm = Abs::AR;
@@ -366,7 +377,7 @@ namespace LLRobot{
     }
     Abs::ArmTrip relToAbsAT(Rel::ArmTrip armTrip){
         Abs::ArmTrip newAT;
-        if (orientation == Forwards){
+        if (orientation == FORWARDS){
             switch(armTrip){
                 case Rel::ATR:
                     newAT = Abs::ATR;
@@ -390,7 +401,7 @@ namespace LLRobot{
     }
     Abs::Bumper relToAbsBumper(Rel::Bumper bumper){
         Abs::Bumper newBump;
-        if (orientation == Forwards){
+        if (orientation == FORWARDS){
             switch(bumper){
                 case Rel::BF:
                     newBump = Abs::BF;
@@ -415,7 +426,7 @@ namespace LLRobot{
 
     Abs::Claw relToAbsClaw(Rel::Claw claw){
         Abs::Claw newClaw;
-        if (orientation == Forwards){
+        if (orientation == FORWARDS){
             switch(claw){
                 case Rel::CR:
                     newClaw = Abs::CR;

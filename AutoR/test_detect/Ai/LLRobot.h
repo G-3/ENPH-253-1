@@ -3,7 +3,9 @@
 #include <stdint.h>
 
 namespace LLRobot{
+    
     namespace Abs{
+
         enum QRD {TFLF=0, TFRF=1, TFLB=2, TFRB=3, IDLF=4, IDRF=5, IDLB=6, IDRB=7, IAR = 8,IAL = 9};
         int readQRD(::LLRobot::Abs::QRD position, bool applyThresh=false);
 
@@ -27,6 +29,7 @@ namespace LLRobot{
     }
 
     namespace Rel{
+
         enum QRD {TFLF=0, TFRF=1, TFLB=2, TFRB=3, IDLF=4, IDRF=5, IDLB=6, IDRB=7, INR = 8,INL = 9};
         int readQRD(::LLRobot::Rel::QRD position, bool applyThresh=false);
 
@@ -38,16 +41,19 @@ namespace LLRobot{
         bool driveMotors(int16_t left, int16_t right);
 
         enum Claw {CL = 0,CR = 1};
-        bool openClaw(::LLRobot::Rel::Claw Claw, int16_t pos);
+        bool openClaw(::LLRobot::Rel::Claw Claw, bool pos);
 
         enum Arm {AL = 0,AR = 1};
         bool extendArm(::LLRobot::Rel::Arm arm, bool pos);
+
 
         enum ArmTrip{ATL = 0,ATR = 1};
         bool ReadArmTrip(::LLRobot::Rel::ArmTrip armTrip);
         
         enum Bumper {BF = 0,BB = 1};
         bool readBumper(::LLRobot::Rel::Bumper bumper);
+
     }
-    enum Orientation{Forwards = 0,Backwards = 1};
+    enum Orientation{FORWARDS = 0,BACKWARDS = 1};
+    void flip();
 };
