@@ -33,6 +33,8 @@ void setup()
     LCD.print("Starting up...3");
     delay(1000);
     
+    World::setup();
+ 
     LCD.clear(); LCD.home();
     LCD.print("Starting up...2");
     delay(1000);

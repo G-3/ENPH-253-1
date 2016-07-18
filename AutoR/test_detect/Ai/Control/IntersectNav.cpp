@@ -15,7 +15,7 @@ namespace Control{
     /*
      * Tape Following Mode
      */
-    IntersectNav::IntersectNav(World::Node *start, World::Node *dest, World::Node *base): start(start), dest(dest), base(base){
+    IntersectNav::IntersectNav(World::Node *start, World::Node *base, World::Node *dest): start(start), dest(dest), base(base){
         tapeFollower = new TapeFollow();
         speed = 100;
         curPhase = INIT_ALIGN;
