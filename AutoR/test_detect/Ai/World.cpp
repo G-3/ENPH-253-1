@@ -1,15 +1,19 @@
 #include "World.h"
 
 #include "HLRobot.h"
-
 #include "Config.h"
+
+#include "Debug.h"
+
+#include <Arduino.h>
 
 namespace World{
 	Node *nodes[3] = {};
 
-	// Rotates the specified direction 90 degrees counterclockwise
+	// Rotates the specified direction 90*rotations degrees counterclockwise
 	// and returns the resulting direction
 	Dir rotate(Dir direction, int rotations) {
+        // Add since Dir increases counterclockwise
 		return (Dir) ((direction + rotations) % 4);
 	}
     
@@ -19,14 +23,21 @@ namespace World{
     void setup(){
         // Loop over all the pre-configured edges
         for (int i=0; i<Config::linksSize; i++){
+            Debug::serialPrint("Link", Debug::INTERSECT_DB);
             // Initialize nodes of the given edge
             int startID = Config::links[i][0];
             if(!nodes[startID]){
                 nodes[startID] = new Node();
+                char msg[20];
+                sprintf(msg, "NodeS . %d . %d \n", i, startID);
+                Debug::serialPrint(msg, Debug::INTERSECT_DB);
             }
             int endID = Config::links[i][1];
             if(!nodes[endID]){
                 nodes[endID] = new Node();
+                char msg[20];
+                sprintf(msg, "NodeE . %d . %d \n", i, endID);
+                Debug::serialPrint(msg, Debug::INTERSECT_DB);
             }
             
             // here dir is the direction of the end note
@@ -62,20 +73,29 @@ namespace World{
     }
 
     void Node::relLinkDirs(bool expectTapeDir[4], Node *start){
-        int startDir;
+        Dir startDir;
         for(int i=0; i<4; i++){
             if(linked[i]==start){
-                startDir = i;
+                startDir = (Dir)i;
+                Debug::serialPrint("Start direction found.", Debug::INTERSECT_DB);
                 break;
             }
         }
         for(int i=0; i<4; i++){
             if(linked[i]){
-                //This shifts the directions by startDir
-                expectTapeDir[rotate((Dir)i, startDir)] = 1;
+                char msg[30];
+                sprintf(msg, "Start: %d\nActual %d \n", startDir, i);
+                Debug::serialPrint(msg, Debug::INTERSECT_DB);
+
+                // Want to see what the direction of the tape is in the new reference frame
+                // This is the exact inverse of rotating it by the offset of the new reference frame
+                expectTapeDir[rotate((Dir)i, 4-startDir)] = 1;
             }
             else{
-                expectTapeDir[rotate((Dir)i, startDir)] = 0; 
+                char msg[30];
+                sprintf(msg, "NULL %d \n", i);
+                Debug::serialPrint(msg, Debug::INTERSECT_DB);
+                expectTapeDir[rotate((Dir)i, 4-startDir)] = 0; 
             }
         }
     }
@@ -93,7 +113,7 @@ namespace World{
         }
         for(int i=0; i<4; i++){
             if(linked[i]==dest){
-                return rotate( (Dir) i, startDir);
+                return rotate( (Dir) i, 4-startDir);
             }
         }
         return DirINVALID;
