@@ -14,7 +14,7 @@ namespace Control{
 	}
 
     Controller::Controller(){
-        curController= new TapeFollow();
+        curController = new TapeFollow();
         HLRobot::curMode = HLRobot::TAPE_FOLLOW;
     } 
 

@@ -1,4 +1,7 @@
 #include "World.h"
+
+#include "HLRobot.h"
+
 #include "Config.h"
 
 namespace World{
@@ -9,9 +12,14 @@ namespace World{
 	Dir rotate(Dir direction, int rotations) {
 		return (Dir) ((direction + rotations) % 4);
 	}
-
-    Board::Board(){
+    
+    //TODO: Change node system to have double edges since some edges
+    //      bend in direction aka leaves start node on left but curves
+    //      in to dest node at top.
+    void setup(){
+        // Loop over all the pre-configured edges
         for (int i=0; i<Config::linksSize; i++){
+            // Initialize nodes of the given edge
             int startID = Config::links[i][0];
             if(!nodes[startID]){
                 nodes[startID] = new Node();
@@ -30,20 +38,27 @@ namespace World{
                     // same convention for indexing
                     nodes[startID]->linked[DirB] = nodes[endID];
                     nodes[endID]->linked[DirF] = nodes[startID];
+                    break;
 
                 case DirR: 
                     nodes[startID]->linked[DirR] = nodes[endID];
                     nodes[endID]->linked[DirL] = nodes[startID];
+                    break;
 
                 case DirF: 
                     nodes[startID]->linked[DirF] = nodes[endID];
                     nodes[endID]->linked[DirB] = nodes[startID];
+                    break;
 
                 case DirL: 
                     nodes[startID]->linked[DirL] = nodes[endID];
                     nodes[endID]->linked[DirR] = nodes[startID];           
+                    break;
             }
         }
+        HLRobot::lastNode = nodes[0];
+        HLRobot::baseNode = nodes[1];
+        HLRobot::destNode = nodes[2];
     }
 
     void Node::relLinkDirs(bool expectTapeDir[4], Node *start){

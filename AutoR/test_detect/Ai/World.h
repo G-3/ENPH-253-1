@@ -5,11 +5,6 @@ namespace World{
 
 	Dir rotate(Dir direction, int rotations);
 
-	class Board {
-	public:
-		Board();
-	};
-
 	class Node {
 	public:
 		bool deadEnd;
@@ -21,7 +16,7 @@ namespace World{
 
     void setup();
     
-    // links describes all edges on the 
+    // links describes all edges on the board 
     extern Node *nodes[3];
     const int nodesSize = 3;
 }

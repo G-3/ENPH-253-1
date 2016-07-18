@@ -1,8 +1,12 @@
 #include "IntersectNav.h"
+
 #include "TapeFollow.h"
 #include "../World.h"
 #include "../LLRobot.h"
 #include "../EHandler.h"
+
+#include <Arduino.h>
+#include "../Debug.h"
 
 using namespace LLRobot::Rel;
 using namespace EHandler;
@@ -17,6 +21,16 @@ namespace Control{
         curPhase = INIT_ALIGN;
         base->relLinkDirs(expectTapeDir, start);
         destDir = base->relDestDir(dest, start);
+       
+        Debug::serialPrint("Direction . Exp Tape \n", Debug::INTERSECT_DB);
+        for(int i = 0; i < 4; i++){
+            char msg[20];
+            sprintf(msg, "%d . %d \n", i, expectTapeDir[i]);
+            Debug::serialPrint(msg, Debug::INTERSECT_DB);
+        }
+        char msg[20];
+        sprintf(msg, "Dest Dir %d \n", destDir);
+        Debug::serialPrint(msg, Debug::INTERSECT_DB);
     }
 
     IntersectNav::~IntersectNav(){
@@ -36,11 +50,13 @@ namespace Control{
 		switch (curPhase) {
 			case INIT_ALIGN:
 			{
+                Debug::serialPrint("Intersect initial align.", Debug::INTERSECT_DB);
 				// Align the intersection detectors after detection 
 				bool l = readQRD(IDLF, true);
 				bool r = readQRD(IDRF, true);
 
 				if (!(xl || xr)) {
+                    // Just a straight intersection
 					if (l || r) {
 						// This wasn't supposed to happen
 						// we weren't expecting a cross edge
@@ -48,6 +64,7 @@ namespace Control{
 					}
 				}
 				if (xlr) {
+                    // Expecting left and right intersections.
 					// gotta rotate until it aligns
 					// need some state of what we've seen maybe
 				}
@@ -70,6 +87,7 @@ namespace Control{
 
 			case DRIVE_THRU:
 			{
+                Debug::serialPrint("Intersect drive through.", Debug::INTERSECT_DB);
 				// Drive until we activate our aligners
 				// Read the alligners
 				bool l = readQRD(INL, true);
@@ -90,7 +108,7 @@ namespace Control{
 					}
 					else if (l) {
 						// expected only on the right
-						falseIntersect();
+						//falseIntersect();
 					}
 
 				}
@@ -112,6 +130,7 @@ namespace Control{
 
 			case INTER_ALIGN:
 			{
+                Debug::serialPrint("Intersect center intersection align.", Debug::INTERSECT_DB);
 				// Align the intersection aligners
 				if (!xlr) {
 					// What are we doing?
@@ -122,6 +141,7 @@ namespace Control{
 				break;
 
 			case TRIP_INTER:
+                Debug::serialPrint("Intersect turn til trip intersect.", Debug::INTERSECT_DB);
 				// Turn until we trip the intersection detectors
 				if (destDir == World::DirL) {
 					// turning left
@@ -150,6 +170,7 @@ namespace Control{
 
 			case TRIP_FOLLOW:
 			{
+                Debug::serialPrint("Intersect turn til trip tapefollow.", Debug::INTERSECT_DB);
 				// Turn until we trip the tape followers
 				if (destDir == World::DirL) {
 					// Check if we trip the TF
@@ -181,6 +202,7 @@ namespace Control{
 
 			case END:
 			{
+                Debug::serialPrint("END.", Debug::INTERSECT_DB);
 				// Call da event handler
 				break;
 			}
