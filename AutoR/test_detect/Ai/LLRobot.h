@@ -6,11 +6,12 @@ namespace LLRobot{
     
     namespace Abs{
 
-        enum QRD {TFLF=0, TFRF=1, TFLB=2, TFRB=3, IDLF=4, IDRF=5, IDLB=6, IDRB=7, IAR = 8,IAL = 9};
+        enum QRD {TFLF=0, TFRF=1, TFLB=2, TFRB=3, IDLF=4, IDRF=5, IDLB=6, IDRB=7, INR = 8,INL = 9};
         int readQRD(::LLRobot::Abs::QRD position, bool applyThresh=false);
 
         enum QSD {IRLF = 0,IRLM = 1,IRLB = 2,IRLU = 3,IRRF = 4,IRRM = 5,IRRB = 6, IRRU = 7};
-        int readQSD(::LLRobot::Abs::QSD position, bool applyThresh=false);
+        int readCurrentQSD(::LLRobot::Abs::QSD position, bool isControl);
+        bool setCurrentQSD(::LLRobot::Abs::QSD position, bool isControl);
         
         enum DMot {DML = 0, DMR = 1};
         bool driveMotor(::LLRobot::Abs::DMot motorpos, int16_t speed);
@@ -34,7 +35,8 @@ namespace LLRobot{
         int readQRD(::LLRobot::Rel::QRD position, bool applyThresh=false);
 
         enum QSD {IRLF = 0,IRLM = 1,IRLB = 2,IRLU = 3,IRRF = 4,IRRM = 5,IRRB = 6, IRRU = 7};
-        int readQSD(::LLRobot::Rel::QSD position, bool applyThresh=false);
+        int readCurrentQSD(::LLRobot::Rel::QSD position, bool isControl);
+        bool setCurrentQSD(::LLRobot::Rel::QSD position, bool isControl);
         
         enum DMot {DML = 0, DMR = 1};
         bool driveMotor(::LLRobot::Rel::DMot motorpos, int16_t speed);
@@ -54,6 +56,8 @@ namespace LLRobot{
         bool readBumper(::LLRobot::Rel::Bumper bumper);
 
     }
+    
     enum Orientation{FORWARDS = 0,BACKWARDS = 1};
+    void setControlLock(bool state);
     void flip();
 };

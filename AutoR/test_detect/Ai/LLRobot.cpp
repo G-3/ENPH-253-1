@@ -7,13 +7,17 @@ namespace LLRobot{
     const int QRD_PEAK[] = {500,500,500,500,500,500,500,500,500,500};
     const int QSD_THRESH[] = {100,100,100,50,100,100,100,50};
     const int QSD_PEAK[] = {1024,1024,1024,1024,1024,1024,1024,1024};
+    const int QSD_MICROS = 3000;
 
     namespace{
         // TODO: Add the pin placement for the back as well, maybe have a lookup table instead of enum
 
 
         // Analog In
-        const int pinIAR = 5;
+        const int PIN_IAR = 0;
+
+        const int PIN_INL = 5;
+        const int PIN_INR = 6;
 
         enum QRDFront {pinTFLF=3,pinTFRF=2,pinIDLF=4,pinIDRF=1};
         enum QRDBack  {pinTFLB=3,pinTFRB=2,pinIDLB=4,pinIDRB=1};
@@ -33,7 +37,11 @@ namespace LLRobot{
 
         // Current Multiplexer States
         bool MPQRD_state = orientation;
+
+        unsigned long timestampQSD = 0;
+        bool controlLock = false;
     }   
+
     
     int multiplexReadQrd(Orientation direction,int pin){
         if(MPQRD_state != direction){
@@ -54,12 +62,39 @@ namespace LLRobot{
                 break;
         }
     }
+
+    void setControlLock(bool value){
+        controlLock = value;
+    }
     
     namespace Abs{
         enum ArmValues {ExtendRight = 100, ExtendLeft = 100, RetractRight = 30, RetractLeft = 30};
         enum ClawValues {OpenRight = 100, OpenLeft = 100, CloseRight = 30, CloseLeft = 30};
 
+        int readCurrentQSD(bool isControl){
+            //Allow control when control lock is on
+            //Allow everthing else when everything else is on
+            if (isControl == controlLock){
+                if ((micros() - timestampQSD) > QSD_MICROS){
+                        return analogRead(PIN_IAR);
+                }
+            }
+            return -1;
+        }
 
+        bool setCurrentQSD(QSD position, bool isControl){
+            if (isControl == controlLock){
+                if ((micros() - timestampQSD) > QSD_MICROS){
+                    digitalWrite(pinMPQSD0, position % 1);
+                    digitalWrite(pinMPQSD1, position % 2);
+                    digitalWrite(pinMPQSD2, position % 4);
+                    timestampQSD = micros();
+                    return true;   
+                }
+            }
+            return false;
+        }
+        
 
         int threshQRD(QRD position){
             return QRD_THRESH[position];
@@ -110,6 +145,12 @@ namespace LLRobot{
 
                 case IDRB:
                     val = multiplexReadQrd(BACKWARDS,pinIDRB);
+                    break;
+                case INL:
+                    val = digitalRead(PIN_INL);
+                    break;
+                case INR:
+                    val = digitalRead(PIN_INR);
                     break;
                 
                 default:
@@ -234,6 +275,12 @@ namespace LLRobot{
                 case Rel::IDRB:
                     newPos = Abs::IDRB;
                     break;
+                case Rel::INL:
+                    newPos = Abs::INL;
+                    break;
+                case Rel::INR:
+                    newPos = Abs::INR;
+                    break;
             }
         }
         else{
@@ -261,6 +308,12 @@ namespace LLRobot{
                     break;
                 case Rel::IDRB:
                     newPos = Abs::IDLF;
+                    break;
+                case Rel::INL:
+                    newPos = Abs::INR;
+                    break;
+                case Rel::INR:
+                    newPos = Abs::INL;
                     break;
             }
         }
@@ -451,6 +504,15 @@ namespace LLRobot{
     }
 
     namespace Rel{
+
+        int readCurrentQSD(bool isControl){
+            return Abs::readCurrentQSD(isControl);
+        }
+        bool setCurrentQSD(QSD position, bool isControl){
+            Abs::QSD absPos = relToAbsQSD(position);
+            return Abs::readCurrentQSD(absPos,isControl);
+        }
+
         int threshQRD(QRD position){
             Abs::QRD absPos = relToAbsQRD(position);
             return Abs::threshQRD(absPos);
