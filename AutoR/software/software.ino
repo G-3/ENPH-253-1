@@ -1,7 +1,11 @@
 // This include statement should be changed to whatever we want to be running 
 
-// #include "./test_nav/test_nav.h"
-#include "./test_qrd/test_qrd.h"
+// Test Nav, tests navigation.
+#include "./test_nav/test_nav.h"
+
+// Test the QRDs listing them on the LCD one by one
+// Multi-paged, use START button to switch between.
+// #include "./test_qrd/test_qrd.h"
 
 void setup()
 {
