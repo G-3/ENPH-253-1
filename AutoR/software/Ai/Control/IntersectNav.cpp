@@ -37,6 +37,32 @@ namespace Control{
        delete tapeFollower; 
     }
 
+    bool IntersectNav::checkMismatch(bool completed){
+        // Critical Failure: Seen a direction that wasn't expected 
+        if(!expectTapeDir[World::DirR] && seenTapeDir[World::DirR]){
+            return true;
+        }
+        else if(!expectTapeDir[World::DirL] && seenTapeDir[World::DirL]){
+            return true;
+        }
+        else if(!expectTapeDir[World::DirF] && seenTapeDir[World::DirF]){
+            return true;
+        }
+        // Completion: We have seen all the intersections we were supposed to
+        else if(    (expectTapeDir[World::DirR] == seenTapeDir[World::DirR]) &&
+                    (expectTapeDir[World::DirL] == seenTapeDir[World::DirL]) &&
+                    (expectTapeDir[World::DirF] == seenTapeDir[World::DirF]) )
+        {
+            return false;
+        }
+        // Incomplete: We are missing some intersections
+        else{
+            // return true, if we completed the intersection but still missing
+            // return false, if we have not completed the intersection yet
+            return completed;
+        }
+    }
+
     //TODO remove knob controls from controller.
 
     // Note error is defined in the x direction with a robot to the right
@@ -46,166 +72,361 @@ namespace Control{
         bool xr = expectTapeDir[World::DirR];
         bool xf = expectTapeDir[World::DirF];
         bool xlr = xl && xr;
+        
+        // we are looking to travel forward, follow tape while tracking the intersection
+        // there should be at least one other direction
+        if (destDir == World::DirF){
 
-		switch (curPhase) {
-			case INIT_ALIGN:
-			{
-                Debug::serialPrint("Intersect initial align.", Debug::INTERSECT_DB);
-				// Align the intersection detectors after detection 
-				bool l = readQRD(IDLF, true);
-				bool r = readQRD(IDRF, true);
+            // TODO: Hack assume the forward direction has been confirmed by bot, need to check for this somehow
+            seenTapeDir[World::DirF] = true;
+            
+            switch(curPhase){
+                case INIT_ALIGN:
+                {
+                    // Align the intersection detectors after detection 
+                    bool l = readQRD(IDLF, true);
+                    bool r = readQRD(IDRF, true);
+                    
+                    // Update the seen tape directions
+                    seenTapeDir[World::DirR] |= r;
+                    seenTapeDir[World::DirL] |= l;
+                    
+                    // Tapefollow until we hit a correct intersection
+                    if (checkMismatch(false)) {
+                        // Failure
+                    }
+                    else if (l || r){
+                        curPhase = DRIVE_THRU;
+                    }
+                    tapeFollower->step();
+                    break;
+                }
 
-				if (!(xl || xr)) {
-                    // Just a straight intersection
-					if (l || r) {
-						// This wasn't supposed to happen
-						// we weren't expecting a cross edge
+                case DRIVE_THRU:
+                {
+                    if(xlr){
+                        // Keep updating to find the other one
+                        bool l = readQRD(IDLF, true);
+                        bool r = readQRD(IDRF, true);
+                        // Update the seen tape directions
+                        seenTapeDir[World::DirR] |= r;
+                        seenTapeDir[World::DirL] |= l;
+                    }
 
-					}
-				}
-				if (xlr) {
-                    // Expecting left and right intersections.
-					// gotta rotate until it aligns
-					// need some state of what we've seen maybe
-				}
-				else if (l && r) {
-					// Only one was supposed to be tripped
-				}
-				else if ((xl && l) || (xr && r)) {
-					// we are good let's move on
-					curPhase = DRIVE_THRU;
-					return;
-				}
-				else if (l || r) {
-					// We messed up, trip on an unexpected side
-				}
-				else {
-					//Precondition not matched, we aren't actually on tape
-				}
-				break;
-			}
+                    // Check our aligners
+                    bool l = readQRD(INL, true);
+                    bool r = readQRD(INR, true);
 
-			case DRIVE_THRU:
-			{
-                Debug::serialPrint("Intersect drive through.", Debug::INTERSECT_DB);
-				// Drive until we activate our aligners
-				// Read the alligners
-				bool l = readQRD(INL, true);
-				bool r = readQRD(INR, true);
+                    if (l || r){
+                        // We should have completely checked out the intersection
+                        if(checkMismatch(true)){
+                            // Fail
+                        }
+                        else{
+                            // We are done
+                            curPhase = END;
+                        }
+                    }
+                    tapeFollower->step();
+                    break;
+                }
 
-				if (xlr) {
-					if (l || r) {
-						curPhase = INTER_ALIGN;
-						return;
-					}
-				}
+                case END:
+                    // Call Eventhandler
+                    break;
+            }
+        }
 
-				else if (xr) {
-					// only right should be tripped
-					if (r) {
-						curPhase = TRIP_INTER;
-						return;
-					}
-					else if (l) {
-						// expected only on the right
-						//falseIntersect();
-					}
+        // Turning right or left with no tape to follow
+        else if(!xf){
+            switch(curPhase){
+                // TODO: We are assuming that forward doesn't exist, need to check for this somehow
+                case INIT_ALIGN:
+                {
+                    Debug::serialPrint("Intersect initial align.", Debug::INTERSECT_DB);
+                    bool l = readQRD(IDLF, true);
+                    bool r = readQRD(IDRF, true);
+                    
+                    // Update the seen tape directions
+                    seenTapeDir[World::DirR] |= r;
+                    seenTapeDir[World::DirL] |= l;
+                    
+                    // Tapefollow until we hit a correct intersection
+                    if (checkMismatch(false)) {
+                        // Failure
+                    }
+                    else if (l || r){
+                        curPhase = DRIVE_THRU;
+                    }
 
-				}
+                    tapeFollower->step();
+                    break;
+                }
 
-				else if (xl) {
-					// only left should be tripped
-					if (l) {
-						curPhase = TRIP_INTER;
-						return;
-					}
-					else if (r) {
-						// expected only on the left
-						falseIntersect();
-					}
-				}
-				driveMotors(speed, speed);
-				break;
-			}
+                case DRIVE_THRU:
+                {
+                    Debug::serialPrint("Intersect drive through.", Debug::INTERSECT_DB);
+                    if(xlr){
+                        // Keep updating to find the other one
+                        bool l = readQRD(IDLF, true);
+                        bool r = readQRD(IDRF, true);
+                        // Update the seen tape directions
+                        seenTapeDir[World::DirR] |= r;
+                        seenTapeDir[World::DirL] |= l;
+                    }
 
-			case INTER_ALIGN:
-			{
-                Debug::serialPrint("Intersect center intersection align.", Debug::INTERSECT_DB);
-				// Align the intersection aligners
-				if (!xlr) {
-					// What are we doing?
-				}
-				else {
-					//Some state stuff
-				}
-				break;
+                    // Check our aligners
+                    bool l = readQRD(INL, true);
+                    bool r = readQRD(INR, true);
 
-			case TRIP_INTER:
-                Debug::serialPrint("Intersect turn til trip intersect.", Debug::INTERSECT_DB);
-				// Turn until we trip the intersection detectors
-				if (destDir == World::DirL) {
-					// turning left
-					bool l = readQRD(IDLF, true);
-						if (l) {
-							// We tripped, move on
-							curPhase = TRIP_FOLLOW;
-						}
+                    if (l || r){
+                        // We should have completely checked out the intersection
+                        if(checkMismatch(true)){
+                            // Fail
+                        }
+                        else{
+                            // We can move on
+                            // TODO: See if we can get away with this in all cases
+                            curPhase = TRIP_INTER;
+                        }
+                    }
+                    driveMotors(speed, speed);
+                    break;
+                }
 
-					driveMotors(speed, -speed);
-				}
-				else if (destDir == World::DirR) {
-					// turning right
-					bool r = readQRD(IDRF, true);
-						if (r) {
-							// We tripped, move on
-							curPhase = TRIP_FOLLOW;
-						}
-					driveMotors(-speed, speed);
-				}
-				else {
-					//What?
-				}
-				break;
-			}
+                case INTER_ALIGN:
+                {
+                    Debug::serialPrint("Intersect center intersection align.", Debug::INTERSECT_DB);
+                    // Align the intersection aligners
+                    if (!xlr) {
+                        // What are we doing?
+                    }
+                    else {
+                        //Some state stuff
+                    }
+                    break;
 
-			case TRIP_FOLLOW:
-			{
-                Debug::serialPrint("Intersect turn til trip tapefollow.", Debug::INTERSECT_DB);
-				// Turn until we trip the tape followers
-				if (destDir == World::DirL) {
-					// Check if we trip the TF
-					bool l = readQRD(TFLF, true);
-					if (l) {
-						//Gottem we are done
-						curPhase = END;
-						return;
-					}
-					else {
-						driveMotors(speed, -speed);
-					}
+                case TRIP_INTER:
+                    Debug::serialPrint("Turn til trip intersect.", Debug::INTERSECT_DB);
+                    // Turn until we trip the intersection detectors
+                    if (destDir == World::DirL) {
+                        // turning left
+                        bool l = readQRD(IDLF, true);
+                            if (l) {
+                                // We tripped, move on
+                                curPhase = TRIP_FOLLOW;
+                            }
 
-				}
-				else if (destDir == World::DirR) {
-					// Check if we trip the TF
-					bool r = readQRD(TFRF, true);
-					if (r) {
-						//Gottem we are done
-						curPhase = END;
-						return;
-					}
-					else {
-						driveMotors(-speed, speed);
-					}
-				}
-				break;
-			}
+                        driveMotors(speed, -speed);
+                    }
+                    else if (destDir == World::DirR) {
+                        // turning right
+                        bool r = readQRD(IDRF, true);
+                            if (r) {
+                                // We tripped, move on
+                                curPhase = TRIP_FOLLOW;
+                            }
+                        driveMotors(-speed, speed);
+                    }
+                    break;
+                }
 
-			case END:
-			{
-                Debug::serialPrint("END.", Debug::INTERSECT_DB);
-				// Call da event handler
-				break;
-			}
-		}
+                case TRIP_FOLLOW:
+                {
+                    Debug::serialPrint("Intersect turn til trip tapefollow.", Debug::INTERSECT_DB);
+                    // Turn until we trip the tape followers
+                    if (destDir == World::DirL) {
+                        // Check if we trip the TF
+                        bool l = readQRD(TFLF, true);
+                        if (l) {
+                            //Gottem we are done
+                            curPhase = END;
+                            return;
+                        }
+                        else {
+                            driveMotors(speed, -speed);
+                        }
+
+                    }
+                    else if (destDir == World::DirR) {
+                        // Check if we trip the TF
+                        bool r = readQRD(TFRF, true);
+                        if (r) {
+                            //Gottem we are done
+                            curPhase = END;
+                            return;
+                        }
+                        else {
+                            driveMotors(-speed, speed);
+                        }
+                    }
+                    break;
+                }
+
+                case END:
+                {
+                    Debug::serialPrint("END.", Debug::INTERSECT_DB);
+                    // Call da event handler
+                    break;
+                }
+            }
+        }
+
+        // Turn at the intersection and there is a follow through path
+        else{
+            // TODO: currently assumes front exists
+            seenTapeDir[World::DirF] = true;
+            switch (curPhase) {
+                case INIT_ALIGN:
+                {
+                    Debug::serialPrint("Intersect initial align.", Debug::INTERSECT_DB);
+                    bool l = readQRD(IDLF, true);
+                    bool r = readQRD(IDRF, true);
+                    
+                    // Update the seen tape directions
+                    seenTapeDir[World::DirR] |= r;
+                    seenTapeDir[World::DirL] |= l;
+                    
+                    // Tapefollow until we hit a correct intersection
+                    if (checkMismatch(false)) {
+                        // Failure
+                    }
+                    else if (l || r){
+                        curPhase = DRIVE_THRU;
+                    }
+
+                    tapeFollower->step();
+                    break;
+                }
+
+                case DRIVE_THRU:
+                {
+                    Debug::serialPrint("Intersect drive through.", Debug::INTERSECT_DB);
+                    if(xlr){
+                        // Keep updating to find the other one
+                        bool l = readQRD(IDLF, true);
+                        bool r = readQRD(IDRF, true);
+                        // Update the seen tape directions
+                        seenTapeDir[World::DirR] |= r;
+                        seenTapeDir[World::DirL] |= l;
+                    }
+
+                    // Check our aligners
+                    bool l = readQRD(INL, true);
+                    bool r = readQRD(INR, true);
+
+                    if (l || r){
+                        // We should have completely checked out the intersection
+                        if(checkMismatch(true)){
+                            // Fail
+                        }
+                        else{
+                            // We can move on
+                            if(xlr){
+                                if(l) linedUp = World::DirL;
+                                else if(r) linedUp = World::DirR;
+                                curPhase = INTER_ALIGN;
+                            }
+                            else{
+                                curPhase = TRIP_INTER;
+                            }
+                        }
+                    }
+                    tapeFollower->step();
+                    break;
+                }
+
+                case INTER_ALIGN:
+                {
+                    Debug::serialPrint("Intersect center intersection align.", Debug::INTERSECT_DB);
+                    // Align the intersection aligners
+                    if (linedUp == World::DirL) {
+                        // turning left
+                        bool r = readQRD(INR, true);
+                            if (r) {
+                                // We tripped, move on
+                                curPhase = TRIP_FOLLOW;
+                            }
+
+                        driveMotors(0, speed);
+                    }
+                    else if (linedUp == World::DirR) {
+                        // turning right
+                        bool l = readQRD(INL, true);
+                            if (l) {
+                                // We tripped, move on
+                                curPhase = TRIP_FOLLOW;
+                            }
+                        driveMotors(speed, 0);
+                    }
+                    break;
+                }
+
+                case TRIP_INTER:
+                {
+                    Debug::serialPrint("Intersect turn til trip intersect.", Debug::INTERSECT_DB);
+                    // Turn until we trip the intersection detectors
+                    if (destDir == World::DirL) {
+                        // turning left
+                        bool l = readQRD(IDLF, true);
+                            if (l) {
+                                // We tripped, move on
+                                curPhase = TRIP_FOLLOW;
+                            }
+
+                        driveMotors(speed, -speed);
+                    }
+                    else if (destDir == World::DirR) {
+                        // turning right
+                        bool r = readQRD(IDRF, true);
+                            if (r) {
+                                // We tripped, move on
+                                curPhase = TRIP_FOLLOW;
+                            }
+                        driveMotors(-speed, speed);
+                    }
+                    break;
+                }
+
+                case TRIP_FOLLOW:
+                {
+                    Debug::serialPrint("Intersect turn til trip tapefollow.", Debug::INTERSECT_DB);
+                    // Turn until we trip the tape followers
+                    if (destDir == World::DirL) {
+                        // Check if we trip the TF
+                        bool l = readQRD(TFLF, true);
+                        if (l) {
+                            //Gottem we are done
+                            curPhase = END;
+                            return;
+                        }
+                        else {
+                            driveMotors(speed, -speed);
+                        }
+
+                    }
+                    else if (destDir == World::DirR) {
+                        // Check if we trip the TF
+                        bool r = readQRD(TFRF, true);
+                        if (r) {
+                            //Gottem we are done
+                            curPhase = END;
+                            return;
+                        }
+                        else {
+                            driveMotors(-speed, speed);
+                        }
+                    }
+                    break;
+                }
+
+                case END:
+                {
+                    Debug::serialPrint("END.", Debug::INTERSECT_DB);
+                    // Call da event handler
+                    break;
+                }
+            }
+        }
     }
 }
