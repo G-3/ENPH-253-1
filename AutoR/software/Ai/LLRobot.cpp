@@ -23,7 +23,7 @@ namespace LLRobot{
         enum QRDBack  {pinTFLB=3,pinTFRB=2,pinIDLB=4,pinIDRB=1};
 
         // Digital Out
-        enum DOut {pinQSTReset = 4,pinMPQSD0 = 5, pinMPQSD1 = 6, pinMPQSD2 = 7, pinMPQRD=8};
+        enum DOut {pinQSDReset = 4,pinMPQSD0 = 5, pinMPQSD1 = 6, pinMPQSD2 = 7, pinMPQRD=8};
         // Motor out
         enum MOut {pinDML=2, pinDMR=1};
         // Servo indicies
@@ -85,9 +85,11 @@ namespace LLRobot{
         bool setCurrentQSD(QSD position, bool isControl){
             if (isControl == controlLock){
                 if ((micros() - timestampQSD) > QSD_MICROS){
+                    digitalWrite(pinQSDReset,0);
                     digitalWrite(pinMPQSD0, position % 1);
                     digitalWrite(pinMPQSD1, position % 2);
                     digitalWrite(pinMPQSD2, position % 4);
+                    digitalWrite(pinQSDReset,1);
                     timestampQSD = micros();
                     return true;   
                 }
@@ -178,28 +180,23 @@ namespace LLRobot{
             return false;
         }
 
-        bool extendArm(Arm arm, bool pos){
-            if (pos){
-                switch(arm){
-                    case AR:
-                        servos[AMR].write(ExtendRight);
-                        break;
-                    case AL:
-                        servos[AML].write(ExtendLeft);
-                        break;
-                }
+        bool extendArm(Arm arm,int16_t value){
+            switch(arm){
+                case AR:
+                    if (value > ExtendRight)
+                        value = ExtendRight;
+                    if (value < RetractRight)
+                        value = RetractRight;
+                    servos[AMR].write(value);
+                    break;
+                case AL:
+                    if (value > ExtendLeft)
+                        value = ExtendLeft;
+                    if (value < RetractLeft)
+                        value = RetractLeft;
+                    servos[AML].write(value);
+                    break;
             }
-            else{
-                switch(arm){
-                    case AR:
-                        servos[AMR].write(RetractRight);
-                        break;
-                    case AL:
-                        servos[AML].write(RetractLeft);
-                        break;
-                }
-            }
-
             return true;
         }
 
@@ -231,18 +228,18 @@ namespace LLRobot{
         bool readArmTrip(ArmTrip armTrip){
             switch(armTrip){
                 case ATR:
-                    return digitalRead(pinATR);
+                    return !digitalRead(pinATR);
                 case ATL:
-                    return digitalRead(pinATL);
+                    return !digitalRead(pinATL);
             }
         }
 
         bool readBumper(Bumper bumper){
             switch(bumper){
                 case BF:
-                    return digitalRead(pinBF);
+                    return !digitalRead(pinBF);
                 case BB:
-                    return digitalRead(pinBB);
+                    return !digitalRead(pinBB);
             }
         }
     }
@@ -553,7 +550,7 @@ namespace LLRobot{
             return driveMotor(DML, left) & driveMotor(DMR, right);
         }
 
-        bool extendArm(Arm arm, bool pos){
+        bool extendArm(Arm arm, int16_t pos){
             Abs::Arm absArm = relToAbsArm(arm);
             return Abs::extendArm(absArm, pos);
         }
