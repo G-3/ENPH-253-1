@@ -5,6 +5,7 @@
 
 #include "../Ai/Debug.h"
 
+#include "../Ai/World.h"
 #include "../Ai/EDetect.h"
 #include "../Ai/LLRobot.h"
 #include "../Ai/Control/Controller.h"
@@ -32,26 +33,63 @@ void setup_m()
  
     LCD.clear(); LCD.home();
     LCD.print("Starting up...3");
-    delay(1000);
+    delay(500);
     
     World::setup();
-    HLRobot::lastNode = nodes[0];
-    HLRobot::baseNode = nodes[1];
-    HLRobot::destNode = nodes[4];
-
-    LCD.clear(); LCD.home();
+       LCD.clear(); LCD.home();
     LCD.print("Starting up...2");
-    delay(1000);
+    delay(500);
     
     LCD.clear(); LCD.home();
     LCD.print("Starting up...1");
-    delay(1000);
+    delay(500);
 }
  
+uint8_t start=0; 
+uint8_t base=1; 
+uint8_t end=4; 
+
 void loop_m()
 {
+    if(startbutton()){
+        uint8_t choose = knob(7)/16;
+        while(!stopbutton()){
+            choose = knob(7)/16;
+            LCD.clear(); LCD.home();
+            LCD.print("Start:"); LCD.print(choose);
+            LCD.setCursor(0, 1);
+            LCD.print("Prev:"); LCD.print(start); 
+            delay(20);
+        }
+        start = choose;
+        delay(250);
+
+        while(!stopbutton()){
+            choose = knob(7)/16;
+            LCD.clear(); LCD.home();
+            LCD.print("Base:"); LCD.print(choose);
+            LCD.setCursor(0, 1);
+            LCD.print("Prev:"); LCD.print(base); 
+        }
+        base = choose;
+        delay(250);
+
+        while(!stopbutton()){
+            choose = knob(7)/16;
+            LCD.clear(); LCD.home();
+            LCD.print("End:"); LCD.print(choose);
+            LCD.setCursor(0, 1);
+            LCD.print("Prev:"); LCD.print(end); 
+        }
+        end = choose;
+        delay(250);
+    }
+
+    HLRobot::lastNode = World::nodes[start];
+    HLRobot::baseNode = World::nodes[base];
+    HLRobot::destNode = World::nodes[end];
+
     Event::EDetect::getInstance()->step();
     Control::Controller::getInstance()->step();
-    delay(500);
     //testQRDs();
 }
