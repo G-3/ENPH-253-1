@@ -12,12 +12,6 @@ namespace Control{
     Pickup::Pickup(LLRobot::Side side){
         currentPhase = SETUP;
         currentSide = side;
-        Claw claw;
-        Arm arm;
-        ArmTrip at;
-        QSD fS;
-        QSD mS;
-        QSD bS;
         if (side == LLRobot::RIGHT){
             claw = CR;
             arm = AR;
