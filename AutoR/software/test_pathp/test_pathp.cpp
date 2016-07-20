@@ -10,7 +10,7 @@
 #include "../Ai/World.h"
 #include "../Ai/HLRobot.h"
 
-LiquidCrystal LCD(26,27,28,16, 17, 18, 19,20,21,22,23);
+LiquidCrystal LCD(26,27,28,16,17,18,19,20,21,22,23);
 
 motorClass motor ;
 

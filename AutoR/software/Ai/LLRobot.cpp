@@ -42,6 +42,13 @@ namespace LLRobot{
         bool controlLock = false;
     }   
 
+
+    void initialize(){
+        for (int16_t i = 8; i < 16;i++){
+            pinMode(i,OUTPUT);
+        }
+    }
+
     
     int multiplexReadQrd(Orientation direction,int pin){
         if(MPQRD_state != direction){
@@ -61,6 +68,10 @@ namespace LLRobot{
                 orientation = FORWARDS;
                 break;
         }
+    }
+
+    Orientation getOrientation(){
+        return orientation;
     }
 
     void setControlLock(bool value){

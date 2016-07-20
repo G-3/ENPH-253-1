@@ -3,6 +3,8 @@
 #include <stdint.h>
 
 namespace LLRobot{
+
+    void initialize();
     
     namespace Abs{
 
@@ -63,4 +65,5 @@ namespace LLRobot{
     enum Side{LEFT = 0, RIGHT = 1};
     void setControlLock(bool state);
     void flip();
+    Orientation getOrientation();
 };
