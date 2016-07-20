@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Config.h"
+
 namespace World {
 	class Node;
 }
@@ -17,6 +19,8 @@ namespace HLRobot{
     // The node that we need to navigate towards next. 
     // After the baseNode is navigated, this becomes the new basenode.
     extern World::Node *destNode;
+
+    extern World::Node *path[Config::linksSize];
     
     enum OpMode {TAPE_FOLLOW, INTER_NAV, TRACK_DOWN, GRAB, DROP};
 

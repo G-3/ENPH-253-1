@@ -5,6 +5,7 @@ namespace HLRobot {
     World::Node *lastNode;
     World::Node *baseNode;
     World::Node *destNode;
-    
-	OpMode curMode;
+    World::Node *path[Config::linksSize] = {};
+	
+    OpMode curMode;
 }
