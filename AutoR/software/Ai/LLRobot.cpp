@@ -14,7 +14,7 @@ namespace LLRobot{
 
 
         // Analog In
-        const int PIN_IAR = 0;
+        const int PIN_QSD = 0;
 
         const int PIN_INL = 5;
         const int PIN_INR = 6;
@@ -76,7 +76,7 @@ namespace LLRobot{
             //Allow everthing else when everything else is on
             if (isControl == controlLock){
                 if ((micros() - timestampQSD) > QSD_MICROS){
-                        return analogRead(PIN_IAR);
+                        return analogRead(PIN_QSD);
                 }
             }
             return -1;
@@ -149,10 +149,10 @@ namespace LLRobot{
                     val = multiplexReadQrd(BACKWARDS,pinIDRB);
                     break;
                 case INL:
-                    val = digitalRead(PIN_INL);
+                    val = analogRead(PIN_INL);
                     break;
                 case INR:
-                    val = digitalRead(PIN_INR);
+                    val = analogRead(PIN_INR);
                     break;
                 
                 default:
