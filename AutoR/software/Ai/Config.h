@@ -1,12 +1,15 @@
 #pragma once
 #include "Arduino.h"
+#define NUM_NODES (21u)
+
 namespace Config{
     // links describes edges between nodes: dest, start, dir from start to dest
     // dir-> 0:R 1:T 2:L 3:B
     // static const int links[2][3] = {{1, 0, 1},{1, 2, 0}};
     // static const int linksSize = 2;
-    static const uint8_t linksSize = 40;
-    static const uint8_t links[40][3]{ { 0, 1, 0 },
+    static const uint8_t linksSize = 48;
+    static const uint8_t links[48][3]{     
+        { 0, 1, 0 },
         { 1, 0, 2 },
         { 1, 2, 0 },
         { 1, 4, 1 },
@@ -25,6 +28,8 @@ namespace Config{
         { 6, 5, 1 },
         { 7, 5, 0 },
         { 8, 4, 3 },
+        { 8, 18, 0 },
+        { 8, 19, 2 },
         { 9, 3, 3 },
         { 9, 13, 1 },
         { 10, 11, 0 },
@@ -45,6 +50,12 @@ namespace Config{
         { 15, 17, 2 },
         { 16, 15, 3 },
         { 17, 15, 0 },
-        { 18, 14, 1 }
+        { 18, 14, 1 },
+        { 18, 8, 0 },
+        { 18, 19, 2 },
+        { 19, 8, 3 },
+        { 19, 18, 1 },
+        { 19, 20, 2 },
+        { 20, 19, 0 }
     };
 }

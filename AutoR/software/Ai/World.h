@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+#include "Config.h"
 
 namespace World{
 	enum Dir { DirINVALID = -1, DirB = 0, DirR = 1, DirF = 2, DirL = 3 };
@@ -29,6 +30,6 @@ namespace World{
     void setup();
     
     // links describes all edges on the board 
-    extern Node *nodes[19];
-    const uint8_t nodesSize = 19;
+    extern Node *nodes[NUM_NODES];
+    const uint8_t nodesSize = NUM_NODES;
 }
