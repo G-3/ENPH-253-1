@@ -7,7 +7,7 @@ namespace LLRobot{
     const int QRD_PEAK[] = {500,500,500,500,500,500,500,500,500,500};
     const int QSD_THRESH[] = {100,100,100,50,100,100,100,50};
     const int QSD_PEAK[] = {1024,1024,1024,1024,1024,1024,1024,1024};
-    const int QSD_MICROS = 3000;
+    const int QSD_MICROS = 2900;
 
     namespace{
         // TODO: Add the pin placement for the back as well, maybe have a lookup table instead of enum
@@ -42,6 +42,13 @@ namespace LLRobot{
         bool controlLock = false;
     }   
 
+
+    void initialize(){
+        for (int16_t i = 8; i < 16;i++){
+            pinMode(i,OUTPUT);
+        }
+    }
+
     
     int multiplexReadQrd(Orientation direction,int pin){
         if(MPQRD_state != direction){
@@ -61,6 +68,10 @@ namespace LLRobot{
                 orientation = FORWARDS;
                 break;
         }
+    }
+
+    Orientation getOrientation(){
+        return orientation;
     }
 
     void setControlLock(bool value){
@@ -507,7 +518,7 @@ namespace LLRobot{
         }
         bool setCurrentQSD(QSD position, bool isControl){
             Abs::QSD absPos = relToAbsQSD(position);
-            return Abs::readCurrentQSD(absPos,isControl);
+            return Abs::setCurrentQSD(absPos,isControl);
         }
 
         int threshQRD(QRD position){

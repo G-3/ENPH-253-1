@@ -3,6 +3,8 @@
 #include <stdint.h>
 
 namespace LLRobot{
+
+    void initialize();
     
     namespace Abs{
 
@@ -10,7 +12,7 @@ namespace LLRobot{
         int readQRD(::LLRobot::Abs::QRD position, bool applyThresh=false);
 
         enum QSD {IRLF = 0,IRLM = 1,IRLB = 2,IRLU = 3,IRRF = 4,IRRM = 5,IRRB = 6, IRRU = 7};
-        int readCurrentQSD(::LLRobot::Abs::QSD position, bool isControl);
+        int readCurrentQSD(bool isControl);
         bool setCurrentQSD(::LLRobot::Abs::QSD position, bool isControl);
         
         enum DMot {DML = 0, DMR = 1};
@@ -35,7 +37,7 @@ namespace LLRobot{
         int readQRD(::LLRobot::Rel::QRD position, bool applyThresh=false);
 
         enum QSD {IRLF = 0,IRLM = 1,IRLB = 2,IRLU = 3,IRRF = 4,IRRM = 5,IRRB = 6, IRRU = 7};
-        int readCurrentQSD(::LLRobot::Rel::QSD position, bool isControl);
+        int readCurrentQSD(bool isControl);
         bool setCurrentQSD(::LLRobot::Rel::QSD position, bool isControl);
         
         enum DMot {DML = 0, DMR = 1};
@@ -63,4 +65,5 @@ namespace LLRobot{
     enum Side{LEFT = 0, RIGHT = 1};
     void setControlLock(bool state);
     void flip();
+    Orientation getOrientation();
 };
