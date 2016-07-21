@@ -3,6 +3,8 @@
 namespace EHandler{
     void intersect(bool left, bool right);
 
-	void falseIntersect();
+    void finishIntersect();
+	
+    void falseIntersect();
 };
 

@@ -36,7 +36,7 @@ namespace Control{
     IntersectNav::~IntersectNav(){
        delete tapeFollower; 
     }
-
+   
     bool IntersectNav::checkMismatch(bool completed){
         // Critical Failure: Seen a direction that wasn't expected 
         if(!expectTapeDir[World::DirR] && seenTapeDir[World::DirR]){
@@ -93,7 +93,7 @@ namespace Control{
                     
                     // Tapefollow until we hit a correct intersection
                     if (checkMismatch(false)) {
-                        // Failure
+                        // FAIL: mismatched intersection
                     }
                     else if (l || r){
                         curPhase = DRIVE_THRU;
@@ -120,7 +120,7 @@ namespace Control{
                     if (l || r){
                         // We should have completely checked out the intersection
                         if(checkMismatch(true)){
-                            // Fail
+                            // FAIL: mismatched interseciton
                         }
                         else{
                             // We are done
@@ -133,6 +133,8 @@ namespace Control{
 
                 case END:
                     // Call Eventhandler
+                    // DONE:
+                    finishIntersect();
                     break;
             }
         }
@@ -153,7 +155,7 @@ namespace Control{
                     
                     // Tapefollow until we hit a correct intersection
                     if (checkMismatch(false)) {
-                        // Failure
+                        // FAIL:
                     }
                     else if (l || r){
                         curPhase = DRIVE_THRU;
@@ -182,7 +184,7 @@ namespace Control{
                     if (l || r){
                         // We should have completely checked out the intersection
                         if(checkMismatch(true)){
-                            // Fail
+                            // FAIL:
                         }
                         else{
                             // We can move on
@@ -193,7 +195,8 @@ namespace Control{
                     driveMotors(speed, speed);
                     break;
                 }
-
+                
+                /*
                 case INTER_ALIGN:
                 {
                     Debug::serialPrint("Intersect center intersection align.", Debug::INTERSECT_DB);
@@ -205,8 +208,10 @@ namespace Control{
                         //Some state stuff
                     }
                     break;
+                */
 
                 case TRIP_INTER:
+                {
                     Debug::serialPrint("Turn til trip intersect.", Debug::INTERSECT_DB);
                     // Turn until we trip the intersection detectors
                     if (destDir == World::DirL) {
@@ -266,7 +271,8 @@ namespace Control{
                 case END:
                 {
                     Debug::serialPrint("END.", Debug::INTERSECT_DB);
-                    // Call da event handler
+                    //DONE:
+                    finishIntersect();
                     break;
                 }
             }
@@ -289,7 +295,7 @@ namespace Control{
                     
                     // Tapefollow until we hit a correct intersection
                     if (checkMismatch(false)) {
-                        // Failure
+                        // FAIL:
                     }
                     else if (l || r){
                         curPhase = DRIVE_THRU;
@@ -318,7 +324,7 @@ namespace Control{
                     if (l || r){
                         // We should have completely checked out the intersection
                         if(checkMismatch(true)){
-                            // Fail
+                            // FAIL:
                         }
                         else{
                             // We can move on
@@ -423,7 +429,8 @@ namespace Control{
                 case END:
                 {
                     Debug::serialPrint("END.", Debug::INTERSECT_DB);
-                    // Call da event handler
+                    //DONE:
+                    finishIntersect();
                     break;
                 }
             }

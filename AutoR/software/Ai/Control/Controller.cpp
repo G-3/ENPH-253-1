@@ -16,19 +16,29 @@ namespace Control{
     Controller::Controller(){
         curController = new TapeFollow();
         HLRobot::curMode = HLRobot::TAPE_FOLLOW;
-    } 
+    }
 
     Controller::~Controller(){
         delete curController; 
     } 
 
     void Controller::step(){
+        if (nextController){
+            swapController();
+        }
         curController->step();
     }
 
-    void Controller::swapController(ControlMode *newController){
+    void Controller::swapController(){
         // delete the old controller
         delete curController;
-        curController = newController;
+        curController = nextController;
+        nextController = 0;
+    }
+    
+    void Controller::setNextController(ControlMode *newController){
+        // delete the old controller
+        delete nextController;
+        nextController = newController;
     }
 }
