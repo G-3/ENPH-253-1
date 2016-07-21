@@ -11,7 +11,7 @@
 #define DIST_MAX (1000)
 
 namespace World{
-	Node *nodes[19] = {};
+	Node *nodes[NUM_NODES] = {};
 
 	// Rotates the specified direction 90*rotations degrees counterclockwise
 	// and returns the resulting direction
@@ -117,7 +117,7 @@ namespace World{
     }
 
     void updatePath(uint8_t src, uint8_t target){
-        uint8_t n = 19;
+        uint8_t n = NUM_NODES;
         uint8_t prev[n];    // previous node in optimal path from source
         uint16_t dist[n];    // distance from source to i
         bool Q[n];      // set of visited nodes Q, true if visited

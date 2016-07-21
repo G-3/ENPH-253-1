@@ -36,10 +36,6 @@ void setup_m()
     delay(200);
     
     World::setup();
-    HLRobot::lastNode = World::nodes[0];
-    HLRobot::baseNode = World::nodes[1];
-    HLRobot::destNode = World::nodes[4];
-
     LCD.clear(); LCD.home();
     LCD.print("Starting up...2");
     delay(200);
@@ -52,24 +48,53 @@ void setup_m()
 
 }
 
-unsigned long start=0;
-unsigned long end=0;
+unsigned long startt=0;
+unsigned long endt=0;
 
 void loop_m()
 {   
-    start = micros(); 
-    World::updatePath(8, 18);
-    end = micros();
-    Serial.println(end);
-    Serial.println(start);
-    int counter = 0;
+    startt = micros(); 
+    World::updatePath(1, 10);
+    endt = micros();
+    Serial.println(endt);
+    Serial.println(startt);
+    int counter = 1;
+    
+    World::Node *start = World::nodes[0];
+    World::Node *base = World::nodes[1];
+    World::Node *dest = HLRobot::path[counter];
+
     while (HLRobot::path[counter]){
-        counter += 1;
         Serial.print(counter);
         Serial.print(" ");
         Serial.println(HLRobot::path[counter]->id);
+        
+        dest = HLRobot::path[counter];
+        
+        Serial.print("Destination Node:");
+        Serial.println(dest->id);
+
+        bool expectTapeDir[4]={false, false, false, false};
+        base->relLinkDirs(expectTapeDir, start);
+        int destDir = base->relDestDir(dest, start);
+        Debug::serialPrint("Direction . Exp Tape \n", Debug::INTERSECT_DB);
+        for(int i = 0; i < 4; i++){
+            char msg[20];
+            sprintf(msg, "%d . %d \n", i, expectTapeDir[i]);
+            Debug::serialPrint(msg, Debug::INTERSECT_DB);
+        }
+        char msg[20];
+        sprintf(msg, "Dest Dir %d \n", destDir);
+        Debug::serialPrint(msg, Debug::INTERSECT_DB);   
+        Serial.println(destDir); 
+        counter += 1;
+        start = base;
+        base = dest;
+
     }
+
     delay(1000);
+    
     // Event::EDetect::getInstance()->step();
     // Control::Controller::getInstance()->step();
     // testQRDs();
