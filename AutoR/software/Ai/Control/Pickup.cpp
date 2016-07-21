@@ -61,7 +61,7 @@ namespace Control{
         driveMotors(motorAmplitude,-motorAmplitude);
     }
     void Pickup::alignment(){
-        int16_t val = readCurrentQSD(mS,true);
+        int16_t val = readCurrentQSD(true);
 
         //Update Maximum Amplitude
         if (val > maxAmp)
