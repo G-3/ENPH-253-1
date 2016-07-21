@@ -4,11 +4,15 @@
 // #include "./test_pathp/test_pathp.h"
 
 // Test Nav, tests navigation.
-#include "./test_nav/test_nav.h"
+// #include "./test_nav/test_nav.h"
 
 // Test the QRDs listing them on the LCD one by one
 // Multi-paged, use START button to switch between.
 // #include "./test_qrd/test_qrd.h"
+
+// Test traversal between two nodes
+#include "./test_trav/test_trav.h"
+
 
 void setup()
 {

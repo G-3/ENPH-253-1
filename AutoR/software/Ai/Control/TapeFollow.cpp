@@ -10,7 +10,6 @@ namespace Control{
         int qTime = 50;
     }
 
-
     /*
      * Tape Following Mode
      */
@@ -24,7 +23,6 @@ namespace Control{
     }
 
     //TODO remove knob controls from controller.
-
     // Note error is defined in the x direction with a robot to the right
     // of the tape having positive error.
     void TapeFollow::step(){
@@ -100,7 +98,7 @@ namespace Control{
 
         LLRobot::Rel::driveMotor(LLRobot::Rel::DML, powerL);
         LLRobot::Rel::driveMotor(LLRobot::Rel::DMR, powerR);
-	counter+=1;
+        counter+=1;
 	
 	if(counter%10==0){
 	    /*jSerial.println("~~~~~~~~~");

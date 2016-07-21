@@ -30,6 +30,8 @@ namespace Control{
 			IntersectNav(World::Node *start, World::Node *dest, World::Node *base);
             ~IntersectNav();
             void step();
+            bool done();
+            bool fail();
     };
 }
 

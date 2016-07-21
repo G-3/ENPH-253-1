@@ -11,13 +11,14 @@ namespace Control{
             Controller();
 			~Controller();
             static Controller *main_instance;
-            ControlMode *curController;
+            ControlMode *curController = 0;
+            ControlMode *nextController = 0;
             int count = 0;
-
+            void swapController();
 
         public:
 			static Controller *getInstance();
             void step();
-            void swapController(ControlMode *newController);
+            void setNextController(ControlMode *newController);
     }; 
 };

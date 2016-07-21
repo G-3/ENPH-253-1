@@ -3,6 +3,7 @@
 #include "HLRobot.h"
 #include "Control/Controller.h"
 #include "Control/IntersectNav.h"
+#include "Control/TapeFollow.h"
 
 #include "Debug.h"
 
@@ -14,10 +15,17 @@ namespace EHandler{
         if (HLRobot::curMode != HLRobot::INTER_NAV){
             HLRobot::curMode = HLRobot::INTER_NAV;
             Debug::serialPrint("EHandler.intersect was called. Swapping to IntersectNav Control Mode.", Debug::EHANDLER);
-            Control::Controller::getInstance()->swapController(new Control::IntersectNav(HLRobot::lastNode, HLRobot::baseNode,HLRobot::destNode));
+            Control::Controller::getInstance()->setNextController(new Control::IntersectNav(HLRobot::lastNode, HLRobot::baseNode,HLRobot::destNode));
         }
     }
-    
+   
+    void finishIntersect(){
+        HLRobot::lastNode = HLRobot::baseNode;
+        HLRobot::baseNode = HLRobot::destNode;
+        HLRobot::destNode = HLRobot::path[1];
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+    }
+
     void falseIntersect(){
          
     }

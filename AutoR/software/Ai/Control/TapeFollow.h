@@ -23,7 +23,7 @@ namespace Control{
             double base = 255; //The base speed of the motor
             TapeFollow();
             ~TapeFollow();
-	    void step();
+            void step();
     };
 }
 
