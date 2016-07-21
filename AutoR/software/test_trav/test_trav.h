@@ -36,7 +36,7 @@ void setup_m()
     delay(500);
     
     World::setup();
-       LCD.clear(); LCD.home();
+    LCD.clear(); LCD.home();
     LCD.print("Starting up...2");
     delay(500);
     
@@ -45,9 +45,9 @@ void setup_m()
     delay(500);
 }
  
-uint8_t start=0; 
-uint8_t base=1; 
-uint8_t end=4; 
+uint8_t start=0;
+uint8_t base=1;
+uint8_t fin=12; 
 
 void loop_m()
 {
@@ -77,17 +77,18 @@ void loop_m()
         while(!stopbutton()){
             choose = knob(7)/16;
             LCD.clear(); LCD.home();
-            LCD.print("End:"); LCD.print(choose);
+            LCD.print("Fin:"); LCD.print(choose);
             LCD.setCursor(0, 1);
-            LCD.print("Prev:"); LCD.print(end); 
+            LCD.print("Prev:"); LCD.print(fin); 
         }
-        end = choose;
+        fin = choose;
         delay(250);
     }
 
+    World::updatePath(base, fin);
     HLRobot::lastNode = World::nodes[start];
     HLRobot::baseNode = World::nodes[base];
-    HLRobot::destNode = World::nodes[end];
+    HLRobot::destNode = HLRobot::path[1];
 
     Event::EDetect::getInstance()->step();
     Control::Controller::getInstance()->step();
