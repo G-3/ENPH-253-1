@@ -346,3 +346,41 @@ void testClaws(){
     }
     while(startbutton());
 }
+
+void testMotors(){
+    Side side = LEFT;
+    rightValue = 0;
+    leftValue = 0;
+    while(!startbutton()){
+        delay(100);
+        int16_t val = (knob(6)/2) -256;
+        LCD.clear();
+        LCD.home();
+        LCD.print("Motors");
+
+        if (stopbutton()){
+            if (side == LEFT){
+                side = RIGHT;
+            }else{
+                side = LEFT;
+            }
+            while(stopbutton());
+        }
+        if (side == LEFT){
+            LCD.setCursor(0,1);
+            LCD.print("Left:");
+            LCD.setCursor(8,1);
+            LCD.print(val);
+            leftValue = val;
+        }else{
+            LCD.setCursor(0,1);
+            LCD.print("Right:");
+            LCD.setCursor(8,1);
+            LCD.print(val);
+            rightValue = val;
+        }
+        driveMotors(leftValue,rightValue);
+    }
+    while(startbutton());
+
+}
