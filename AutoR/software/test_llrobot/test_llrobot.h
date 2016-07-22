@@ -84,9 +84,11 @@ bool setOrientation(){
 
 void testQRD(){
     int16_t stage = 0;
+    int16_t speed = 250;
     while(!startbutton()){
         delay(100);
-
+        
+        Rel::driveMotors(speed, speed);
         if (stopbutton()){
             stage++;
             stage %=3;
@@ -183,16 +185,16 @@ void testQSD(){
                 {
                     Rel::setCurrentQSD(Rel::IRLB,false);
                     delay(3);
-                    int16_t irlb = Rel::readCurrentQSD(false);
+                    int irlb = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRLM,false);
                     delay(3);
-                    int16_t irlm = Rel::readCurrentQSD(false);
+                    int irlm = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRLF,false);
                     delay(3);
-                    int16_t irlf = Rel::readCurrentQSD(false);
+                    int irlf = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRLU,false);
                     delay(3);
-                    int16_t irlu = Rel::readCurrentQSD(false);
+                    int irlu = Rel::readCurrentQSD(false);
 
                     LCD.clear();
 
@@ -217,16 +219,16 @@ void testQSD(){
                 {
                     Rel::setCurrentQSD(Rel::IRRB,false);
                     delay(3);
-                    int16_t irrb = Rel::readCurrentQSD(false);
+                    int irrb = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRRM,false);
                     delay(3);
-                    int16_t irrm = Rel::readCurrentQSD(false);
+                    int irrm = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRRF,false);
                     delay(3);
-                    int16_t irrf = Rel::readCurrentQSD(false);
+                    int irrf = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRRU,false);
                     delay(3);
-                    int16_t irru = Rel::readCurrentQSD(false);
+                    int irru = Rel::readCurrentQSD(false);
 
                     LCD.clear();
 
@@ -288,7 +290,7 @@ void testArms(){
     Side side = LEFT;
     while(!startbutton()){
         delay(100);
-        int angle = knob(7)/5;
+        int angle = knob(6)/5;
 
         LCD.clear();
         LCD.home();
@@ -318,7 +320,7 @@ void testClaws(){
     Side side = LEFT;
     while(!startbutton()){
         delay(100);
-        bool isOpen = knob(7) < 512;
+        bool isOpen = knob(6) < 512;
         LCD.clear();
         LCD.home();
         LCD.print("isOpen: ");
@@ -326,19 +328,19 @@ void testClaws(){
 
         if (stopbutton()){
             if (side == LEFT){
-                LCD.setCursor(0,1);
-                LCD.print("Left");
                 side = RIGHT;
             }else{
-                LCD.setCursor(0,1);
-                LCD.print("Right");
                 side = LEFT;
             }
             while(stopbutton());
         }
         if (side == LEFT){
+            LCD.setCursor(0,1);
+            LCD.print("Left");
             Rel::openClaw(Rel::CL,isOpen);
         }else{
+            LCD.setCursor(0,1);
+            LCD.print("Right");
             Rel::openClaw(Rel::CR,isOpen);
         }
     }
