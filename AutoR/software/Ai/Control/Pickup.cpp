@@ -9,8 +9,8 @@ namespace Control{
 
     }
 
-    Pickup::Pickup(LLRobot::Side side){
-        currentPhase = SETUP;
+    Pickup::Pickup(LLRobot::Side side,Phase phase){
+        currentPhase = phase;
         currentSide = side;
         if (side == LLRobot::RIGHT){
             claw = CR;
@@ -54,11 +54,9 @@ namespace Control{
         openClaw(claw,true);
         extendArm(arm,false);
         driveMotors(0,0);
-        currentPhase = ALIGMENT;
+        currentPhase = EXTENSION;
         LLRobot::setControlLock(true);
         setCurrentQSD(mS,true);
-        
-        driveMotors(motorAmplitude,-motorAmplitude);
     }
     void Pickup::alignment(){
         int16_t val = readCurrentQSD(true);
@@ -111,6 +109,10 @@ namespace Control{
             extensionTimestamp = millis();
         }
 
+        if (((millis() - extensionTimestamp)/SERVO_RATE > 180)){
+            currentPhase = FAIL;
+        }
+
         //if collision has occured
         if (readArmTrip(at)){
             currentPhase = CLOSE;
@@ -119,20 +121,26 @@ namespace Control{
             uint16_t angle = (millis() - extensionTimestamp)/SERVO_RATE;
             extendArm(arm,angle);
         }
+        
     }
 
     void Pickup::close(){
         if (clawTimestamp == 0){
             clawTimestamp = millis();
         }
-
         openClaw(claw,false);
-        if ((millis()-clawTimestamp) > CLAW_DELAY)
+        if ((millis()-clawTimestamp) > CLAW_DELAY){
             currentPhase = RETRACTION;
+        }
     }
     void Pickup::retraction(){
         extendArm(arm,0);
         //TODO: Callback and inform event handler that pickup is complete 
+        LLRobot::setControlLock(false);
+    }
+    void Pickup::fail(){
+        extendArm(arm,0);
+        //TODO: Callback and inform event handler that pickup has failed 
         LLRobot::setControlLock(false);
     }
 
@@ -150,9 +158,11 @@ namespace Control{
             case CLOSE:
                 close();
                 break;
-
             case RETRACTION:
                 retraction();
+                break;
+            case FAIL:
+                fail();
                 break;
         }
     }

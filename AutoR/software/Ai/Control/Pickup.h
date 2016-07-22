@@ -7,8 +7,12 @@ using namespace LLRobot::Rel;
 
 namespace Control{
     class Pickup : public ControlMode{
+        public:
+            enum Phase {SETUP,ALIGMENT,EXTENSION,CLOSE,RETRACTION,FAIL};
+            Pickup(LLRobot::Side side,Phase phase=SETUP);
+            ~Pickup();
+        void step();
         private:
-            enum Phase {SETUP,ALIGMENT,EXTENSION,CLOSE,RETRACTION};
 
             const uint16_t CLAW_DELAY = 500; //milliseconds
             const uint16_t SERVO_RATE = 10; //milliseconds per degree
@@ -45,11 +49,6 @@ namespace Control{
             void extension();
             void close();
             void retraction();
-
-        public:
-            Pickup(LLRobot::Side side);
-            ~Pickup();
-
-        void step();
+            void fail();
     };
 };

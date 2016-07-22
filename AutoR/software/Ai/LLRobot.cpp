@@ -32,7 +32,7 @@ namespace LLRobot{
         enum SOut {AGL=0, AGR=1,AML=3,AMR=2};
         ServoTINAH * servos[] = {&RCServo0,&RCServo1,&RCServo2,&RCServo3};
         // Digital In
-        enum DIn {pinATL=0,pinATR=1,pinBF=2,pinBB=5};
+        enum DIn {pinATL=1,pinATR=0,pinBF=2,pinBB=5};
 
         //Current orientation
         Orientation orientation = FORWARDS; 
@@ -79,7 +79,7 @@ namespace LLRobot{
     void setControlLock(bool value){
         controlLock = value;
     }
-    namespace Abs{ enum ArmValues {ExtendRight = 140, ExtendLeft = 140, RetractRight = 30, RetractLeft = 30};
+    namespace Abs{ enum ArmValues {ExtendRight = 140, ExtendLeft = 140, RetractRight = 20, RetractLeft = 20};
         enum ClawValues {OpenRight = 0, OpenLeft = 0, CloseRight = 180, CloseLeft = 180};
 
         int readCurrentQSD(bool isControl){
@@ -189,10 +189,10 @@ namespace LLRobot{
         bool driveMotor(DMot motorpos, int16_t speed){
             switch(motorpos){
                 case DML:
-                    motor.speed(pinDML, speed);
+                    motor.speed(pinDML, -speed);
                     return true;
                 case DMR:
-                    motor.speed(pinDMR, -speed);
+                    motor.speed(pinDMR, speed);
                     return true;
             } 
             return false;
@@ -567,7 +567,10 @@ namespace LLRobot{
 
         bool driveMotor(DMot motorPos, int16_t speed){
             Abs::DMot absMot = relToAbsDM(motorPos);
-            return Abs::driveMotor(absMot,speed);
+            if (orientation == FORWARDS)
+                return Abs::driveMotor(absMot,speed);
+            else
+                return Abs::driveMotor(absMot,-speed);
         }
 
         bool driveMotors(int16_t left, int16_t right){
