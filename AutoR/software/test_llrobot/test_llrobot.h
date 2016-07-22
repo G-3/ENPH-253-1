@@ -21,6 +21,7 @@ void testQSD();
 void testTripSensors();
 void testArms();
 void testClaws();
+void testMotors();
 
 LiquidCrystal LCD(26,27,28,16,17,18,19,20,21,22,23);
 
@@ -54,6 +55,7 @@ void loop_m()
     testTripSensors();
     testArms();
     testClaws();
+    testMotors();
 
     LCD.clear(); LCD.home();
     LCD.print("Done!");
@@ -349,8 +351,8 @@ void testClaws(){
 
 void testMotors(){
     Side side = LEFT;
-    rightValue = 0;
-    leftValue = 0;
+    int16_t rightValue = 0;
+    int16_t leftValue = 0;
     while(!startbutton()){
         delay(100);
         int16_t val = (knob(6)/2) -256;
@@ -379,7 +381,7 @@ void testMotors(){
             LCD.print(val);
             rightValue = val;
         }
-        driveMotors(leftValue,rightValue);
+        Rel::driveMotors(leftValue,rightValue);
     }
     while(startbutton());
 
