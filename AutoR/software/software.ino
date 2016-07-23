@@ -17,10 +17,13 @@
 // #include "./test_trav/test_trav.h"
 
 //Test Pickup
-#include "./test_pickup/test_pickup.h"
+//#include "./test_pickup/test_pickup.h"
 
 //Test Irs
 //#include "./test_ir/test_ir.h"
+
+//Test Speed
+#include "./test_speed/test_speed.h"
 
 
 void setup()
