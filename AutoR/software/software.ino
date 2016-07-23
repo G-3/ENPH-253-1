@@ -19,6 +19,9 @@
 //Test Pickup
 #include "./test_pickup/test_pickup.h"
 
+//Test Irs
+//#include "./test_ir/test_ir.h"
+
 
 void setup()
 {
