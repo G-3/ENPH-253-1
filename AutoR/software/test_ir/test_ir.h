@@ -56,7 +56,9 @@ void cycle_through_irs(){
         
         LCD.setCursor(0,1);
         LCD.print("Value: ");
-        LCD.print(Rel::readCurrentQSD(false));
+        int16_t val = Rel::readCurrentQSD(false);
+        LCD.print(val);
+        Serial.println(val);
 
         if (stopbutton()){
             val++;
