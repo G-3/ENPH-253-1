@@ -20,11 +20,13 @@
 //#include "./test_pickup/test_pickup.h"
 
 //Test Irs
-#include "./test_ir/test_ir.h"
+//#include "./test_ir/test_ir.h"
 
 //Test Speed
 //#include "./test_speed/test_speed.h"
 
+//Test Tape Follow
+#include "./test_tapef/test_tapef2.h"
 
 void setup()
 {
