@@ -87,8 +87,8 @@ void loop_m(){
             pGain = val;
             while(startbutton());
 
-            tf->~TapeFollow2();
-            tf = new Control::TapeFollow2(base,dGain,pGain);
+            delete tf;
+            tf = new Control::TapeFollow2(dGain,pGain,base);
 
             LCD.clear();
             LCD.print("Following tape");

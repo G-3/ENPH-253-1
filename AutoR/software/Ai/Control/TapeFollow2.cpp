@@ -23,8 +23,8 @@ namespace Control{
             //Serial.println("right");
             if (sensorL < THLD_RIGHT && sensorR < THLD_LEFT){
                 //tape lost
-                left = eBase - eGain;
-                right = eBase + eGain;
+                left = base - pGain*2;
+                right = base + pGain*2;
             }
             else if (sensorL + HYSTERESIS < sensorR){
                 //transition detected to the left side
@@ -60,8 +60,8 @@ namespace Control{
             //Serial.println("left");
             if (sensorL < THLD_RIGHT && sensorR < THLD_LEFT){
                 //tape lost
-                left = eBase + eGain;
-                right = eBase - eGain;
+                left = base + pGain*2;
+                right = base - pGain*2;
             }
             else if (sensorR + HYSTERESIS < sensorL){
                 //transition detected to the right side
@@ -93,6 +93,9 @@ namespace Control{
                 }
             }
         }
+        Serial.println(left);
+        Serial.println(right);
+        Serial.println(base);
         driveMotors(left,right);
     }
 }
