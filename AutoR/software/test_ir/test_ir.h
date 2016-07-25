@@ -46,6 +46,7 @@ void loop_m(){
 
 void cycle_through_irs(){
     uint8_t val = 0;
+    Rel::driveMotors(128,128);
     while(!startbutton()){
         delay(100);
         LCD.clear(); 
@@ -56,7 +57,11 @@ void cycle_through_irs(){
         
         LCD.setCursor(0,1);
         LCD.print("Value: ");
-        LCD.print(Rel::readCurrentQSD(false));
+        Rel::setCurrentQSD((Rel::QSD)val,false);
+        delay(3);
+        int16_t reading = Rel::readCurrentQSD(false);
+        LCD.print(reading);
+        Serial.println(reading);
 
         if (stopbutton()){
             val++;
@@ -71,6 +76,7 @@ void cycle_through_irs(){
 
 void testQSD(){
     int16_t stage = 0;
+    int16_t del = 3;
     while(!startbutton()){
         delay(88);
 
@@ -84,16 +90,16 @@ void testQSD(){
             case 0:
                 {
                     Rel::setCurrentQSD(Rel::IRLB,false);
-                    delay(3);
+                    delay(del);
                     int irlb = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRLM,false);
-                    delay(3);
+                    delay(del);
                     int irlm = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRLF,false);
-                    delay(3);
+                    delay(del);
                     int irlf = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRLU,false);
-                    delay(3);
+                    delay(del);
                     int irlu = Rel::readCurrentQSD(false);
 
                     LCD.clear();
@@ -118,16 +124,16 @@ void testQSD(){
             case 1:
                 {
                     Rel::setCurrentQSD(Rel::IRRB,false);
-                    delay(3);
+                    delay(del);
                     int irrb = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRRM,false);
-                    delay(3);
+                    delay(del);
                     int irrm = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRRF,false);
-                    delay(3);
+                    delay(del);
                     int irrf = Rel::readCurrentQSD(false);
                     Rel::setCurrentQSD(Rel::IRRU,false);
-                    delay(3);
+                    delay(del);
                     int irru = Rel::readCurrentQSD(false);
 
                     LCD.clear();
