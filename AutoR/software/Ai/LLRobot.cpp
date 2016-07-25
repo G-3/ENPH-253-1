@@ -27,7 +27,7 @@ namespace LLRobot{
         // Digital Out
         enum DOut {pinQSDReset = 15,pinMPQSDA = 14, pinMPQSDB = 13, pinMPQSDC = 12, pinMPQRD=8};
         // Motor out
-        enum MOut {pinDML=2, pinDMR=1};
+        enum MOut {pinDML=1, pinDMR=2};
         // Servo indicies
         enum SOut {AGL=0, AGR=1,AML=3,AMR=2};
         ServoTINAH * servos[] = {&RCServo0,&RCServo1,&RCServo2,&RCServo3};
@@ -381,28 +381,28 @@ namespace LLRobot{
         else{
             switch(position){
                 case Rel::IRLF:
-                    newPos = Abs::IRLF;
-                    break;
-                case Rel::IRLM:
-                    newPos = Abs::IRLM;
-                    break;
-                case Rel::IRLB:
-                    newPos = Abs::IRLB;
-                    break;
-                case Rel::IRLU:
-                    newPos = Abs::IRLU;
-                    break;
-                case Rel::IRRF:
-                    newPos = Abs::IRRF;
-                    break;
-                case Rel::IRRM:
-                    newPos = Abs::IRRM;
-                    break;
-                case Rel::IRRB:
                     newPos = Abs::IRRB;
                     break;
-                case Rel::IRRU:
+                case Rel::IRLM:
+                    newPos = Abs::IRRM;
+                    break;
+                case Rel::IRLB:
+                    newPos = Abs::IRRF;
+                    break;
+                case Rel::IRLU:
                     newPos = Abs::IRRU;
+                    break;
+                case Rel::IRRF:
+                    newPos = Abs::IRLB;
+                    break;
+                case Rel::IRRM:
+                    newPos = Abs::IRLM;
+                    break;
+                case Rel::IRRB:
+                    newPos = Abs::IRLF;
+                    break;
+                case Rel::IRRU:
+                    newPos = Abs::IRLU;
                     break;
             }
         }
