@@ -9,6 +9,7 @@
 #include "../Ai/EDetect.h"
 #include "../Ai/LLRobot.h"
 #include "../Ai/Control/Controller.h"
+#include "../Ai/Control/TapeFollow.h"
 #include "../Ai/HLRobot.h"
 
 #define ledPin 13
@@ -21,6 +22,11 @@ ServoTINAH RCServo0;    // declare variables for up to eight     servos.   Repla
 ServoTINAH RCServo1; 
 ServoTINAH RCServo2;
 ServoTINAH RCServo3;
+
+uint8_t start=11; 
+uint8_t base=12; 
+uint8_t end=13; 
+
 
 void setup_m()
 {
@@ -44,53 +50,63 @@ void setup_m()
     LCD.clear(); LCD.home();
     LCD.print("Starting up...1");
     delay(500);
+/*    
+    uint8_t choose = knob(7)/16;
+    while(!stopbutton()){
+        choose = knob(7)/40;
+        LCD.clear(); LCD.home();
+        LCD.print("Start:"); LCD.print(choose);
+        LCD.setCursor(0, 1);
+        LCD.print("Prev:"); LCD.print(start); 
+        delay(20);
+    }
+    start = choose;
+    delay(250);
+
+    while(!stopbutton()){
+        choose = knob(7)/40;
+        LCD.clear(); LCD.home();
+        LCD.print("Base:"); LCD.print(choose);
+        LCD.setCursor(0, 1);
+        LCD.print("Prev:"); LCD.print(base); 
+    }
+    base = choose;
+    delay(250);
+
+    while(!stopbutton()){
+        choose = knob(7)/40;
+        LCD.clear(); LCD.home();
+        LCD.print("End:"); LCD.print(choose);
+        LCD.setCursor(0, 1);
+        LCD.print("Prev:"); LCD.print(end); 
+    }
+    end = choose;
+    delay(250);
+  */  HLRobot::lastNode = World::nodes[start];
+    HLRobot::baseNode = World::nodes[base];
+    HLRobot::destNode = World::nodes[end];
 }
  
-uint8_t start=0; 
-uint8_t base=1; 
-uint8_t end=4; 
+unsigned long starttime = 0;
+unsigned long endtime = 0;
 
 void loop_m()
 {
-    if(startbutton()){
-        uint8_t choose = knob(7)/16;
-        while(!stopbutton()){
-            choose = knob(7)/16;
-            LCD.clear(); LCD.home();
-            LCD.print("Start:"); LCD.print(choose);
-            LCD.setCursor(0, 1);
-            LCD.print("Prev:"); LCD.print(start); 
-            delay(20);
-        }
-        start = choose;
-        delay(250);
-
-        while(!stopbutton()){
-            choose = knob(7)/16;
-            LCD.clear(); LCD.home();
-            LCD.print("Base:"); LCD.print(choose);
-            LCD.setCursor(0, 1);
-            LCD.print("Prev:"); LCD.print(base); 
-        }
-        base = choose;
-        delay(250);
-
-        while(!stopbutton()){
-            choose = knob(7)/16;
-            LCD.clear(); LCD.home();
-            LCD.print("End:"); LCD.print(choose);
-            LCD.setCursor(0, 1);
-            LCD.print("Prev:"); LCD.print(end); 
-        }
-        end = choose;
-        delay(250);
-    }
-
-    HLRobot::lastNode = World::nodes[start];
-    HLRobot::baseNode = World::nodes[base];
-    HLRobot::destNode = World::nodes[end];
-
+    
+//    starttime = micros();
+//    analogRead(4); 
+//    endtime = micros();
+//    starttime = micros();
+    //LLRobot::Rel::readQRD(LLRobot::Rel::IDLF, true);
     Event::EDetect::getInstance()->step();
     Control::Controller::getInstance()->step();
+//    endtime = micros();
+//    Serial.print("Time: "); Serial.println(endtime - starttime);
     //testQRDs();
+    if(startbutton()){
+        HLRobot::lastNode = World::nodes[start];
+        HLRobot::baseNode = World::nodes[base];
+        HLRobot::destNode = World::nodes[end];
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+    }
 }

@@ -18,6 +18,12 @@ namespace EHandler{
             Control::Controller::getInstance()->setNextController(new Control::IntersectNav(HLRobot::lastNode, HLRobot::baseNode,HLRobot::destNode));
         }
     }
+
+    void flip(){
+        HLRobot::lastNode = HLRobot::baseNode;
+        HLRobot::baseNode = HLRobot::lastNode;
+        HLRobot::destNode = 0;
+    }
    
     void finishIntersect(){
         HLRobot::lastNode = HLRobot::baseNode;
@@ -34,5 +40,16 @@ namespace EHandler{
         //LCD.clear(); LCD.home();
         //LCD.print(message);
     }
+    
+    void finishPickup(){
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+    }
 
+    void finishTurnAround(){
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+    }
+ 
+    void finishDropOff(){
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+    }
 } 
