@@ -11,7 +11,8 @@ namespace LLRobot{
         enum QRD {TFLF=0, TFRF=1, TFLB=2, TFRB=3, IDLF=4, IDRF=5, IDLB=6, IDRB=7, INR = 8,INL = 9};
         int readQRD(::LLRobot::Abs::QRD position, bool applyThresh=false);
 
-        enum QSD {IRLF = 0,IRLM = 1,IRLB = 2,IRLU = 3,IRRF = 4,IRRM = 5,IRRB = 6, IRRU = 7};
+        enum QSD {IRLF = 3,IRLM = 7,IRLB = 5,IRLU = 1,IRRF = 4,IRRM = 0,IRRB = 6, IRRU = 2};
+        //enum QSD {IRLF = 3,IRLM = 1,IRLB = 2,IRLU = 3,IRRF = 5,IRRM = 5,IRRB = 6, IRRU = 7};
         int readCurrentQSD(bool isControl);
         bool setCurrentQSD(::LLRobot::Abs::QSD position, bool isControl);
         
@@ -46,7 +47,7 @@ namespace LLRobot{
 
         enum Claw {CL = 0,CR = 1};
         //True means open
-        bool openClaw(::LLRobot::Rel::Claw Claw, bool pos);
+        bool openClaw(::LLRobot::Rel::Claw Claw, bool isOpen);
 
         enum Arm {AL = 0,AR = 1};
         //True means extended

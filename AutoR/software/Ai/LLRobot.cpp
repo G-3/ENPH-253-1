@@ -1,5 +1,6 @@
 #include "LLRobot.h"
 #include <phys253.h>
+#include <Arduino.h>
 
 namespace LLRobot{
     //All values are absolute
@@ -12,25 +13,26 @@ namespace LLRobot{
     namespace{
         // TODO: Add the pin placement for the back as well, maybe have a lookup table instead of enum
 
-
         // Analog In
-        const int PIN_QSD = 0;
+        const int PIN_QSD = 7;
 
         const int PIN_INL = 5;
-        const int PIN_INR = 6;
+        const int PIN_INR = 0;
 
-        enum QRDFront {pinTFLF=3,pinTFRF=2,pinIDLF=4,pinIDRF=1};
-        enum QRDBack  {pinTFLB=3,pinTFRB=2,pinIDLB=4,pinIDRB=1};
+        // old enum QRDFront {pinTFLF=3,pinTFRF=2,pinIDLF=4,pinIDRF=1};
+        enum QRDFront {pinTFLF=3,pinTFRF=4,pinIDLF=1,pinIDRF=2};
+        // old enum QRDBack  {pinTFLB=3,pinTFRB=2,pinIDLB=4,pinIDRB=1};
+        enum QRDBack  {pinTFLB=4,pinTFRB=2,pinIDLB=3,pinIDRB=1};
 
         // Digital Out
-        enum DOut {pinQSDReset = 4,pinMPQSD0 = 5, pinMPQSD1 = 6, pinMPQSD2 = 7, pinMPQRD=8};
+        enum DOut {pinQSDReset = 15,pinMPQSDA = 14, pinMPQSDB = 13, pinMPQSDC = 12, pinMPQRD=8};
         // Motor out
-        enum MOut {pinDML=2, pinDMR=1};
+        enum MOut {pinDML=1, pinDMR=2};
         // Servo indicies
-        enum SOut {AGL=0, AGR=1,AML=2,AMR=3};
-        ServoTINAH servos[] = {RCServo0,RCServo1,RCServo2,RCServo3};
+        enum SOut {AGL=0, AGR=1,AML=3,AMR=2};
+        ServoTINAH * servos[] = {&RCServo0,&RCServo1,&RCServo2,&RCServo3};
         // Digital In
-        enum DIn {pinATR=8,pinATL=9,pinBF=10,pinBB=11};
+        enum DIn {pinATL=1,pinATR=0,pinBF=2,pinBB=5};
 
         //Current orientation
         Orientation orientation = FORWARDS; 
@@ -47,6 +49,15 @@ namespace LLRobot{
         for (int16_t i = 8; i < 16;i++){
             pinMode(i,OUTPUT);
         }
+        const unsigned char PS_16 = (1 << ADPS2);
+        const unsigned char PS_32 = (1 << ADPS2) | (1 << ADPS0);
+        const unsigned char PS_64 = (1 << ADPS2) | (1 << ADPS1);
+        const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
+
+        // set up the ADC
+        ADCSRA &= ~PS_128;  // remove bits set by Arduino library
+        ADCSRA |= PS_16; //Add our bits our bits
+        
     }
 
     
@@ -77,10 +88,8 @@ namespace LLRobot{
     void setControlLock(bool value){
         controlLock = value;
     }
-    
-    namespace Abs{
-        enum ArmValues {ExtendRight = 100, ExtendLeft = 100, RetractRight = 30, RetractLeft = 30};
-        enum ClawValues {OpenRight = 100, OpenLeft = 100, CloseRight = 30, CloseLeft = 30};
+    namespace Abs{ enum ArmValues {ExtendRight = 140, ExtendLeft = 140, RetractRight = 20, RetractLeft = 20};
+        enum ClawValues {OpenRight = 0, OpenLeft = 0, CloseRight = 180, CloseLeft = 180};
 
         int readCurrentQSD(bool isControl){
             //Allow control when control lock is on
@@ -97,10 +106,17 @@ namespace LLRobot{
             if (isControl == controlLock){
                 if ((micros() - timestampQSD) > QSD_MICROS){
                     digitalWrite(pinQSDReset,0);
-                    digitalWrite(pinMPQSD0, position % 1);
-                    digitalWrite(pinMPQSD1, position % 2);
-                    digitalWrite(pinMPQSD2, position % 4);
+                    digitalWrite(pinMPQSDA, !!((int)position & 1 << 2));
+                    digitalWrite(pinMPQSDB, !!((int)position & 1 << 1));
+                    digitalWrite(pinMPQSDC, !!((int)position & 1 << 0));
+                    Serial.println(!!((int)position & 1 << 0));
+                    Serial.println(!!((int)position & 1 << 1));
+                    Serial.println(!!((int)position & 1 << 2));
+                    Serial.println((int)position);
+                    Serial.println("---------------");
+
                     digitalWrite(pinQSDReset,1);
+
                     timestampQSD = micros();
                     return true;   
                 }
@@ -182,10 +198,10 @@ namespace LLRobot{
         bool driveMotor(DMot motorpos, int16_t speed){
             switch(motorpos){
                 case DML:
-                    motor.speed(pinDML, speed);
+                    motor.speed(pinDML, -speed);
                     return true;
                 case DMR:
-                    motor.speed(pinDMR, -speed);
+                    motor.speed(pinDMR, speed);
                     return true;
             } 
             return false;
@@ -198,37 +214,41 @@ namespace LLRobot{
                         value = ExtendRight;
                     if (value < RetractRight)
                         value = RetractRight;
-                    servos[AMR].write(value);
+                    servos[AMR]->write(value);
+                    //RCServo0.write(value);
+                    Serial.println(value);
                     break;
                 case AL:
                     if (value > ExtendLeft)
                         value = ExtendLeft;
                     if (value < RetractLeft)
                         value = RetractLeft;
-                    servos[AML].write(value);
+                    servos[AML]->write(value);
+                    //RCServo1.write(value);
+                    Serial.println(value);
                     break;
             }
             return true;
         }
 
-        bool openClaw(Claw claw, bool pos){
-            if (pos){
+        bool openClaw(Claw claw, bool isOpen){
+            if (isOpen){
                 switch(claw){
                     case CR:
-                        servos[CR].write(OpenRight);
+                        servos[CR]->write(OpenRight);
                         break;
                     case CL:
-                        servos[CL].write(OpenLeft);
+                        servos[CL]->write(OpenLeft);
                         break;
                 }
             }
             else{
                 switch(claw){
                     case CR:
-                        servos[AMR].write(CloseRight);
+                        servos[CR]->write(CloseRight);
                         break;
                     case CL:
-                        servos[AMR].write(CloseLeft);
+                        servos[CL]->write(CloseLeft);
                         break;
                 }
             }
@@ -361,31 +381,32 @@ namespace LLRobot{
         else{
             switch(position){
                 case Rel::IRLF:
-                    newPos = Abs::IRLF;
-                    break;
-                case Rel::IRLM:
-                    newPos = Abs::IRLM;
-                    break;
-                case Rel::IRLB:
-                    newPos = Abs::IRLB;
-                    break;
-                case Rel::IRLU:
-                    newPos = Abs::IRLU;
-                    break;
-                case Rel::IRRF:
-                    newPos = Abs::IRRF;
-                    break;
-                case Rel::IRRM:
-                    newPos = Abs::IRRM;
-                    break;
-                case Rel::IRRB:
                     newPos = Abs::IRRB;
                     break;
-                case Rel::IRRU:
+                case Rel::IRLM:
+                    newPos = Abs::IRRM;
+                    break;
+                case Rel::IRLB:
+                    newPos = Abs::IRRF;
+                    break;
+                case Rel::IRLU:
                     newPos = Abs::IRRU;
+                    break;
+                case Rel::IRRF:
+                    newPos = Abs::IRLB;
+                    break;
+                case Rel::IRRM:
+                    newPos = Abs::IRLM;
+                    break;
+                case Rel::IRRB:
+                    newPos = Abs::IRLF;
+                    break;
+                case Rel::IRRU:
+                    newPos = Abs::IRLU;
                     break;
             }
         }
+        return newPos;
 
     }
     Abs::DMot relToAbsDM(Rel::DMot motor){
@@ -450,14 +471,15 @@ namespace LLRobot{
 
         }else{
             switch(armTrip){
-                case Rel::AR:
+                case Rel::ATR:
                     newAT = Abs::ATL;
                     break;
-                case Rel::AL:
+                case Rel::ATL:
                     newAT = Abs::ATR;
                     break;
             }
         }
+        return newAT;
 
     }
     Abs::Bumper relToAbsBumper(Rel::Bumper bumper){
@@ -554,7 +576,10 @@ namespace LLRobot{
 
         bool driveMotor(DMot motorPos, int16_t speed){
             Abs::DMot absMot = relToAbsDM(motorPos);
-            return Abs::driveMotor(absMot,speed);
+            if (orientation == FORWARDS)
+                return Abs::driveMotor(absMot,speed);
+            else
+                return Abs::driveMotor(absMot,-speed);
         }
 
         bool driveMotors(int16_t left, int16_t right){

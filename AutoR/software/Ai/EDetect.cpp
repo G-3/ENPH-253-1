@@ -24,12 +24,12 @@ namespace Event{
 
     void EDetect::step(){
         count+=1;
-        if(count%2==0){
+        //if(count%2==0){
                 checkIntersect();
-        }
+        //}
     }
 
-    void checkIntersect(){
+    bool checkIntersect(){
         bool interL = 0;
         bool interR = 0;
 
@@ -37,13 +37,15 @@ namespace Event{
         interR = readQRD(IDRF, true);	
         
         if(interL || interR) {
-            char msg [100];
-            sprintf(msg, "checkIntersect OK - R: %s L: %s", (interL?"true":"false"), (interR?"true":"false") );
-            Debug::serialPrint(msg, Debug::EDETECT);
+            //char msg [100];
+            //sprintf(msg, "checkIntersect OK - R: %s L: %s", (interL?"true":"false"), (interR?"true":"false") );
+            //Debug::serialPrint(msg, Debug::EDETECT);
             EHandler::intersect(interL, interR);
+            return true;
         }
         else{
-            Debug::serialPrint("checkIntersect SKIP - No intersection", Debug::EDETECT);
+            //Debug::serialPrint("checkIntersect SKIP - No intersection", Debug::EDETECT);
+            return false;
         }
     }
 

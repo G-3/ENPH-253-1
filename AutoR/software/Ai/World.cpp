@@ -168,6 +168,7 @@ namespace World{
         for (int i = pathLength; i >= 0; i--) {
             HLRobot::path[pathLength-i] = tempPath[i];
         }
+        HLRobot::path[pathLength] = 0;
     }
 
     int minDistance(uint16_t dist[], bool Q[], uint8_t length){

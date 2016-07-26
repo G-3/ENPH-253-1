@@ -46,24 +46,25 @@ void setup_m()
     
     Serial.println("updating");
 
+    World::Node *start = World::nodes[0];
+    World::Node *base = World::nodes[1];
+    World::updatePath(1, 10);
 }
 
 unsigned long startt=0;
 unsigned long endt=0;
 
 void loop_m()
-{   
-    startt = micros(); 
-    World::updatePath(1, 10);
-    endt = micros();
-    Serial.println(endt);
-    Serial.println(startt);
-    int counter = 1;
+{
+    Event::EDetect::getInstance()->step();
+    Control::Controller::getInstance()->step();   
+    //startt = micros(); 
+    //endt = micros();
+    //Serial.println(endt);
+    //Serial.println(startt);
+    //int counter = 1;
     
-    World::Node *start = World::nodes[0];
-    World::Node *base = World::nodes[1];
-    World::Node *dest = HLRobot::path[counter];
-
+/*
     while (HLRobot::path[counter]){
         Serial.print(counter);
         Serial.print(" ");
@@ -92,7 +93,7 @@ void loop_m()
         base = dest;
 
     }
-
+*/
     delay(1000);
     
     // Event::EDetect::getInstance()->step();
