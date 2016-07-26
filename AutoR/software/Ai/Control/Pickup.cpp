@@ -54,30 +54,33 @@ namespace Control{
         openClaw(claw,true);
         extendArm(arm,false);
         driveMotors(0,0);
-        currentPhase = EXTENSION;
         LLRobot::setControlLock(true);
-        setCurrentQSD(mS,true);
+        if(setCurrentQSD(mS,true)){
+            driveMotors(motorAmplitude,-motorAmplitude);
+            currentPhase = ALIGMENT;
+        }
     }
     void Pickup::alignment(){
-        int16_t val = readCurrentQSD(true);
-
+        int16_t reading = readCurrentQSD(true);
         //Update Maximum Amplitude
-        if (val > maxAmp)
-            maxAmp = val;
+        if (reading > maxAmp)
+            maxAmp = reading;
         
 
         //Check that a couple of previous values are all below the threshold
-        if (motorAmplitude > 40){
+        if (motorAmplitude > 60){
             bool islower = true;
             for (int16_t i = 0;i < pValuesSize;i++){
-                if (readPValue(i) + THRESHOLD > maxAmp){
-                    islower = false;
-                }
+                Serial.println("-----");
+                Serial.println(reading);
+                Serial.println(maxAmp);
+                Serial.println(readPValue(i) + THRESHOLD);
+                Serial.println("-----");
+                islower &= (readPValue(i) + THRESHOLD) < maxAmp;
             }
             
             //If the read amplitude is deacreasing, flip directions and lower motor amplitude
             if(islower){
-
                 motorAmplitude -= motorStepDown;
 
                 //flip direction
@@ -89,7 +92,7 @@ namespace Control{
                 }
 
                 //reset maxAmp
-                maxAmp = val; 
+                maxAmp = reading; 
 
 
 
@@ -101,7 +104,7 @@ namespace Control{
             currentPhase = EXTENSION;
         }
 
-        updatePValues(val);
+        updatePValues(reading);
     }
     void Pickup::extension(){
         //Initialize timestamp
@@ -147,12 +150,15 @@ namespace Control{
     void Pickup::step(){
         switch(currentPhase){
             case SETUP:
+                Serial.println("Setup");
                 setup();
                 break;
             case ALIGMENT:
+                Serial.println("Aligment");
                 alignment();
                 break;
             case EXTENSION:
+                Serial.println("Extension");
                 extension();
                 break;
             case CLOSE:

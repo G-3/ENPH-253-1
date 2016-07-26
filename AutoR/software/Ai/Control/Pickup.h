@@ -15,16 +15,16 @@ namespace Control{
         private:
 
             const uint16_t CLAW_DELAY = 500; //milliseconds
-            const uint16_t SERVO_RATE = 10; //milliseconds per degree
-            const int16_t pValuesSize = 0;
+            const uint16_t SERVO_RATE = 15; //milliseconds per degree
+            const int16_t pValuesSize = 6;
             const uint16_t THRESHOLD = 10;
-            int16_t pValues[4] = {0,0,0,0};
+            int16_t pValues[6] = {0,0,0,0,0,0};
             int16_t currentPointer = 0;
-            uint16_t maxAmp = 0;
+            int16_t maxAmp = 0;
 
             uint16_t motorDirection = true;
             uint16_t motorAmplitude = 80;
-            uint16_t motorStepDown = 20;
+            uint16_t motorStepDown = 10;
 
             Phase currentPhase;
             LLRobot::Side currentSide;

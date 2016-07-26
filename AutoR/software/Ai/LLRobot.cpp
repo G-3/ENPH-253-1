@@ -109,14 +109,7 @@ namespace LLRobot{
                     digitalWrite(pinMPQSDA, !!((int)position & 1 << 2));
                     digitalWrite(pinMPQSDB, !!((int)position & 1 << 1));
                     digitalWrite(pinMPQSDC, !!((int)position & 1 << 0));
-                    Serial.println(!!((int)position & 1 << 0));
-                    Serial.println(!!((int)position & 1 << 1));
-                    Serial.println(!!((int)position & 1 << 2));
-                    Serial.println((int)position);
-                    Serial.println("---------------");
-
                     digitalWrite(pinQSDReset,1);
-
                     timestampQSD = micros();
                     return true;   
                 }
@@ -216,7 +209,6 @@ namespace LLRobot{
                         value = RetractRight;
                     servos[AMR]->write(value);
                     //RCServo0.write(value);
-                    Serial.println(value);
                     break;
                 case AL:
                     if (value > ExtendLeft)
@@ -225,7 +217,6 @@ namespace LLRobot{
                         value = RetractLeft;
                     servos[AML]->write(value);
                     //RCServo1.write(value);
-                    Serial.println(value);
                     break;
             }
             return true;
