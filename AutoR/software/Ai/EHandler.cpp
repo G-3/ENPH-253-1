@@ -4,6 +4,7 @@
 #include "Control/Controller.h"
 #include "Control/IntersectNav.h"
 #include "Control/TapeFollow.h"
+#include "Control/TapeFollow2.h"
 
 #include "Debug.h"
 
@@ -18,12 +19,18 @@ namespace EHandler{
             Control::Controller::getInstance()->setNextController(new Control::IntersectNav(HLRobot::lastNode, HLRobot::baseNode,HLRobot::destNode));
         }
     }
+
+    void flip(){
+        HLRobot::lastNode = HLRobot::baseNode;
+        HLRobot::baseNode = HLRobot::lastNode;
+        HLRobot::destNode = 0;
+    }
    
     void finishIntersect(){
         HLRobot::lastNode = HLRobot::baseNode;
         HLRobot::baseNode = HLRobot::destNode;
-        HLRobot::destNode = HLRobot::path[1];
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+        HLRobot::destNode = HLRobot::getNextDest(HLRobot::baseNode);
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
     }
 
     void falseIntersect(){
@@ -34,5 +41,17 @@ namespace EHandler{
         //LCD.clear(); LCD.home();
         //LCD.print(message);
     }
+    
+    void finishPickup(){
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+    }
 
+    void finishTurnAround(){
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+        flip();
+    }
+ 
+    void finishDropOff(){
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+    }
 } 

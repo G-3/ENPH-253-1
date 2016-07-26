@@ -4,10 +4,10 @@
 // #include "./test_pathp/test_pathp.h"
 
 // Test LowLevel Robot
-//#include "./test_llrobot/test_llrobot.h"
+// #include "./test_llrobot/test_llrobot.h"
 
 // Test Nav, tests navigation.
-// #include "./test_nav/test_nav.h"
+#include "./test_nav/test_nav.h"
 
 // Test the QRDs listing them on the LCD one by one
 // Multi-paged, use START button to switch between.

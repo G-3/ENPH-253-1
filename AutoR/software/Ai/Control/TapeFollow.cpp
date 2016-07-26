@@ -31,9 +31,9 @@ namespace Control{
         int sensorR = LLRobot::Rel::readQRD(LLRobot::Rel::TFRF, false);
         int diff = sensorL-sensorR; 
         int l,r;
-        if (sensorL < THLD1) l = 0;
+        if (sensorL < 200) l = 0;
         else l = 1;
-        if (sensorR < THLD2) r = 0;
+        if (sensorR < 200) r = 0;
         else r = 1;
 
         if (l == 0 && r == 0){
@@ -85,42 +85,40 @@ namespace Control{
         double Vc = controlProcess->step(err, derivative); 
         
 		int G = knob(6) / 100;
-        v = knob(7)/4.;
+        int base1 = knob(7)/4;
         // With a positive reaction needed, we need to increase the left motor.
-        int powerL = base - G*Vc;
+        int powerL = base1 - G*Vc;
         if (powerL > 255) powerL = 255;
         if (powerL < 0) powerL = 0;
 
         // With a positive reaction needed, we need to decrease the right motor.
-        int powerR = base + G*Vc;
+        int powerR = base1 + G*Vc;
         if (powerR > 255) powerR = 255;
         if (powerR < 0) powerR = 0;
 
-        LLRobot::Rel::driveMotor(LLRobot::Rel::DML, powerL);
-        LLRobot::Rel::driveMotor(LLRobot::Rel::DMR, powerR);
+        LLRobot::Rel::driveMotors(powerL, powerR);
         counter+=1;
 	
-	if(counter%10==0){
-	    /*jSerial.println("~~~~~~~~~");
-	    Serial.println(powerR);
-	    Serial.println(powerL);
-	    Serial.println("-       -");
-	    Serial.println(sensorL);
-	    Serial.println(sensorR);
-	    Serial.println("~~~~~~~~~");
-	    Serial.println();  */
-	    counter = 0;
-	    LCD.clear();
+        if(counter%30==0){
+            Serial.println("~~~~~~~~~");
+            Serial.println(powerR);
+            Serial.println(powerL);
+            Serial.println("-       -");
+            Serial.println(sensorL);
+            Serial.println(sensorR);
+            Serial.println("~~~~~~~~~");
+            Serial.println();
+            counter = 0;
+            LCD.clear();
             LCD.home();
-	    LCD.print(sensorL);
-	    LCD.print(" | ");
-	    LCD.print(powerL);
-	    LCD.setCursor(0,1);
-	    LCD.print(sensorR);
-	    LCD.print(" | ");
-	    LCD.print(Vc);
-	}
+            LCD.print(base1);
+            LCD.print(" | ");
+            LCD.print(G);
+            LCD.setCursor(0,1);
+            LCD.print(sensorR);
+            LCD.print(" | ");
+            LCD.print(sensorL);
+        }
         errp = err;
-	delay(dt);
     }
 }

@@ -1,6 +1,7 @@
 #include "Controller.h"
 #include "ControlMode.h"
 #include "TapeFollow.h"
+#include "TapeFollow2.h"
 #include "../HLRobot.h"
 #include <phys253.h>
 
@@ -14,7 +15,7 @@ namespace Control{
 	}
 
     Controller::Controller(){
-        curController = new TapeFollow();
+        curController = new TapeFollow2(126,25,17);
         HLRobot::curMode = HLRobot::TAPE_FOLLOW;
     }
 

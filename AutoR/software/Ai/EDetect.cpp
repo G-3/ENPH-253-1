@@ -19,9 +19,9 @@ namespace Event{
 
     void EDetect::step(){
         count+=1;
-        if(count%2==0){
+        //if(count%2==0){
                 checkIntersect();
-        }
+        //}
     }
 
     bool checkIntersect(){

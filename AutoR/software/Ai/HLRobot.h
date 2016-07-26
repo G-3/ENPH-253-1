@@ -26,5 +26,6 @@ namespace HLRobot{
 
     extern OpMode curMode;
 
+    World::Node *getNextDest(World::Node* base);
 }
 
