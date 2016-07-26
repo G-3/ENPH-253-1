@@ -8,19 +8,20 @@ namespace World{
 	Dir rotate(Dir direction, int rotations);
 
 	class Node {
-	public:
-		bool deadEnd;
-        int8_t id = -1;
-		Node(int id) : id(id), deadEnd(false) {
-            weights[0] = 1;
-            weights[1] = 1;
-            weights[2] = 1;
-            weights[3] = 1;
-        };
-		Node *linked[4] = {};
-        uint16_t weights[4];
-		void relLinkDirs(bool expectTapeDir[4], Node *start);
-		Dir relDestDir(Node *dest, Node *start);
+        public:
+            unsigned long visitStamp = 0;
+            bool deadEnd;
+            int8_t id = -1;
+            Node(int id) : id(id), deadEnd(false) {
+                weights[0] = 1;
+                weights[1] = 1;
+                weights[2] = 1;
+                weights[3] = 1;
+            };
+            Node *linked[4] = {};
+            uint16_t weights[4];
+            void relLinkDirs(bool expectTapeDir[4], Node *start);
+            Dir relDestDir(Node *dest, Node *start);
 	};
 
     void updatePath(uint8_t src, uint8_t target);

@@ -54,8 +54,4 @@ namespace Control{
                 currentPhase = SETUP;
         }
     }
-    
-
-
-
 }

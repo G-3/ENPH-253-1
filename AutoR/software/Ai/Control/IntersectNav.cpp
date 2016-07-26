@@ -1,6 +1,6 @@
 #include "IntersectNav.h"
 
-#include "TapeFollow.h"
+#include "TapeFollow2.h"
 #include "../World.h"
 #include "../LLRobot.h"
 #include "../EHandler.h"
@@ -18,7 +18,7 @@ namespace Control{
      * Tape Following Mode
      */
     IntersectNav::IntersectNav(World::Node *start, World::Node *base, World::Node *dest): start(start), dest(dest), base(base){
-        tapeFollower = new TapeFollow();
+        tapeFollower = new TapeFollow2(126,25,17);
         speed = 100;
         curPhase = INIT_ALIGN;
         base->relLinkDirs(expectTapeDir, start);

@@ -5,7 +5,7 @@
 #include "../World.h"
 
 namespace Control{
-    class TapeFollow;
+    class TapeFollow2;
 }
 
 namespace Control{
@@ -25,7 +25,7 @@ namespace Control{
             Phase curPhase;
 
             int speed;
-            TapeFollow* tapeFollower;
+            TapeFollow2* tapeFollower;
         public:
 			IntersectNav(World::Node *start, World::Node *dest, World::Node *base);
             ~IntersectNav();
