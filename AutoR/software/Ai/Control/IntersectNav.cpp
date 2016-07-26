@@ -151,7 +151,7 @@ namespace Control{
                 case INIT_ALIGN:
                 {
                     driveMotors(0,0);
-                    Debug::serialPrint("INIT.", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("INIT.", Debug::INTERSECT_DB);
                     bool l = readQRD(IDLF, true);
                     bool r = readQRD(IDRF, true);
                     //Serial.print("TFL:"); Serial.println(l); 
@@ -175,14 +175,14 @@ namespace Control{
                 case DRIVE_THRU:
                 {
                     driveMotors(speed, speed);
-                    Debug::serialPrint("DRIVE_THRU.", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("DRIVE_THRU.", Debug::INTERSECT_DB);
                     if(xlr){
                         // Keep updating to find the other one
-                        bool l = readQRD(IDLF, true);
-                        bool r = readQRD(IDRF, true);
+                        bool ll = readQRD(IDLF, true);
+                        bool rr = readQRD(IDRF, true);
                         // Update the seen tape directions
-                        seenTapeDir[World::DirR] |= r;
-                        seenTapeDir[World::DirL] |= l;
+                        seenTapeDir[World::DirR] |= rr;
+                        seenTapeDir[World::DirL] |= ll;
                     }
 
                     // Check our aligners
@@ -224,7 +224,7 @@ namespace Control{
 
                 case TRIP_INTER:
                 {
-                    Debug::serialPrint("TURN_INTER", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("TURN_INTER", Debug::INTERSECT_DB);
                     // Turn until we trip the intersection detectors
                     if (destDir == World::DirL) {
                         driveMotors(speed, -speed);
@@ -254,7 +254,7 @@ namespace Control{
 
                 case TRIP_FOLLOW:
                 {
-                    Debug::serialPrint("TURN_TF.", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("TURN_TF.", Debug::INTERSECT_DB);
                     // Turn until we trip the tape followers
                     if (destDir == World::DirL) {
                         // Check if we trip the TF
@@ -290,7 +290,7 @@ namespace Control{
 
                 case END:
                 {
-                    Debug::serialPrint("END.", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("END.", Debug::INTERSECT_DB);
                     driveMotors(0, 0);
                     //DONE:
                     finishIntersect();
