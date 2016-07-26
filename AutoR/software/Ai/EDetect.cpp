@@ -19,9 +19,9 @@ namespace Event{
 
     void EDetect::step(){
         count+=1;
-        if(count%2==0){
+        //if(count%2==0){
                 checkIntersect();
-        }
+        //}
     }
 
     void checkIntersect(){
@@ -38,7 +38,7 @@ namespace Event{
             EHandler::intersect(interL, interR);
         }
         else{
-            Debug::serialPrint("checkIntersect SKIP - No intersection", Debug::EDETECT);
+            //Debug::serialPrint("checkIntersect SKIP - No intersection", Debug::EDETECT);
         }
     }
 }
