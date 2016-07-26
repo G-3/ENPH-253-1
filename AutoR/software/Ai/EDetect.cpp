@@ -24,7 +24,7 @@ namespace Event{
         }
     }
 
-    void checkIntersect(){
+    bool checkIntersect(){
         bool interL = 0;
         bool interR = 0;
 
@@ -36,9 +36,11 @@ namespace Event{
             sprintf(msg, "checkIntersect OK - R: %s L: %s", (interL?"true":"false"), (interR?"true":"false") );
             Debug::serialPrint(msg, Debug::EDETECT);
             EHandler::intersect(interL, interR);
+            return true;
         }
         else{
             Debug::serialPrint("checkIntersect SKIP - No intersection", Debug::EDETECT);
+            return false;
         }
     }
 }
