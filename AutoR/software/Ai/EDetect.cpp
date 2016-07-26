@@ -30,7 +30,7 @@ namespace Event{
         //}
     }
 
-    bool checkIntersect(){
+    bool EDetect::checkIntersect(){
         bool interL = 0;
         bool interR = 0;
 
@@ -65,23 +65,64 @@ namespace Event{
         return false;
     }
     bool EDetect::checkIR(){
+        bool eventDetected = false;
+
         if (timestampIR == 0){
             timestampIR = micros();
         }
 
         if ((micros()-timestampIR) > IR_TIME_DELAY){
             timestampIR = micros();
-            slowDownCounter++;
-            slowDownCounter %= SLOW_DOWN_FACTOR;
-            if (slowDownCounter == 0){
-                fCounter++;
-                fCounter %= F_LENGHT;
+
+            switch(irCounter){
+                case 0:
+                    if(readCurrentQSD(false) > 200){
+                        EHandler::passengerDetected(LLRobot::RIGHT);
+                        eventDetected = true;
+                    }
+
+                    break;
+                case 1:
+                    if(readCurrentQSD(false) > 200){
+                        EHandler::passengerDetected(LLRobot::LEFT);
+                        eventDetected = true;
+                    }
+                    break;
+                case 2:
+                    if(readCurrentQSD(false) > 700){
+                        EHandler::dropOffDetected(LLRobot::RIGHT);
+                        eventDetected = true;
+                    }
+                    break;
+                case 3:
+                    if(readCurrentQSD(false) > 700){
+                        EHandler::dropOffDetected(LLRobot::LEFT);
+                        eventDetected = true;
+                    }
+                    break;
             }
-            else{
-                sCounter++;
-                sCounter %+ S_LENGHT; 
+
+
+            //Switch to next Event
+            irCounter++;
+            irCounter %= 4;
+            switch(irCounter){
+                case 0:
+                    setCurrentQSD(IRRM,false);
+                    break;
+                case 1:
+                    setCurrentQSD(IRLM,false);
+                    break;
+                case 2:
+                    setCurrentQSD(IRRU,false);
+                    break;
+                case 3:
+                    setCurrentQSD(IRLU,false);
+                    break;
             }
+            
         }
+        return eventDetected;
     }
 }
 

@@ -14,17 +14,8 @@ namespace Event{
             const int16_t IR_TIME_DELAY = 3000;
 
             uint8_t consecutiveBumps = 0;
+            int16_t irCounter = 0;
             
-            //FastSensorSchedule
-            const char fSchedule [2]={IRLM,IRRM};
-            const uint8_t F_LENGHT = 2;
-            uint8_t fCounter=0;
-            uint8_t currentFSensor= 0;
-            //SlowSensorSchedule
-            const char sSchedule [2]= {IRLU,IRRU};
-            const uint8_t S_LENGHT = 2;
-            uint8_t sCounter = 0;
-            uint8_t currentSSensor= 0;
 
             uint16_t slowDownCounter = 0;
             const uint8_t SLOW_DOWN_FACTOR = 4;

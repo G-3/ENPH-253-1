@@ -54,4 +54,14 @@ namespace EHandler{
     void finishDropOff(){
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
     }
+
+    void passengerDetected(LLRobot::Side side){
+
+    }
+    void collisionDetected(LLRobot::Orientation side){
+
+    }
+    void dropOffDetected(LLRobot::Orientation side){
+
+    }
 } 

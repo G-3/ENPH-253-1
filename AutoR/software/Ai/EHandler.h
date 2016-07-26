@@ -14,7 +14,7 @@ namespace EHandler{
     
     void passengerDetected(LLRobot::Side side);
     void collisionDetected(LLRobot::Orientation side);
-    void dropOffDetected(LLRobot::Orientation side);
+    void dropOffDetected(LLRobot::Side side);
     void finishPickup();
 
     void finishTurnAround();
