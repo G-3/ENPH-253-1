@@ -25,11 +25,11 @@
 //Test Speed
 //#include "./test_speed/test_speed.h"
 
-//Test Tape Follow2
-// #include "./test_tapef/test_tapef2.h"
- 
-// Test tape follow
-// #include "./test_tapef/test_tapef.h"
+//Test Tape Follow
+//#include "./test_tapef/test_tapef2.h"
+
+//Test EDetect
+#include "./test_eDetect/test_eDetect.h"
 
 void setup()
 {
