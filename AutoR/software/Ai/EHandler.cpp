@@ -4,6 +4,7 @@
 #include "Control/Controller.h"
 #include "Control/IntersectNav.h"
 #include "Control/TapeFollow.h"
+#include "Control/TapeFollow2.h"
 
 #include "Debug.h"
 
@@ -28,8 +29,8 @@ namespace EHandler{
     void finishIntersect(){
         HLRobot::lastNode = HLRobot::baseNode;
         HLRobot::baseNode = HLRobot::destNode;
-        HLRobot::destNode = HLRobot::path[1];
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+        HLRobot::destNode = HLRobot::getNextDest(HLRobot::baseNode);
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
     }
 
     void falseIntersect(){
@@ -47,6 +48,7 @@ namespace EHandler{
 
     void finishTurnAround(){
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+        flip();
     }
  
     void finishDropOff(){
