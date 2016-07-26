@@ -33,7 +33,6 @@ namespace Event{
             bool checkBumpers();
             bool checkIntersect();
             bool checkIR();
-
             void step();
     };
     
