@@ -4,6 +4,7 @@
 
 #include "LLRobot.h"
 #include "EHandler.h"
+#include "EDetect.h"
 
 #include "Debug.h"
 
@@ -49,33 +50,38 @@ namespace Event{
         }
     }
 
-    void checkBumper(){
-        
-    }
-    void checkIR(){
-        if (timestamp == 0){
-            timestamp = micros();
+    bool EDetect::checkBumpers(){
+        if (readBumper(BF))
+            consecutiveBumps++;
+        else{
+            consecutiveBumps = 0;
         }
 
-        if ((micros()-timestamp) > IR_TIME_DELAY){
-            timestamp = micros();
+        if (consecutiveBumps > 5){
+            EHandler::collisionDetected(LLRobot::FORWARDS);
+            consecutiveBumps = 0;
+            return true;
+        }
+        return false;
+    }
+    bool EDetect::checkIR(){
+        if (timestampIR == 0){
+            timestampIR = micros();
+        }
+
+        if ((micros()-timestampIR) > IR_TIME_DELAY){
+            timestampIR = micros();
             slowDownCounter++;
-            slowDownCounter %= slowDownFactor;
+            slowDownCounter %= SLOW_DOWN_FACTOR;
             if (slowDownCounter == 0){
                 fCounter++;
                 fCounter %= F_LENGHT;
-                
             }
             else{
                 sCounter++;
                 sCounter %+ S_LENGHT; 
-
             }
-            
-
         }
-
-
     }
 }
 

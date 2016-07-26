@@ -75,3 +75,32 @@ void testID(){
     while(startbutton());
 }
 
+void testBumpers(){
+    bool collisionDetected = false;
+    int16_t counter = 0;
+    while(!startbutton()){
+        delay(1);
+        counter %= 10;
+        int32_t t1 = micros();
+        bool val = Event::checkBumpers();
+        int32_t t2 = micros();
+        intersectionDetected |= val;
+        if (counter == 0){
+            if (collisionDetected == false){
+                LCD.clear(); LCD.home();
+                LCD.print("False");
+            }else{
+                LCD.clear(); LCD.home();
+                LCD.print("True");
+            }
+            LCD.setCursor(0,1);
+            LCD.print(t2-t1);
+        }
+        
+        Serial.println(val);
+        counter++;
+    }
+    while(startbutton());
+
+}
+

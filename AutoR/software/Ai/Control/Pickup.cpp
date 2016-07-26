@@ -54,7 +54,7 @@ namespace Control{
         openClaw(claw,true);
         extendArm(arm,false);
         driveMotors(0,0);
-        currentPhase = EXTENSION;
+        currentPhase = ALIGMENT;
         LLRobot::setControlLock(true);
         setCurrentQSD(mS,true);
     }
