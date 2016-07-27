@@ -8,23 +8,25 @@ using namespace LLRobot::Rel;
 namespace Control{
     class Pickup : public ControlMode{
         public:
-            enum Phase {SETUP,ALIGMENT,EXTENSION,CLOSE,RETRACTION,FAIL};
+            enum Phase {SETUP,ALIGMENT,EXTENSION,CLOSE,RETRACTION,FAIL,REFIND_TAPE};
             Pickup(LLRobot::Side side,Phase phase=SETUP);
             ~Pickup();
         void step();
         private:
 
             const uint16_t CLAW_DELAY = 500; //milliseconds
-            const uint16_t SERVO_RATE = 10; //milliseconds per degree
-            const int16_t pValuesSize = 0;
+            const uint16_t SERVO_RATE = 15; //milliseconds per degree
+            const uint32_t ALIGMENT_T = 2000000; //microsecond
+            const uint16_t IR_DELAY = 3000;//microseconds
+            const int16_t pValuesSize = 2;
             const uint16_t THRESHOLD = 10;
-            int16_t pValues[4] = {0,0,0,0};
+            int16_t pValues[2] = {0,0};
             int16_t currentPointer = 0;
-            uint16_t maxAmp = 0;
+            int16_t maxAmp = 0;
 
             uint16_t motorDirection = true;
-            uint16_t motorAmplitude = 80;
-            uint16_t motorStepDown = 20;
+            uint16_t motorAmplitude = 60;
+            uint16_t motorStepDown = 10;
 
             Phase currentPhase;
             LLRobot::Side currentSide;
@@ -36,8 +38,10 @@ namespace Control{
             QSD bS;
 
 
-            unsigned long extensionTimestamp = 0;
-            unsigned long clawTimestamp = 0;
+            uint32_t aligmentTimestamp = 0;
+            uint32_t extensionTimestamp = 0;
+            uint32_t clawTimestamp = 0;
+            uint32_t retractionTimestamp = 0;
 
 
             void updatePValues(int16_t value);
@@ -50,5 +54,6 @@ namespace Control{
             void close();
             void retraction();
             void fail();
+            void refindTape();
     };
 };

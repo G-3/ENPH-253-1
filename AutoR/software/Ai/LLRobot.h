@@ -30,6 +30,10 @@ namespace LLRobot{
         
         enum Bumper {BF = 1,BB = 0};
         bool readBumper(::LLRobot::Abs::Bumper bumper);
+
+        void setPassengerPickup(::LLRobot::Abs::Claw calw,bool state);
+        bool getPassengerPickup(::LLRobot::Abs::Claw calw);
+
     }
 
     namespace Rel{
@@ -59,6 +63,9 @@ namespace LLRobot{
         
         enum Bumper {BF = 0,BB = 1};
         bool readBumper(::LLRobot::Rel::Bumper bumper);
+
+        void setPassengerPickup(::LLRobot::Rel::Claw calw,bool state);
+        bool getPassengerPickup(::LLRobot::Rel::Claw calw);
 
     }
     
