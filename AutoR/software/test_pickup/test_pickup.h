@@ -40,7 +40,7 @@ void setup_m(){
 }
 
 void loop_m(){
-    Control::Pickup pickup = Control::Pickup(RIGHT,Control::Pickup::SETUP);
+    Control::Pickup pickup = Control::Pickup(RIGHT);
 
     while (!startbutton()){
     }

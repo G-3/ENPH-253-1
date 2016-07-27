@@ -39,8 +39,6 @@ namespace Control{
 
             case FIND_RIGHT:
                 driveMotors(ROTATION_SPEED,-ROTATION_SPEED);
-
-                driveMotors(-ROTATION_SPEED,ROTATION_SPEED);
                 if(readQRD(TFRF) || readQRD(TFLF)){
                     currentPhase = SETUP;
                     //TODO: inform event handler that we have turned around
