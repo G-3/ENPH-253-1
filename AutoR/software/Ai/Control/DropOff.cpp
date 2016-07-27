@@ -12,21 +12,51 @@ namespace Control{
         releaseTimestamp = 0;
         retractionTimestamp = 0;
 
-        if (side == LLRobot::RIGHT){
-            claw = CR;
-            arm = AR;
-        }
-        else{
-            claw = CL;
-            arm = AL;
-        }
     }
 
     DropOff::~DropOff(){
     }
 
     void DropOff::setup(){
-        currentPhase = EXTENSION;
+        Claw altClaw;
+        Arm altArm;
+        if (side == LLRobot::RIGHT){
+            altClaw = CL;
+            altArm = AR;
+            claw = CR;
+            arm = AR;
+        }
+        else{
+            altClaw = CR;
+            altArm = AR;
+            claw = CL;
+            arm = AL;
+        }
+        if (getPassengerPickup(claw)){
+            currentPhase = EXTENSION;
+        }
+
+        else if (getPassengerPickup(altClaw)){
+                claw = altClaw;
+                arm = altArm;
+        }
+        else{
+            //TODO:Event Handler screwed up
+        }
+    }
+    void DropOff::oneEightyP1(){
+        driveMotors(-50,50);
+        if(readQRD(IDLF)){
+           currentPhase = ONE_EIGHTY_P2; 
+        }
+    }
+    void DropOff::oneEightyP2(){
+        driveMotors(-40,40);
+        if( readQRD(TFLF) || readQRD(TFLF) ){
+           currentPhase = EXTENSION; 
+           //TODO: inform event handler that we have flipped orientations
+        }
+        
     }
 
     void DropOff::extension(){
@@ -61,7 +91,14 @@ namespace Control{
         }
 
         if (millis() - retractionTimestamp > RETRACTION_DELAY){
-            //TODO: Call back to event handler
+            setPassengerPickup(claw,false);
+            if (getPassengerPickup(CL)||getPassengerPickup(CR)){
+                //if there is still another animal try again
+                currentPhase = SETUP;
+            }
+            else{
+                //TODO: Call back to event handler informing that drop-off is done
+            }
         }
     }
 
