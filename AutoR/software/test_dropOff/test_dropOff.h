@@ -56,18 +56,21 @@ void testDropOff(){
     LCD.clear(); LCD.home();
     LCD.print("Ready!");
     while(!startbutton()){
+        delay(10);
         if(readArmTrip(ATR)){
+           Serial.println("right");
            openClaw(CR,false);
            setPassengerPickup(CR,true);
         }
         if(readArmTrip(ATL)){
+           Serial.println("left");
            openClaw(CL,false);
            setPassengerPickup(CL,true);
         }
 
     }
     while(startbutton());
-    delay(1000);
+    delay(100);
     Control::DropOff* df = new Control::DropOff(LLRobot::RIGHT);
     LCD.clear(); LCD.home();
     LCD.print("Dropping off...");
@@ -75,4 +78,5 @@ void testDropOff(){
         df->step();
         delay(1);
     }
+    delete df;
 }

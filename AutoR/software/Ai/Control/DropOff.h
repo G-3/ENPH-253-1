@@ -19,9 +19,9 @@ namespace Control{
             Arm arm;
             LLRobot::Side side;
 
-            int16_t extensionTimestamp;
-            int16_t releaseTimestamp;
-            int16_t retractionTimestamp;
+            int32_t extensionTimestamp;
+            int32_t releaseTimestamp;
+            int32_t retractionTimestamp;
 
             void setup();
             void extension();

@@ -35,24 +35,23 @@ namespace Control{
         if (getPassengerPickup(claw)){
             currentPhase = EXTENSION;
         }
-
         else if (getPassengerPickup(altClaw)){
-                claw = altClaw;
-                arm = altArm;
+                LLRobot::flip();
+                currentPhase = ONE_EIGHTY_P1;
         }
         else{
             //TODO:Event Handler screwed up
         }
     }
     void DropOff::oneEightyP1(){
-        driveMotors(-50,50);
-        if(readQRD(IDLF)){
+        driveMotors(-140,140);
+        if(readQRD(IDLF) > 250){
            currentPhase = ONE_EIGHTY_P2; 
         }
     }
     void DropOff::oneEightyP2(){
-        driveMotors(-40,40);
-        if( readQRD(TFLF) || readQRD(TFLF) ){
+        driveMotors(-60,60);
+        if( readQRD(TFLF) > 250 || readQRD(TFRF) > 250 ){
            currentPhase = EXTENSION; 
            //TODO: inform event handler that we have flipped orientations
         }
@@ -60,6 +59,8 @@ namespace Control{
     }
 
     void DropOff::extension(){
+
+        driveMotors(0,0);
         //Initialize timestamp
         if (extensionTimestamp == 0){
             extensionTimestamp = millis();
@@ -67,6 +68,7 @@ namespace Control{
         }
 
         if (millis() - extensionTimestamp > EXTENSION_DELAY){
+            extensionTimestamp = 0;
             currentPhase = RELEASE;
         }
     }
@@ -79,7 +81,9 @@ namespace Control{
         }
 
         if (millis() - releaseTimestamp > RELEASE_DELAY){
+            releaseTimestamp = 0;
             currentPhase = RETRACTION;
+            setPassengerPickup(claw,false);
         }
     }
 
@@ -91,7 +95,7 @@ namespace Control{
         }
 
         if (millis() - retractionTimestamp > RETRACTION_DELAY){
-            setPassengerPickup(claw,false);
+            retractionTimestamp = 0;
             if (getPassengerPickup(CL)||getPassengerPickup(CR)){
                 //if there is still another animal try again
                 currentPhase = SETUP;
@@ -106,16 +110,29 @@ namespace Control{
         switch(currentPhase){
             case SETUP:    
                 setup();
+                Serial.println("setup");
                 break;
             case EXTENSION:
+                Serial.println("extension");
                 extension();
                 break;
             case RELEASE: 
+                Serial.println("release");
                 release();
                 break;
             case RETRACTION:
                 retraction();
+                Serial.println("retraction");
                 break;
+            case ONE_EIGHTY_P1:
+                Serial.println("oneEightyP1");
+                oneEightyP1();
+                break;
+            case ONE_EIGHTY_P2:
+                Serial.println("oneEightyP2");
+                oneEightyP2();
+                break;
+
         }
     }
     
