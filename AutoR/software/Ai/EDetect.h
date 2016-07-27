@@ -17,7 +17,7 @@ namespace Event{
      *  Checks for intersections ahead. 
      *  Will call appropriate handler if front intersection detectors are tripped.
      */
-    void checkIntersect();
+    bool checkIntersect();
 
     void checkBumpers();
 };

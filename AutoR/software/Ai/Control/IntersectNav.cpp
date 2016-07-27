@@ -18,8 +18,8 @@ namespace Control{
      * Tape Following Mode
      */
     IntersectNav::IntersectNav(World::Node *start, World::Node *base, World::Node *dest): start(start), dest(dest), base(base){
-        tapeFollower = new TapeFollow2(126,25,17);
-        speed = 100;
+        tapeFollower = new TapeFollow2(17,25,60);
+        speed = 50;
         curPhase = INIT_ALIGN;
         base->relLinkDirs(expectTapeDir, start);
         destDir = base->relDestDir(dest, start);
@@ -75,7 +75,6 @@ namespace Control{
         bool xf = expectTapeDir[World::DirF];
         bool xlr = xl && xr;
         
-        speed = knob(7)/4; 
 
         // we are looking to travel forward, follow tape while tracking the intersection
         // there should be at least one other direction
@@ -151,7 +150,7 @@ namespace Control{
                 case INIT_ALIGN:
                 {
                     driveMotors(0,0);
-                    Debug::serialPrint("INIT.", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("INIT.", Debug::INTERSECT_DB);
                     bool l = readQRD(IDLF, true);
                     bool r = readQRD(IDRF, true);
                     //Serial.print("TFL:"); Serial.println(l); 
@@ -165,7 +164,7 @@ namespace Control{
                         // FAIL:
                         //Serial.println("Failed mismatch check");
                     //}
-                    if (l || r){
+                    if (true){//l || r){
                         //Serial.println("Switched to Drive Thru");
                         curPhase = DRIVE_THRU;
                     }
@@ -175,7 +174,7 @@ namespace Control{
                 case DRIVE_THRU:
                 {
                     driveMotors(speed, speed);
-                    Debug::serialPrint("DRIVE_THRU.", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("DRIVE_THRU.", Debug::INTERSECT_DB);
                     if(xlr){
                         // Keep updating to find the other one
                         bool l = readQRD(IDLF, true);
@@ -224,10 +223,10 @@ namespace Control{
 
                 case TRIP_INTER:
                 {
-                    Debug::serialPrint("TURN_INTER", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("TURN_INTER", Debug::INTERSECT_DB);
                     // Turn until we trip the intersection detectors
                     if (destDir == World::DirL) {
-                        driveMotors(speed, -speed);
+                        driveMotors(-speed, speed);
                         // turning left
                         bool l = readQRD(IDLF, true);
                         //Serial.print("L: "); Serial.println(l);
@@ -239,7 +238,7 @@ namespace Control{
 
                     }
                     else{//(destDir == World::DirR) {
-                        driveMotors(-speed, speed);
+                        driveMotors(speed, -speed);
                         // turning right
                         bool r = readQRD(IDRF, true);
                         // Serial.print("R: "); Serial.println(r);
@@ -254,7 +253,7 @@ namespace Control{
 
                 case TRIP_FOLLOW:
                 {
-                    Debug::serialPrint("TURN_TF.", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("TURN_TF.", Debug::INTERSECT_DB);
                     // Turn until we trip the tape followers
                     if (destDir == World::DirL) {
                         // Check if we trip the TF
@@ -267,7 +266,7 @@ namespace Control{
                             return;
                         }
                         else {
-                            driveMotors(speed, -speed);
+                            driveMotors(-speed, speed);
                         }
 
                     }
@@ -282,7 +281,7 @@ namespace Control{
                             return;
                         }
                         else {
-                            driveMotors(-speed, speed);
+                            driveMotors(speed, -speed);
                         }
                     }
                     break;
@@ -290,7 +289,7 @@ namespace Control{
 
                 case END:
                 {
-                    Debug::serialPrint("END.", Debug::INTERSECT_DB);
+//                    Debug::serialPrint("END.", Debug::INTERSECT_DB);
                     driveMotors(0, 0);
                     //DONE:
                     finishIntersect();
@@ -306,7 +305,7 @@ namespace Control{
             switch (curPhase) {
                 case INIT_ALIGN:
                 {
-                    Debug::serialPrint("Intersect initial align.", Debug::INTERSECT_DB);
+                    //Debug::serialPrint("Intersect initial align.", Debug::INTERSECT_DB);
                     bool l = readQRD(IDLF, true);
                     bool r = readQRD(IDRF, true);
                     
@@ -315,10 +314,11 @@ namespace Control{
                     seenTapeDir[World::DirL] |= l;
                     
                     // Tapefollow until we hit a correct intersection
-                    if (checkMismatch(false)) {
+                    //if (checkMismatch(false)) {
                         // FAIL:
-                    }
-                    else if (l || r){
+                    //}
+                   // else 
+                    if (l || r){
                         curPhase = DRIVE_THRU;
                     }
 
@@ -328,7 +328,7 @@ namespace Control{
 
                 case DRIVE_THRU:
                 {
-                    Debug::serialPrint("Intersect drive through.", Debug::INTERSECT_DB);
+                    //Debug::serialPrint("Intersect drive through.", Debug::INTERSECT_DB);
                     if(xlr){
                         // Keep updating to find the other one
                         bool l = readQRD(IDLF, true);
@@ -344,10 +344,10 @@ namespace Control{
 
                     if (l || r){
                         // We should have completely checked out the intersection
-                        if(checkMismatch(true)){
+                        //if(checkMismatch(true)){
                             // FAIL:
-                        }
-                        else{
+                        //}
+                        //else{
                             // We can move on
                             if(xlr){
                                 if(l) linedUp = World::DirL;
@@ -357,7 +357,7 @@ namespace Control{
                             else{
                                 curPhase = TRIP_INTER;
                             }
-                        }
+                        //}
                     }
                     tapeFollower->step();
                     break;
@@ -365,7 +365,7 @@ namespace Control{
 
                 case INTER_ALIGN:
                 {
-                    Debug::serialPrint("Intersect center intersection align.", Debug::INTERSECT_DB);
+                    //Debug::serialPrint("Intersect center intersection align.", Debug::INTERSECT_DB);
                     // Align the intersection aligners
                     if (linedUp == World::DirL) {
                         // turning left
@@ -391,7 +391,7 @@ namespace Control{
 
                 case TRIP_INTER:
                 {
-                    Debug::serialPrint("Intersect turn til trip intersect.", Debug::INTERSECT_DB);
+                    //Debug::serialPrint("Intersect turn til trip intersect.", Debug::INTERSECT_DB);
                     // Turn until we trip the intersection detectors
                     if (destDir == World::DirL) {
                         // turning left
@@ -417,7 +417,7 @@ namespace Control{
 
                 case TRIP_FOLLOW:
                 {
-                    Debug::serialPrint("Intersect turn til trip tapefollow.", Debug::INTERSECT_DB);
+                    //Debug::serialPrint("Intersect turn til trip tapefollow.", Debug::INTERSECT_DB);
                     // Turn until we trip the tape followers
                     if (destDir == World::DirL) {
                         // Check if we trip the TF
@@ -428,7 +428,7 @@ namespace Control{
                             return;
                         }
                         else {
-                            driveMotors(speed, -speed);
+                            driveMotors(-speed, speed);
                         }
 
                     }
@@ -441,7 +441,7 @@ namespace Control{
                             return;
                         }
                         else {
-                            driveMotors(-speed, speed);
+                            driveMotors(speed, -speed);
                         }
                     }
                     break;
@@ -449,7 +449,7 @@ namespace Control{
 
                 case END:
                 {
-                    Debug::serialPrint("END.", Debug::INTERSECT_DB);
+                    //Debug::serialPrint("END.", Debug::INTERSECT_DB);
                     //DONE:
                     finishIntersect();
                     break;

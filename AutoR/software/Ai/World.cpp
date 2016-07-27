@@ -163,12 +163,13 @@ namespace World{
             trackBack = prev[trackBack];
             pathLength += 1;
         }
-        
+        tempPath[pathLength] = nodes[src]; 
+
         // tempPath is reversed since we started from the end, we should invert when assigning path
         for (int i = pathLength; i >= 0; i--) {
             HLRobot::path[pathLength-i] = tempPath[i];
         }
-        HLRobot::path[pathLength] = 0;
+        HLRobot::path[pathLength+1] = 0;
     }
 
     int minDistance(uint16_t dist[], bool Q[], uint8_t length){

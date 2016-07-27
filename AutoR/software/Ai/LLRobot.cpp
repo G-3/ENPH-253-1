@@ -4,7 +4,7 @@
 
 namespace LLRobot{
     //All values are absolute
-    const int QRD_THRESH[] = {200,200,200,200,200,200,200,200,200,200};
+    const int QRD_THRESH[] = {250,250,250,250,250,250,250,250,250,250};
     const int QRD_PEAK[] = {500,500,500,500,500,500,500,500,500,500};
     const int QSD_THRESH[] = {100,100,100,50,100,100,100,50};
     const int QSD_PEAK[] = {1024,1024,1024,1024,1024,1024,1024,1024};
@@ -14,25 +14,25 @@ namespace LLRobot{
         // TODO: Add the pin placement for the back as well, maybe have a lookup table instead of enum
 
         // Analog In
-        const int PIN_QSD = 7;
+        const int PIN_QSD = 6;
 
-        const int PIN_INL = 5;
+        const int PIN_INL = 1;
         const int PIN_INR = 0;
 
         // old enum QRDFront {pinTFLF=3,pinTFRF=2,pinIDLF=4,pinIDRF=1};
-        enum QRDFront {pinTFLF=3,pinTFRF=4,pinIDLF=1,pinIDRF=2};
+        enum QRDFront {pinTFLF=3,pinTFRF=2,pinIDLF=5,pinIDRF=4};
         // old enum QRDBack  {pinTFLB=3,pinTFRB=2,pinIDLB=4,pinIDRB=1};
-        enum QRDBack  {pinTFLB=4,pinTFRB=2,pinIDLB=3,pinIDRB=1};
+        enum QRDBack  {pinTFLB=2,pinTFRB=4,pinIDLB=3,pinIDRB=5};
 
         // Digital Out
-        enum DOut {pinQSDReset = 15,pinMPQSDA = 14, pinMPQSDB = 13, pinMPQSDC = 12, pinMPQRD=8};
+        enum DOut {pinQSDReset = 12,pinMPQSDA = 13, pinMPQSDB = 14, pinMPQSDC = 15, pinMPQRD=11};
         // Motor out
         enum MOut {pinDML=1, pinDMR=2};
         // Servo indicies
         enum SOut {AGL=0, AGR=1,AML=3,AMR=2};
         ServoTINAH * servos[] = {&RCServo0,&RCServo1,&RCServo2,&RCServo3};
         // Digital In
-        enum DIn {pinATL=1,pinATR=0,pinBF=2,pinBB=5};
+        enum DIn {pinATL=5,pinATR=4,pinBF=7,pinBB=6};
 
         //Current orientation
         Orientation orientation = FORWARDS; 
@@ -88,7 +88,7 @@ namespace LLRobot{
     void setControlLock(bool value){
         controlLock = value;
     }
-    namespace Abs{ enum ArmValues {ExtendRight = 140, ExtendLeft = 140, RetractRight = 20, RetractLeft = 20};
+    namespace Abs{ enum ArmValues {ExtendRight = 140, ExtendLeft = 140, RetractRight = 0, RetractLeft = 0};
         enum ClawValues {OpenRight = 0, OpenLeft = 0, CloseRight = 180, CloseLeft = 180};
 
         int readCurrentQSD(bool isControl){

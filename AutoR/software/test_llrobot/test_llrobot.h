@@ -291,7 +291,7 @@ void testArms(){
     Side side = LEFT;
     while(!startbutton()){
         delay(100);
-        int angle = knob(6)/5;
+        int angle = knob(7)/5;
 
         LCD.clear();
         LCD.home();
@@ -321,7 +321,7 @@ void testClaws(){
     Side side = LEFT;
     while(!startbutton()){
         delay(100);
-        bool isOpen = knob(6) < 512;
+        bool isOpen = knob(7) < 512;
         LCD.clear();
         LCD.home();
         LCD.print("isOpen: ");
@@ -354,7 +354,7 @@ void testMotors(){
     int16_t leftValue = 0;
     while(!startbutton()){
         delay(100);
-        int16_t val = (knob(6)/2) -256;
+        int16_t val = (knob(7)/2) -256;
         LCD.clear();
         LCD.home();
         LCD.print("Motors");

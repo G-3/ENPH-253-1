@@ -13,7 +13,9 @@ namespace HLRobot {
         while( path[i] != 0 ){
             if (path[i] == base){
                 nextDest = path[i+1];
+                break;
             }
+            i+=1;
         }
         return nextDest;
     }
