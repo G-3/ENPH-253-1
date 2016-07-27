@@ -61,55 +61,67 @@ namespace Control{
         }
     }
     void Pickup::alignment(){
-        int16_t reading = readCurrentQSD(true);
-        //Update Maximum Amplitude
-        if (reading > maxAmp)
-            maxAmp = reading;
-        
+        if (aligmentTimestamp  == 0){
+            aligmentTimestamp = micros();
+        }
 
-        //Check that a couple of previous values are all below the threshold
-        if (motorAmplitude > 60){
-            bool islower = true;
-            for (int16_t i = 0;i < pValuesSize;i++){
-                Serial.println("-----");
-                Serial.println(reading);
-                Serial.println(maxAmp);
-                Serial.println(readPValue(i) + THRESHOLD);
-                Serial.println("-----");
-                islower &= (readPValue(i) + THRESHOLD) < maxAmp;
-            }
+        if (aligmentTimestamp - micros() > 3000){
+            int16_t reading = readCurrentQSD(true);
+            setCurrentQSD(mS,true);
+            aligmentTimestamp = micros();
+            //Update Previous Values
+            updatePValues(reading);
+            //Update Maximum Amplitude
+            Serial.println(reading);
+            if (reading > maxAmp)
+                maxAmp = reading;
             
-            //If the read amplitude is deacreasing, flip directions and lower motor amplitude
-            if(islower){
-                motorAmplitude -= motorStepDown;
 
-                //flip direction
-                motorDirection = !motorDirection;
-                if (motorDirection)
-                    driveMotors(motorAmplitude,-motorAmplitude);
-                else {
-                    driveMotors(-motorAmplitude,motorAmplitude);
+            //Check that a couple of previous values are all below the threshold
+            if (motorAmplitude > 30){
+                bool islower = true;
+                for (int16_t i = 0;i < pValuesSize;i++){
+                    //Serial.println("-----");
+                    //Serial.println(reading);
+                    //Serial.println(maxAmp);
+                    //Serial.println(readPValue(i) + THRESHOLD);
+                    //Serial.println("-----");
+                    islower &= (readPValue(i) + THRESHOLD) < maxAmp;
                 }
+                
+                //If the read amplitude is deacreasing, flip directions and lower motor amplitude
+                if(islower){
+                    motorAmplitude -= motorStepDown;
 
-                //reset maxAmp
-                maxAmp = reading; 
+                    //flip direction
+                    motorDirection = !motorDirection;
+                    if (motorDirection)
+                        driveMotors(motorAmplitude,-motorAmplitude);
+                    else {
+                        driveMotors(-motorAmplitude,motorAmplitude);
+                    }
+
+                    //reset maxAmp
+                    maxAmp = reading; 
 
 
 
+                }
             }
-            
+            else{
+                //robot is aligned move to next phase
+                currentPhase = EXTENSION;
+            }
         }
-        else{
-            //robot is aligned move to next phase
-            currentPhase = EXTENSION;
+        if ((micros() - aligmentTimestamp) > ALIGMENT_T){
+            currentPhase = FAIL;
         }
-
-        updatePValues(reading);
     }
     void Pickup::extension(){
         //Initialize timestamp
         if (extensionTimestamp == 0){
             extensionTimestamp = millis();
+            driveMotors(0,0);
         }
 
         if (((millis() - extensionTimestamp)/SERVO_RATE > 180)){
@@ -137,14 +149,36 @@ namespace Control{
         }
     }
     void Pickup::retraction(){
-        extendArm(arm,0);
-        //TODO: Callback and inform event handler that pickup is complete 
-        LLRobot::setControlLock(false);
+        if (retractionTimestamp == 0){
+            retractionTimestamp = millis();
+        }
+        int16_t angle = 70-(millis()-retractionTimestamp)/SERVO_RATE;
+
+        if (angle >= 0){
+            extendArm(arm,angle);
+        }
+        else{
+            //TODO: Callback and inform event handler that pickup is complete 
+            LLRobot::setControlLock(false);
+        }
     }
     void Pickup::fail(){
-        extendArm(arm,0);
-        //TODO: Callback and inform event handler that pickup has failed 
-        LLRobot::setControlLock(false);
+        if (retractionTimestamp == 0){
+            retractionTimestamp = millis();
+        }
+        int16_t angle = 70-(millis()-retractionTimestamp)/SERVO_RATE;
+
+        if (angle >= 0){
+            extendArm(arm,angle);
+        }
+        else{
+            //todo: callback and inform event handler that pickup has failed 
+            LLRobot::setControlLock(false);
+        }
+    }
+
+    void Pickup::refindTape(){
+
     }
 
     void Pickup::step(){
@@ -169,6 +203,9 @@ namespace Control{
                 break;
             case FAIL:
                 fail();
+                break;
+            case REFIND_TAPE:
+                refindTape();
                 break;
         }
     }
