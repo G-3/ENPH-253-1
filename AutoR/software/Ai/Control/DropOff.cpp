@@ -2,6 +2,7 @@
 
 #include "DropOff.h"
 #include "../LLRobot.h"
+#include "../EHandler.h"
 
 using namespace LLRobot::Rel;
 
@@ -12,24 +13,54 @@ namespace Control{
         releaseTimestamp = 0;
         retractionTimestamp = 0;
 
-        if (side == LLRobot::RIGHT){
-            claw = CR;
-            arm = AR;
-        }
-        else{
-            claw = CL;
-            arm = AL;
-        }
     }
 
     DropOff::~DropOff(){
     }
 
     void DropOff::setup(){
-        currentPhase = EXTENSION;
+        Claw altClaw;
+        Arm altArm;
+        if (side == LLRobot::RIGHT){
+            altClaw = CL;
+            altArm = AR;
+            claw = CR;
+            arm = AR;
+        }
+        else{
+            altClaw = CR;
+            altArm = AR;
+            claw = CL;
+            arm = AL;
+        }
+        if (getPassengerPickup(claw)){
+            currentPhase = EXTENSION;
+        }
+        else if (getPassengerPickup(altClaw)){
+                LLRobot::flip();
+                currentPhase = ONE_EIGHTY_P1;
+        }
+        else{
+            //TODO:Event Handler screwed up
+        }
+    }
+    void DropOff::oneEightyP1(){
+        driveMotors(-140,140);
+        if(readQRD(IDLF) > 250){
+           currentPhase = ONE_EIGHTY_P2; 
+        }
+    }
+    void DropOff::oneEightyP2(){
+        driveMotors(-60,60);
+        if( readQRD(TFLF) > 250 || readQRD(TFRF) > 250 ){
+           currentPhase = EXTENSION; 
+        }
+        
     }
 
     void DropOff::extension(){
+
+        driveMotors(0,0);
         //Initialize timestamp
         if (extensionTimestamp == 0){
             extensionTimestamp = millis();
@@ -37,6 +68,7 @@ namespace Control{
         }
 
         if (millis() - extensionTimestamp > EXTENSION_DELAY){
+            extensionTimestamp = 0;
             currentPhase = RELEASE;
         }
     }
@@ -49,7 +81,9 @@ namespace Control{
         }
 
         if (millis() - releaseTimestamp > RELEASE_DELAY){
+            releaseTimestamp = 0;
             currentPhase = RETRACTION;
+            setPassengerPickup(claw,false);
         }
     }
 
@@ -61,7 +95,15 @@ namespace Control{
         }
 
         if (millis() - retractionTimestamp > RETRACTION_DELAY){
-            //TODO: Call back to event handler
+            retractionTimestamp = 0;
+            if (getPassengerPickup(CL)||getPassengerPickup(CR)){
+                //if there is still another animal try again
+                currentPhase = SETUP;
+            }
+            else{
+                //Call back to event handler informing that drop-off is done
+                EHandler::finishDropOff();
+            }
         }
     }
 
@@ -79,6 +121,13 @@ namespace Control{
             case RETRACTION:
                 retraction();
                 break;
+            case ONE_EIGHTY_P1:
+                oneEightyP1();
+                break;
+            case ONE_EIGHTY_P2:
+                oneEightyP2();
+                break;
+
         }
     }
     
