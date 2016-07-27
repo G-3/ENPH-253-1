@@ -40,6 +40,10 @@ namespace LLRobot{
         // Current Multiplexer States
         bool MPQRD_state = orientation;
 
+        bool rightPassenger = false;
+        bool leftPassenger = false;
+
+
         unsigned long timestampQSD = 0;
         bool controlLock = false;
     }   
@@ -90,6 +94,19 @@ namespace LLRobot{
     }
     namespace Abs{ enum ArmValues {ExtendRight = 140, ExtendLeft = 140, RetractRight = 0, RetractLeft = 0};
         enum ClawValues {OpenRight = 0, OpenLeft = 0, CloseRight = 180, CloseLeft = 180};
+
+        void setPassengerPickup(Claw claw,bool state){
+            if (claw == CL)
+                leftPassenger = state;
+            else
+                rightPassenger = state;
+        }
+        bool getPassengerPickup(Claw claw){
+            if (claw == CL)
+                return leftPassenger;
+            else
+                return rightPassenger;
+        }
 
         int readCurrentQSD(bool isControl){
             //Allow control when control lock is on
@@ -585,6 +602,15 @@ namespace LLRobot{
         bool openClaw(Claw claw, bool pos){
             Abs::Claw absClaw = relToAbsClaw(claw);
             return Abs::openClaw(absClaw,pos);
+        }
+
+        void setPassengerPickup(Claw claw,bool state){
+            Abs::Claw absClaw = relToAbsClaw(claw);
+            Abs::setPassengerPickup(absClaw,state);
+        }
+        bool getPassengerPickup(Claw claw){
+            Abs::Claw absClaw = relToAbsClaw(claw);
+            return Abs::getPassengerPickup(absClaw);
         }
 
         bool readArmTrip(ArmTrip armTrip){

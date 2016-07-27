@@ -1,5 +1,6 @@
 #include "Pickup.h"
 #include "../LLRobot.h"
+#include "../EHandler.h"
 #include <phys253.h>
 
 using namespace LLRobot::Rel;
@@ -158,8 +159,9 @@ namespace Control{
             extendArm(arm,angle);
         }
         else{
-            //TODO: Callback and inform event handler that pickup is complete 
+            setPassengerPickup(claw,true);
             LLRobot::setControlLock(false);
+            currentPhase = REFIND_TAPE;
         }
     }
     void Pickup::fail(){
@@ -172,13 +174,28 @@ namespace Control{
             extendArm(arm,angle);
         }
         else{
-            //todo: callback and inform event handler that pickup has failed 
+            setPassengerPickup(claw,false);
             LLRobot::setControlLock(false);
+            currentPhase = REFIND_TAPE;
         }
     }
 
     void Pickup::refindTape(){
+        if (readQRD(TFLF) || readQRD(TFRF)){
+            driveMotors(0,0);
+            EHandler::finishPickup();
+        }
+        else{
+            if (motorDirection)
+                driveMotors(motorAmplitude,-motorAmplitude);
+            else {
+                driveMotors(-motorAmplitude,motorAmplitude);
+            }
+        }
 
+        if (readQRD(IDLF) || readQRD(IDRF)){
+            motorDirection = !motorDirection;
+        }
     }
 
     void Pickup::step(){
