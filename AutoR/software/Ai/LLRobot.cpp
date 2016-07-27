@@ -29,7 +29,7 @@ namespace LLRobot{
         // Motor out
         enum MOut {pinDML=1, pinDMR=2};
         // Servo indicies
-        enum SOut {AGL=0, AGR=1,AML=3,AMR=2};
+        enum SOut {AGL=0, AGR=1,AML=2,AMR=3};
         ServoTINAH * servos[] = {&RCServo0,&RCServo1,&RCServo2,&RCServo3};
         // Digital In
         enum DIn {pinATL=5,pinATR=4,pinBF=7,pinBB=6};
@@ -39,6 +39,10 @@ namespace LLRobot{
 
         // Current Multiplexer States
         bool MPQRD_state = orientation;
+
+        bool rightPassenger = false;
+        bool leftPassenger = false;
+
 
         unsigned long timestampQSD = 0;
         bool controlLock = false;
@@ -91,6 +95,19 @@ namespace LLRobot{
     namespace Abs{ enum ArmValues {ExtendRight = 140, ExtendLeft = 140, RetractRight = 0, RetractLeft = 0};
         enum ClawValues {OpenRight = 0, OpenLeft = 0, CloseRight = 180, CloseLeft = 180};
 
+        void setPassengerPickup(Claw claw,bool state){
+            if (claw == CL)
+                leftPassenger = state;
+            else
+                rightPassenger = state;
+        }
+        bool getPassengerPickup(Claw claw){
+            if (claw == CL)
+                return leftPassenger;
+            else
+                return rightPassenger;
+        }
+
         int readCurrentQSD(bool isControl){
             //Allow control when control lock is on
             //Allow everthing else when everything else is on
@@ -109,14 +126,7 @@ namespace LLRobot{
                     digitalWrite(pinMPQSDA, !!((int)position & 1 << 2));
                     digitalWrite(pinMPQSDB, !!((int)position & 1 << 1));
                     digitalWrite(pinMPQSDC, !!((int)position & 1 << 0));
-                    Serial.println(!!((int)position & 1 << 0));
-                    Serial.println(!!((int)position & 1 << 1));
-                    Serial.println(!!((int)position & 1 << 2));
-                    Serial.println((int)position);
-                    Serial.println("---------------");
-
                     digitalWrite(pinQSDReset,1);
-
                     timestampQSD = micros();
                     return true;   
                 }
@@ -216,7 +226,6 @@ namespace LLRobot{
                         value = RetractRight;
                     servos[AMR]->write(value);
                     //RCServo0.write(value);
-                    Serial.println(value);
                     break;
                 case AL:
                     if (value > ExtendLeft)
@@ -225,7 +234,6 @@ namespace LLRobot{
                         value = RetractLeft;
                     servos[AML]->write(value);
                     //RCServo1.write(value);
-                    Serial.println(value);
                     break;
             }
             return true;
@@ -594,6 +602,15 @@ namespace LLRobot{
         bool openClaw(Claw claw, bool pos){
             Abs::Claw absClaw = relToAbsClaw(claw);
             return Abs::openClaw(absClaw,pos);
+        }
+
+        void setPassengerPickup(Claw claw,bool state){
+            Abs::Claw absClaw = relToAbsClaw(claw);
+            Abs::setPassengerPickup(absClaw,state);
+        }
+        bool getPassengerPickup(Claw claw){
+            Abs::Claw absClaw = relToAbsClaw(claw);
+            return Abs::getPassengerPickup(absClaw);
         }
 
         bool readArmTrip(ArmTrip armTrip){

@@ -1,5 +1,6 @@
 #include "Pickup.h"
 #include "../LLRobot.h"
+#include "../EHandler.h"
 #include <phys253.h>
 
 using namespace LLRobot::Rel;
@@ -54,59 +55,74 @@ namespace Control{
         openClaw(claw,true);
         extendArm(arm,false);
         driveMotors(0,0);
-        currentPhase = ALIGMENT;
         LLRobot::setControlLock(true);
-        setCurrentQSD(mS,true);
+        if(setCurrentQSD(mS,true)){
+            driveMotors(motorAmplitude,-motorAmplitude);
+            currentPhase = ALIGMENT;
+        }
     }
     void Pickup::alignment(){
-        int16_t val = readCurrentQSD(true);
-
-        //Update Maximum Amplitude
-        if (val > maxAmp)
-            maxAmp = val;
-        
-
-        //Check that a couple of previous values are all below the threshold
-        if (motorAmplitude > 40){
-            bool islower = true;
-            for (int16_t i = 0;i < pValuesSize;i++){
-                if (readPValue(i) + THRESHOLD > maxAmp){
-                    islower = false;
-                }
-            }
-            
-            //If the read amplitude is deacreasing, flip directions and lower motor amplitude
-            if(islower){
-
-                motorAmplitude -= motorStepDown;
-
-                //flip direction
-                motorDirection = !motorDirection;
-                if (motorDirection)
-                    driveMotors(motorAmplitude,-motorAmplitude);
-                else {
-                    driveMotors(-motorAmplitude,motorAmplitude);
-                }
-
-                //reset maxAmp
-                maxAmp = val; 
-
-
-
-            }
-            
-        }
-        else{
-            //robot is aligned move to next phase
-            currentPhase = EXTENSION;
+        if (aligmentTimestamp  == 0){
+            aligmentTimestamp = micros();
         }
 
-        updatePValues(val);
+        if (aligmentTimestamp - micros() > 3000){
+            int16_t reading = readCurrentQSD(true);
+            setCurrentQSD(mS,true);
+            aligmentTimestamp = micros();
+            //Update Previous Values
+            updatePValues(reading);
+            //Update Maximum Amplitude
+            Serial.println(reading);
+            if (reading > maxAmp)
+                maxAmp = reading;
+            
+
+            //Check that a couple of previous values are all below the threshold
+            if (motorAmplitude > 30){
+                bool islower = true;
+                for (int16_t i = 0;i < pValuesSize;i++){
+                    //Serial.println("-----");
+                    //Serial.println(reading);
+                    //Serial.println(maxAmp);
+                    //Serial.println(readPValue(i) + THRESHOLD);
+                    //Serial.println("-----");
+                    islower &= (readPValue(i) + THRESHOLD) < maxAmp;
+                }
+                
+                //If the read amplitude is deacreasing, flip directions and lower motor amplitude
+                if(islower){
+                    motorAmplitude -= motorStepDown;
+
+                    //flip direction
+                    motorDirection = !motorDirection;
+                    if (motorDirection)
+                        driveMotors(motorAmplitude,-motorAmplitude);
+                    else {
+                        driveMotors(-motorAmplitude,motorAmplitude);
+                    }
+
+                    //reset maxAmp
+                    maxAmp = reading; 
+
+
+
+                }
+            }
+            else{
+                //robot is aligned move to next phase
+                currentPhase = EXTENSION;
+            }
+        }
+        if ((micros() - aligmentTimestamp) > ALIGMENT_T){
+            currentPhase = FAIL;
+        }
     }
     void Pickup::extension(){
         //Initialize timestamp
         if (extensionTimestamp == 0){
             extensionTimestamp = millis();
+            driveMotors(0,0);
         }
 
         if (((millis() - extensionTimestamp)/SERVO_RATE > 180)){
@@ -134,25 +150,66 @@ namespace Control{
         }
     }
     void Pickup::retraction(){
-        extendArm(arm,0);
-        //TODO: Callback and inform event handler that pickup is complete 
-        LLRobot::setControlLock(false);
+        if (retractionTimestamp == 0){
+            retractionTimestamp = millis();
+        }
+        int16_t angle = 70-(millis()-retractionTimestamp)/SERVO_RATE;
+
+        if (angle >= 0){
+            extendArm(arm,angle);
+        }
+        else{
+            setPassengerPickup(claw,true);
+            LLRobot::setControlLock(false);
+            currentPhase = REFIND_TAPE;
+        }
     }
     void Pickup::fail(){
-        extendArm(arm,0);
-        //TODO: Callback and inform event handler that pickup has failed 
-        LLRobot::setControlLock(false);
+        if (retractionTimestamp == 0){
+            retractionTimestamp = millis();
+        }
+        int16_t angle = 70-(millis()-retractionTimestamp)/SERVO_RATE;
+
+        if (angle >= 0){
+            extendArm(arm,angle);
+        }
+        else{
+            setPassengerPickup(claw,false);
+            LLRobot::setControlLock(false);
+            currentPhase = REFIND_TAPE;
+        }
+    }
+
+    void Pickup::refindTape(){
+        if (readQRD(TFLF) || readQRD(TFRF)){
+            driveMotors(0,0);
+            EHandler::finishPickup();
+        }
+        else{
+            if (motorDirection)
+                driveMotors(motorAmplitude,-motorAmplitude);
+            else {
+                driveMotors(-motorAmplitude,motorAmplitude);
+            }
+        }
+
+        if (readQRD(IDLF) || readQRD(IDRF)){
+            motorDirection = !motorDirection;
+        }
     }
 
     void Pickup::step(){
         switch(currentPhase){
             case SETUP:
+                Serial.println("Setup");
                 setup();
                 break;
             case ALIGMENT:
+                Serial.println("Aligment");
                 alignment();
                 break;
             case EXTENSION:
+                Serial.println("Extension");
                 extension();
                 break;
             case CLOSE:
@@ -163,6 +220,9 @@ namespace Control{
                 break;
             case FAIL:
                 fail();
+                break;
+            case REFIND_TAPE:
+                refindTape();
                 break;
         }
     }
