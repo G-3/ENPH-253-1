@@ -43,15 +43,15 @@ namespace EHandler{
     }
     
     void finishPickup(){
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
     }
 
     void finishTurnAround(){
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
         flip();
     }
  
     void finishDropOff(){
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
     }
 } 

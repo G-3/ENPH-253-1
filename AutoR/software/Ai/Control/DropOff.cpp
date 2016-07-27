@@ -2,6 +2,7 @@
 
 #include "DropOff.h"
 #include "../LLRobot.h"
+#include "../EHandler.h"
 
 using namespace LLRobot::Rel;
 
@@ -53,7 +54,6 @@ namespace Control{
         driveMotors(-60,60);
         if( readQRD(TFLF) > 250 || readQRD(TFRF) > 250 ){
            currentPhase = EXTENSION; 
-           //TODO: inform event handler that we have flipped orientations
         }
         
     }
@@ -101,7 +101,8 @@ namespace Control{
                 currentPhase = SETUP;
             }
             else{
-                //TODO: Call back to event handler informing that drop-off is done
+                //Call back to event handler informing that drop-off is done
+                EHandler::finishDropOff();
             }
         }
     }
@@ -110,26 +111,20 @@ namespace Control{
         switch(currentPhase){
             case SETUP:    
                 setup();
-                Serial.println("setup");
                 break;
             case EXTENSION:
-                Serial.println("extension");
                 extension();
                 break;
             case RELEASE: 
-                Serial.println("release");
                 release();
                 break;
             case RETRACTION:
                 retraction();
-                Serial.println("retraction");
                 break;
             case ONE_EIGHTY_P1:
-                Serial.println("oneEightyP1");
                 oneEightyP1();
                 break;
             case ONE_EIGHTY_P2:
-                Serial.println("oneEightyP2");
                 oneEightyP2();
                 break;
 
