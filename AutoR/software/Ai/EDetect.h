@@ -19,5 +19,5 @@ namespace Event{
      */
     bool checkIntersect();
 
-    void checkBumpers();
+    bool checkBumper();
 };

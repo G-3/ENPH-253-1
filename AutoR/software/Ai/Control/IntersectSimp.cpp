@@ -18,12 +18,20 @@ namespace Control{
      * Tape Following Mode
      */
     IntersectSimp::IntersectSimp(World::Node *start, World::Node *base, World::Node *dest): start(start), dest(dest), base(base){
+        Serial.println("Nodes");
+        Serial.println(start->id);
+        Serial.println(base->id);
+        Serial.println(dest->id);
+        
         tapeFollower = new TapeFollow2(17,25,80);
         speed = 70;
         curPhase = DRIVE_THRU;
+        LCD.clear(); LCD.home(); // LCD.setCursor(0, 1); 
+        LCD.print("Intersecting1");
         base->relLinkDirs(expectTapeDir, start);
+        LCD.print("Intersecting2");LCD.setCursor(0, 1);
         destDir = base->relDestDir(dest, start);
-       /* 
+        LCD.print((int)destDir);
         Debug::serialPrint("Direction . Exp Tape \n", Debug::INTERSECT_DB);
         for(int i = 0; i < 4; i++){
             char msg[20];
@@ -33,7 +41,6 @@ namespace Control{
         char msg[20];
         sprintf(msg, "Dest Dir %d \n", destDir);
         Debug::serialPrint(msg, Debug::INTERSECT_DB);
-        */
     }
 
     IntersectSimp::~IntersectSimp(){

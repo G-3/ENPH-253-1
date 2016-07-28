@@ -36,7 +36,6 @@ void setup_m()
     LCD.print("Starting up...3");
     delay(500);
     
-    World::setup();
     LCD.clear(); LCD.home();
     LCD.print("Starting up...2");
     delay(500);
@@ -44,6 +43,13 @@ void setup_m()
     LCD.clear(); LCD.home();
     LCD.print("Starting up...1");
     delay(500);
+    World::setup();
+    
+    Serial.println(World::nodes[5]->id);
+    Serial.println(World::nodes[5]->linked[0]->id);
+    Serial.println(World::nodes[5]->linked[1]->id);
+    Serial.println(World::nodes[5]->linked[2]->id);
+    Serial.println(World::nodes[5]->linked[3]->id);
 }
  
 uint8_t start=0;

@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <LiquidCrystal.h>
@@ -9,8 +8,8 @@
 
 #include "../Ai/Debug.h"
 #include "../Ai/LLRobot.h"
-#include "../Ai/Control/Pickup.h"
-#include "../Ai/EDetect.h"
+#include "../Ai/Control/TurnAround.h"
+#include "../Ai/Control/Controller.h"
 
 using namespace LLRobot;
 
@@ -41,18 +40,17 @@ void setup_m(){
 }
 
 void loop_m(){
-    Control::TurnAround turn = Control::TurnAround();
-
     while (!startbutton()){
     }
-    
-    while (startbutton());
+    LCD.print("Checking...");
+    LLRobot::Rel::driveMotors(60,60);
+    while (!LLRobot::Rel::readBumper(LLRobot::Rel::BF));
     LCD.clear(); LCD.home();
     LCD.print("Turning Around...");
+    Control::Controller::getInstance()->setNextController(new Control::TurnAround());
     while(!stopbutton()){
-        turn.step();
+        Control::Controller::getInstance()->step();
         delay(1);
-
     }
     LCD.clear(); LCD.home();
     LCD.print("Done!");

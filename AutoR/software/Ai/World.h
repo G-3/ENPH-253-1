@@ -9,10 +9,11 @@ namespace World{
 
 	class Node {
         public:
-            unsigned long visitStamp = 0;
             bool deadEnd;
             int8_t id = -1;
-            Node(int id) : id(id), deadEnd(false) {
+            Node(int id1){
+                deadEnd = false;
+                id = id1;
                 weights[0] = 1;
                 weights[1] = 1;
                 weights[2] = 1;

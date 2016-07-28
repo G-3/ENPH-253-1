@@ -24,6 +24,7 @@ namespace Control{
         base->relLinkDirs(expectTapeDir, start);
         destDir = base->relDestDir(dest, start);
        
+        /*
         Debug::serialPrint("Direction . Exp Tape \n", Debug::INTERSECT_DB);
         for(int i = 0; i < 4; i++){
             char msg[20];
@@ -33,6 +34,7 @@ namespace Control{
         char msg[20];
         sprintf(msg, "Dest Dir %d \n", destDir);
         Debug::serialPrint(msg, Debug::INTERSECT_DB);
+        */
     }
 
     IntersectNav::~IntersectNav(){

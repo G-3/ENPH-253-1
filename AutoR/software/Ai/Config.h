@@ -8,8 +8,8 @@ namespace Config{
     // static const int links[2][3] = {{1, 0, 1},{1, 2, 0}};
     // static const int linksSize = 2;
     static const uint8_t driveSpeed = 80;
-    static const uint8_t linksSize = 48;
-    static const uint8_t links[48][3] = { 
+    static const uint8_t linksSize = 47;
+    static const uint8_t links[47][3] = { 
         { 0, 1, 0 },
         { 1, 0, 2 },
         { 1, 2, 0 },

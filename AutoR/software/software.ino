@@ -7,14 +7,14 @@
 // #include "./test_llrobot/test_llrobot.h"
 
 // Test Nav, tests navigation.
-//#include "./test_nav/test_nav.h"
+// #include "./test_nav/test_nav.h"
 
 // Test the QRDs listing them on the LCD one by one
 // Multi-paged, use START button to switch between.
 // #include "./test_qrd/test_qrd.h"
 
 // Test traversal between two nodes
-#include "./test_trav/test_trav.h"
+//#include "./test_trav/test_trav.h"
 
 //Test Pickup
 //#include "./test_pickup/test_pickup.h"
@@ -30,6 +30,13 @@
 
 //Test EDetect
 //#include "./test_eDetect/test_eDetect.h"
+
+//Test TurnAround
+//#include "./test_turn/test_turn.h"
+
+//Test MasterPath
+#include "./test_masterpath/test_masterpath.h"
+
 
 void setup()
 {
