@@ -206,7 +206,7 @@ namespace Control{
     }
 
     void Pickup::refindTape(){
-        if (readQRD(TFLF) || readQRD(TFRF)){
+        if (readQRD(TFLF) > 250 || readQRD(TFRF) > 250){
             driveMotors(0,0);
             EHandler::finishPickup();
         }
@@ -218,7 +218,7 @@ namespace Control{
             }
         }
 
-        if (readQRD(IDLF) || readQRD(IDRF)){
+        if (readQRD(IDLF) > 250 || readQRD(IDRF) > 250){
             motorDirection = !motorDirection;
         }
     }
@@ -238,20 +238,26 @@ namespace Control{
                 extension();
                 break;
             case CLOSE:
+                Serial.println("Close")
                 close();
                 break;
             case RETRACTION:
+                Serial.println("Retraction")
                 retraction();
                 break;
             case FAIL:
+                Serial.println("Fail")
                 fail();
                 break;
             case REFIND_TAPE:
+                Serial.println("refind tape")
                 refindTape();
             case ONE_EIGHTY_P1:
+                Serial.println("180 P1")
                 oneEightyP1();
                 break;
             case ONE_EIGHTY_P2:
+                Serial.println("180 P1")
                 oneEightyP2();
                 break;
         }

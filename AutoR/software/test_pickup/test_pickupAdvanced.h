@@ -7,6 +7,8 @@
 
 #include <avr/interrupt.h>
 
+#include "../Ai/EDetect.h"
+#include "../Ai/Control/Controller.h"
 #include "../Ai/Debug.h"
 #include "../Ai/LLRobot.h"
 #include "../Ai/Control/Pickup.h"
@@ -40,8 +42,6 @@ void setup_m(){
 }
 
 void loop_m(){
-    Control::Pickup pickup = Control::Pickup(RIGHT);
-
     LCD.clear(); LCD.home();
     LCD.print("Ready!");
     extendArm(AR,0);
@@ -64,13 +64,12 @@ void loop_m(){
 
     }
     while (startbutton());
-    delay(100);
+    delay(1000);
     LCD.clear(); LCD.home();
     LCD.print("Picking Up...");
     while(!stopbutton()){
         Event::EDetect::getInstance()->step();
         Control::Controller::getInstance()->step();
-
     }
     while(stopbutton()){
         Rel::openClaw(Rel::CR,true);
@@ -80,7 +79,5 @@ void loop_m(){
     }
     LCD.clear(); LCD.home();
     LCD.print("Done!");
-    delay(500);
-    
-    delete pickup;
+    delay(1000);
 }

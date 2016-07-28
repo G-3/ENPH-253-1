@@ -22,7 +22,7 @@ namespace HLRobot{
 
     extern World::Node *path[Config::linksSize];
     
-    enum OpMode {TAPE_FOLLOW, INTER_NAV, TRACK_DOWN, GRAB, DROP};
+    enum OpMode {TAPE_FOLLOW, INTER_NAV, PICKUP, DROP_OFF, TURN_AROUND};
 
     extern OpMode curMode;
 

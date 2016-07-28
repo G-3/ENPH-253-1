@@ -2,34 +2,37 @@
 
 #include "HLRobot.h"
 #include "Control/Controller.h"
+#include "Control/Pickup.h"
 #include "Control/IntersectNav.h"
-#include "Control/TapeFollow.h"
 #include "Control/TapeFollow2.h"
+#include "Control/TurnAround.h"
 
 #include "Debug.h"
+
+using namespace HLRobot;
 
 namespace EHandler{
     void intersect(bool left, bool right){                
         // Check to make sure this agrees with our internal model for the base node
          
         // If so start IntersectNavigation
-        if (HLRobot::curMode != HLRobot::INTER_NAV){
-            HLRobot::curMode = HLRobot::INTER_NAV;
+        if (curMode != INTER_NAV){
+            curMode = INTER_NAV;
             Debug::serialPrint("EHandler.intersect was called. Swapping to IntersectNav Control Mode.", Debug::EHANDLER);
-            Control::Controller::getInstance()->setNextController(new Control::IntersectNav(HLRobot::lastNode, HLRobot::baseNode,HLRobot::destNode));
+            Control::Controller::getInstance()->setNextController(new Control::IntersectNav(lastNode, baseNode,destNode));
         }
     }
 
     void flip(){
-        HLRobot::lastNode = HLRobot::baseNode;
-        HLRobot::baseNode = HLRobot::lastNode;
-        HLRobot::destNode = 0;
+        lastNode = baseNode;
+        baseNode = lastNode;
+        destNode = 0;
     }
    
     void finishIntersect(){
-        HLRobot::lastNode = HLRobot::baseNode;
-        HLRobot::baseNode = HLRobot::destNode;
-        HLRobot::destNode = HLRobot::getNextDest(HLRobot::baseNode);
+        lastNode = baseNode;
+        baseNode = destNode;
+        destNode = getNextDest(baseNode);
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
     }
 
@@ -56,12 +59,22 @@ namespace EHandler{
     }
 
     void passengerDetected(LLRobot::Side side){
-
+        switch(curMode){
+            case TAPE_FOLLOW:
+                curMode = PICKUP;
+                Control::Controller::getInstance()->setNextController(new Control::Pickup(side));
+        }
     }
     void collisionDetected(LLRobot::Orientation side){
-
+        switch(curMode){
+            case TURN_AROUND:
+            case INTER_NAV:
+            case PICKUP:
+                break;
+            default:
+                Control::Controller::getInstance()->setNextController(new Control::TurnAround());
+        }
     }
     void dropOffDetected(LLRobot::Orientation side){
-
     }
 } 
