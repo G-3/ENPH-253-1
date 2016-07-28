@@ -1,5 +1,6 @@
 #pragma once
 
+#include "LLRobot.h"
 namespace EHandler{
     void intersect(bool left, bool right);
 
@@ -11,6 +12,9 @@ namespace EHandler{
 	
     void falseIntersect();
     
+    void passengerDetected(LLRobot::Side side);
+    void collisionDetected(LLRobot::Orientation side);
+    void dropOffDetected(LLRobot::Side side);
     void finishPickup();
 
     void finishTurnAround();
