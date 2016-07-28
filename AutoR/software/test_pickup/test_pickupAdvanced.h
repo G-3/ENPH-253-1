@@ -68,8 +68,8 @@ void loop_m(){
     LCD.clear(); LCD.home();
     LCD.print("Picking Up...");
     while(!stopbutton()){
-        pickup.step();
-        delay(1);
+        Event::EDetect::getInstance()->step();
+        Control::Controller::getInstance()->step();
 
     }
     while(stopbutton()){
@@ -81,4 +81,6 @@ void loop_m(){
     LCD.clear(); LCD.home();
     LCD.print("Done!");
     delay(500);
+    
+    delete pickup;
 }

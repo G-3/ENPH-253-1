@@ -33,6 +33,5 @@ namespace Control{
             DropOff(LLRobot::Side side);
             ~DropOff();
             void step();
-
     };
 }

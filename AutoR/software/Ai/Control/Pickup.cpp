@@ -13,23 +13,6 @@ namespace Control{
     Pickup::Pickup(LLRobot::Side side,Phase phase){
         currentPhase = phase;
         currentSide = side;
-        if (side == LLRobot::RIGHT){
-            claw = CR;
-            arm = AR;
-            at = ATR;
-            fS = IRRF;
-            mS = IRRM;
-            bS = IRRB;
-        }
-        else{
-            claw = CL;
-            arm = AL;
-            at = ATL;
-            fS = IRLF;
-            mS = IRLM;
-            bS = IRLB;
-        }
-
     }
 
     Pickup::~Pickup(){
@@ -50,8 +33,50 @@ namespace Control{
 
     }
 
+    void Pickup::oneEightyP1(){
+        driveMotors(-140,140);
+        if(readQRD(IDLF) > 250){
+           currentPhase = ONE_EIGHTY_P2; 
+        }
+    }
+    void Pickup::oneEightyP2(){
+        driveMotors(-60,60);
+        if( readQRD(TFLF) > 250 || readQRD(TFRF) > 250 ){
+           currentPhase = ALIGMENT; 
+        }
+        
+    }
      
     void Pickup::setup(){
+        Claw altClaw;
+        if (currentSide == LLRobot::RIGHT){
+            claw = CR;
+            altClaw = CL;
+            arm = AR;
+            at = ATR;
+            fS = IRRF;
+            mS = IRRM;
+            bS = IRRB;
+        }
+        else{
+            claw = CL;
+            altClaw = CR;
+            arm = AL;
+            at = ATL;
+            fS = IRLF;
+            mS = IRLM;
+            bS = IRLB;
+        }
+        if (!getPassengerPickup(claw)){
+            currentPhase = EXTENSION;
+        }
+        else if (!getPassengerPickup(altClaw)){
+            LLRobot::flip();
+            currentPhase = ONE_EIGHTY_P1;
+        }
+        else{
+            //TODO:Event Handler screwed up
+        }
         openClaw(claw,true);
         extendArm(arm,false);
         driveMotors(0,0);
@@ -223,6 +248,11 @@ namespace Control{
                 break;
             case REFIND_TAPE:
                 refindTape();
+            case ONE_EIGHTY_P1:
+                oneEightyP1();
+                break;
+            case ONE_EIGHTY_P2:
+                oneEightyP2();
                 break;
         }
     }

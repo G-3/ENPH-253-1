@@ -52,9 +52,6 @@ void testDropOff(){
     extendArm(AL,0);
     openClaw(CL,true);
     driveMotors(0,0);
-
-    LCD.clear(); LCD.home();
-    LCD.print("Ready!");
     while(!startbutton()){
         delay(10);
         if(readArmTrip(ATR)){

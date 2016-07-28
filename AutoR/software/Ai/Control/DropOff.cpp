@@ -37,8 +37,8 @@ namespace Control{
             currentPhase = EXTENSION;
         }
         else if (getPassengerPickup(altClaw)){
-                LLRobot::flip();
-                currentPhase = ONE_EIGHTY_P1;
+            LLRobot::flip();
+            currentPhase = ONE_EIGHTY_P1;
         }
         else{
             //TODO:Event Handler screwed up
