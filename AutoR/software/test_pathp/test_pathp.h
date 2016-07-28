@@ -15,7 +15,7 @@
 
 LiquidCrystal LCD(26,27,28,16, 17, 18, 19,20,21,22,23);
 
-motorClass motor ;
+motorClass motor;
 
 ServoTINAH RCServo0;    // declare variables for up to eight     servos.   Replaced old Servo253 implementation 2015Jan2
 ServoTINAH RCServo1; 
@@ -43,38 +43,34 @@ void setup_m()
     LCD.clear(); LCD.home();
     LCD.print("Starting up...1");
     delay(200);
-    
-    Serial.println("updating");
-
+ 
     World::Node *start = World::nodes[0];
+    HLRobot::lastNode = start;
     World::Node *base = World::nodes[1];
-    World::updatePath(1, 10);
+    HLRobot::lastNode = base;   
+
+    Serial.println("updating");
 }
 
 unsigned long startt=0;
 unsigned long endt=0;
 
 void loop_m()
-{
-    Event::EDetect::getInstance()->step();
-    Control::Controller::getInstance()->step();   
-    //startt = micros(); 
-    //endt = micros();
-    //Serial.println(endt);
-    //Serial.println(startt);
-    //int counter = 1;
+{ 
+    World::Node *base = World::nodes[1];
+    World::updatePath(1, 10);
+    int counter = 0;
     
-/*
     while (HLRobot::path[counter]){
-        Serial.print(counter);
-        Serial.print(" ");
-        Serial.println(HLRobot::path[counter]->id);
+        Serial.println(" ");
         
-        dest = HLRobot::path[counter];
+        World::Node* dest = HLRobot::path[counter];
         
         Serial.print("Destination Node:");
         Serial.println(dest->id);
-
+        
+        counter += 1;
+        /*
         bool expectTapeDir[4]={false, false, false, false};
         base->relLinkDirs(expectTapeDir, start);
         int destDir = base->relDestDir(dest, start);
@@ -91,9 +87,18 @@ void loop_m()
         counter += 1;
         start = base;
         base = dest;
-
-    }
 */
+    }
+    HLRobot::destNode = HLRobot::getNextDest(base);
+    Serial.println(HLRobot::destNode->id);   
+    Event::EDetect::getInstance()->step();
+    Control::Controller::getInstance()->step();   
+    //startt = micros(); 
+    //endt = micros();
+    //Serial.println(endt);
+    //Serial.println(startt);
+    
+
     delay(1000);
     
     // Event::EDetect::getInstance()->step();

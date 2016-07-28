@@ -19,5 +19,6 @@ w.update()
 w.create_image(board.width()/2, board.height()/2, image=board)
 b_graph.draw(w)
 b_graph.printLinks()
+b_graph.printDeadEnds()
 
 master.mainloop()

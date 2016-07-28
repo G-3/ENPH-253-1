@@ -1,9 +1,14 @@
+#include <phys253.h>
 #include "EHandler.h"
-
 #include "HLRobot.h"
+#include "World.h"
+#include "LLRobot.h"
+#include "Config.h"
 #include "Control/Controller.h"
 #include "Control/Pickup.h"
 #include "Control/IntersectNav.h"
+#include "Control/IntersectSimp.h"
+#include "Control/TurnAround.h"
 #include "Control/TapeFollow2.h"
 #include "Control/TurnAround.h"
 
@@ -16,46 +21,71 @@ namespace EHandler{
         // Check to make sure this agrees with our internal model for the base node
          
         // If so start IntersectNavigation
+        
         if (curMode != INTER_NAV){
+            LCD.clear(); LCD.home(); // LCD.setCursor(0, 1); 
+            LCD.print("Inter");LCD.setCursor(0, 1);
+            LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
             curMode = INTER_NAV;
-            Debug::serialPrint("EHandler.intersect was called. Swapping to IntersectNav Control Mode.", Debug::EHANDLER);
-            Control::Controller::getInstance()->setNextController(new Control::IntersectNav(lastNode, baseNode,destNode));
+           // Debug::serialPrint("EHandler.intersect was called. Swapping to IntersectNav Control Mode.", Debug::EHANDLER);
+            Control::Controller::getInstance()->setNextController(new Control::IntersectSimp(lastNode, baseNode,destNode));
         }
     }
-
-    void flip(){
-        lastNode = baseNode;
-        baseNode = lastNode;
-        destNode = 0;
-    }
-   
+ 
     void finishIntersect(){
         lastNode = baseNode;
         baseNode = destNode;
         destNode = getNextDest(baseNode);
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
+        if (destNode) { 
+            curMode = TAPE_FOLLOW;
+            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
+        } else{
+            LLRobot::Rel::driveMotors(0,0);
+        }
     }
 
     void falseIntersect(){
          
     }
 
+    void finishTurnAround(){
+        //expected
+        //if (HLRobot::baseNode->deadEnd){
+        flip();
+        destNode = getNextDest(baseNode); 
+        //}
+        //unexpected
+        curMode = TAPE_FOLLOW;
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
+    }
+ 
+    void flip(){
+        World::Node *oldLastNode = lastNode;
+        lastNode = baseNode;
+        baseNode = oldLastNode;
+    }
+    
     void fail(char message[]){
         //LCD.clear(); LCD.home();
         //LCD.print(message);
     }
     
     void finishPickup(){
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
-    }
-
-    void finishTurnAround(){
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
-        flip();
+        if (LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CL) || LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CR)){
+            if ((baseNode->id == 13 && lastNode->id == 3)||
+                (baseNode->id == 3 && lastNode->id == 13)){
+                if(baseNode->id == 13){
+                    dropOffDetected(LLRobot::RIGHT);
+                }else{
+                    dropOffDetected(LLRobot::LEFT);
+                }
+            }
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
+        }
     }
  
     void finishDropOff(){
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }
 
     void passengerDetected(LLRobot::Side side){
@@ -67,11 +97,8 @@ namespace EHandler{
     }
     void collisionDetected(LLRobot::Orientation side){
         switch(curMode){
-            case TURN_AROUND:
-            case INTER_NAV:
-            case PICKUP:
-                break;
-            default:
+            case TAPE_FOLLOW:
+                curMode = TURN_AROUND;
                 Control::Controller::getInstance()->setNextController(new Control::TurnAround());
         }
     }

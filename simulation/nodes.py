@@ -35,16 +35,26 @@ class Graph(object):
         print '{{ {} }}'.format(linkStr) 
         print i
 
+    def printDeadEnds(self):
+        deadStr = ''
+        deadSize = 0
+        for _,node in self.nodes.items():
+            deadStr += '{}, '.format(node.dead)
+            deadSize += 1
+        print '{{ {} }}'.format(deadStr)
+        print deadSize
+
 class Node(object):
     """
     Note that x and y are given in relative units compared to the size of the board.
     """
-    def __init__(self, id, name, x, y, links = []):
+    def __init__(self, id, name, x, y, dead, links = []):
         self.id = id
         self.name = name
         self.x = x
         self.y = y
         self.links = links
+        self.dead = dead
 
     @classmethod
     def fromData(cls, data):
@@ -63,7 +73,8 @@ class Node(object):
 
         screen.create_text(cx+14, cy-7, text=self.name, activefill='green', font=helv16)
         screen.create_text(cx, cy, text='{}'.format(self.id), font=helv16)
-        
+        if self.dead:
+            screen.create_text(cx-5, cy-10, text='DE', fill='red', font=helv16)
 
     def position(self):
         return (self.x, self.y)
