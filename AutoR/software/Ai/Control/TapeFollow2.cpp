@@ -1,6 +1,7 @@
 #include "../LLRobot.h"
 #include <phys253.h>
 #include "TapeFollow2.h"
+#include "../HLRobot.h"
 using namespace LLRobot::Rel;
 namespace Control{
     TapeFollow2::TapeFollow2(int16_t dGain, int16_t pGain, int16_t base){
@@ -93,9 +94,9 @@ namespace Control{
                 }
             }
         }
-        Serial.println(left);
-        Serial.println(right);
-        Serial.println(base);
+        //Serial.println(left);
+        //Serial.println(right);
+        //Serial.println(base);
         driveMotors(left,right);
     }
 }
