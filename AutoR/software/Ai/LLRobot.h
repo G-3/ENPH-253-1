@@ -26,7 +26,7 @@ namespace LLRobot{
         bool openClaw(::LLRobot::Abs::Claw Claw, bool pos);
 
         enum ArmTrip{ATL = 0,ATR = 1};
-        bool ReadArmTrip(::LLRobot::Abs::ArmTrip armTrip);
+        bool readArmTrip(::LLRobot::Abs::ArmTrip armTrip);
         
         enum Bumper {BF = 1,BB = 0};
         bool readBumper(::LLRobot::Abs::Bumper bumper);

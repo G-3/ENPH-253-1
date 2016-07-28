@@ -4,10 +4,16 @@
 
 #include "LLRobot.h"
 #include "EHandler.h"
+#include "EDetect.h"
 
 #include "Debug.h"
 
+using namespace LLRobot::Rel;
+
 namespace Event{
+
+
+
     EDetect *EDetect::main_instance = 0;
     
     EDetect *EDetect::getInstance(){
@@ -21,16 +27,16 @@ namespace Event{
         count+=1;
         //if(count%2==0){
                 checkIntersect();
-                checkBumper();
+                checkBumpers();
         //}
     }
 
-    bool checkIntersect(){
+    bool EDetect::checkIntersect(){
         bool interL = 0;
         bool interR = 0;
 
-        interL = LLRobot::Rel::readQRD(LLRobot::Rel::IDLF, true);
-        interR = LLRobot::Rel::readQRD(LLRobot::Rel::IDRF, true);	
+        interL = readQRD(IDLF, true);
+        interR = readQRD(IDRF, true);	
         
         if(interL || interR) {
             //char msg [100];
@@ -44,15 +50,64 @@ namespace Event{
             return false;
         }
     }
-    bool checkBumper(){
-        if(LLRobot::Rel::readBumper(LLRobot::Rel::BF)) {
-            //char msg [100];
-            //sprintf(msg, "checkIntersect OK - R: %s L: %s", (interL?"true":"false"), (interR?"true":"false") );
-            //Debug::serialPrint(msg, Debug::EDETECT);
-            EHandler::collision();
+
+    bool EDetect::checkBumpers(){
+        if (readBumper(BF))
+            consecutiveBumps++;
+        else{
+            consecutiveBumps = 0;
+        }
+
+        if (consecutiveBumps > 5){
+            EHandler::collisionDetected(LLRobot::FORWARDS);
+            consecutiveBumps = 0;
             return true;
         }
         return false;
+    }
+
+    bool EDetect::checkIR(){
+        bool eventDetected = false;
+
+        if (timestampIR == 0){
+            timestampIR = micros();
+        }
+
+        if ((micros()-timestampIR) > IR_TIME_DELAY){
+            timestampIR = micros();
+
+            int16_t reading = readCurrentQSD(false);
+            Serial.println(reading);
+            switch(irCounter){
+                case 0:
+                    if(reading > 300){
+                        EHandler::passengerDetected(LLRobot::RIGHT);
+                        eventDetected = true;
+                    }
+
+                    break;
+                case 1:
+                    if(reading > 300){
+                        EHandler::passengerDetected(LLRobot::LEFT);
+                        eventDetected = true;
+                    }
+                    break;
+            }
+
+
+            //Switch to next qsd 
+            irCounter++;
+            irCounter %= 2;
+            switch(irCounter){
+                case 0:
+                    setCurrentQSD(IRRM,false);
+                    break;
+                case 1:
+                    setCurrentQSD(IRLM,false);
+                    break;
+            }
+        }
+        return eventDetected;
     }
 }
 

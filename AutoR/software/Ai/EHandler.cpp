@@ -77,10 +77,20 @@ namespace EHandler{
     }
     
     void finishPickup(){
-        //Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
+    }
+ 
+    void finishDropOff(){
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
     }
 
-    void finishDropOff(){
-        //Control::Controller::getInstance()->setNextController(new Control::TapeFollow());
+    void passengerDetected(LLRobot::Side side){
+
+    }
+    void collisionDetected(LLRobot::Orientation side){
+
+    }
+    void dropOffDetected(LLRobot::Orientation side){
+
     }
 } 
