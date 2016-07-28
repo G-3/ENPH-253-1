@@ -238,26 +238,27 @@ namespace Control{
                 extension();
                 break;
             case CLOSE:
-                Serial.println("Close")
+                Serial.println("Close");
                 close();
                 break;
             case RETRACTION:
-                Serial.println("Retraction")
+                Serial.println("Retraction");
                 retraction();
                 break;
             case FAIL:
-                Serial.println("Fail")
+                Serial.println("Fail");
                 fail();
                 break;
             case REFIND_TAPE:
-                Serial.println("refind tape")
+                Serial.println("refind tape");
                 refindTape();
+                break;
             case ONE_EIGHTY_P1:
-                Serial.println("180 P1")
+                Serial.println("180 P1");
                 oneEightyP1();
                 break;
             case ONE_EIGHTY_P2:
-                Serial.println("180 P1")
+                Serial.println("180 P2");
                 oneEightyP2();
                 break;
         }

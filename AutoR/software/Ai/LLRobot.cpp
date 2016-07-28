@@ -29,7 +29,7 @@ namespace LLRobot{
         // Motor out
         enum MOut {pinDML=1, pinDMR=2};
         // Servo indicies
-        enum SOut {AGL=0, AGR=1,AML=2,AMR=3};
+        enum SOut {AGL=0, AGR=1,AML=3,AMR=2};
         ServoTINAH * servos[] = {&RCServo0,&RCServo1,&RCServo2,&RCServo3};
         // Digital In
         enum DIn {pinATL=5,pinATR=4,pinBF=7,pinBB=6};

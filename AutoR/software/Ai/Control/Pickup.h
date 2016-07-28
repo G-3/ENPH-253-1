@@ -17,9 +17,9 @@ namespace Control{
             const uint16_t SERVO_RATE = 15; //milliseconds per degree
             const uint32_t ALIGMENT_T = 2000000; //microsecond
             const uint16_t IR_DELAY = 3000;//microseconds
-            const int16_t pValuesSize = 2;
-            const uint16_t THRESHOLD = 10;
-            int16_t pValues[2] = {0,0};
+            const int16_t pValuesSize = 3;
+            const uint16_t THRESHOLD = 30;
+            int16_t pValues[3] = {0,0,0};
             int16_t currentPointer = 0;
             int16_t maxAmp = 0;
 
