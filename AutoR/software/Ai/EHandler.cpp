@@ -1,6 +1,7 @@
 #include <phys253.h>
 #include "EHandler.h"
 #include "HLRobot.h"
+#include "World.h"
 #include "LLRobot.h"
 #include "Config.h"
 #include "Control/Controller.h"
@@ -68,7 +69,17 @@ namespace EHandler{
     }
     
     void finishPickup(){
+        if (LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CL) || LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CR)){
+            if ((HLRobot::baseNode->id == 13 && HLRobot::lastNode->id == 3)||
+                (HLRobot::baseNode->id == 3 && HLRobot::lastNode->id == 13)){
+                if(HLRobot::baseNode->id == 13){
+                    dropOffDetected(LLRobot::RIGHT);
+                }else{
+                    dropOffDetected(LLRobot::LEFT);
+                }
+            }
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(126,25,17));
+        }
     }
  
     void finishDropOff(){
