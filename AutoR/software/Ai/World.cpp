@@ -32,15 +32,17 @@ namespace World{
             int startID = Config::links[i][0];
             if(!nodes[startID]){
                 nodes[startID] = new Node(startID);
+                //nodes[startID] -> deadEnd = Config::deadEnds[startID];
                 char msg[20];
-                sprintf(msg, "NodeS . %d . %d \n", i, startID);
+                sprintf(msg, "NodeS . %d . %d\n", i, startID);
                 Debug::serialPrint(msg, Debug::INTERSECT_DB);
             }
             int endID = Config::links[i][1];
             if(!nodes[endID]){
                 nodes[endID] = new Node(endID);
+                //nodes[endID] -> deadEnd = Config::deadEnds[endID];
                 char msg[20];
-                sprintf(msg, "NodeE . %d . %d \n", i, endID);
+                sprintf(msg, "NodeE . %d . %d\n", i, endID);
                 Debug::serialPrint(msg, Debug::INTERSECT_DB);
             }
             
@@ -52,19 +54,26 @@ namespace World{
                     // The neighbor nodes array follows uses
                     // same convention for indexing
                     nodes[startID]->linked[DirB] = nodes[endID];
+                    Serial.print(DirB);Serial.print(" ");  Serial.print(startID);Serial.print(" "); Serial.println(endID);Serial.print(" "); Serial.println(nodes[startID]->linked[0]->id);
                     break;
 
                 case DirR: 
                     nodes[startID]->linked[DirR] = nodes[endID];
+                    Serial.print(DirR);Serial.print(" "); Serial.print(startID);Serial.print(" "); Serial.println(endID);Serial.print(" "); Serial.println(nodes[startID]->linked[1]->id);
                     break;
 
                 case DirF: 
                     nodes[startID]->linked[DirF] = nodes[endID];
+                    Serial.print(DirF);Serial.print(" "); Serial.print(startID);Serial.print(" "); Serial.println(endID);Serial.print(" "); Serial.println(nodes[startID]->linked[2]->id);
                     break;
 
                 case DirL: 
                     nodes[startID]->linked[DirL] = nodes[endID];
+                    Serial.print(DirL);Serial.print(" "); Serial.print(startID);Serial.print(" "); Serial.println(endID);Serial.print(" "); Serial.println(nodes[startID]->linked[3]->id);
                     break;
+
+                default:
+                    Serial.println("What the actual");
             }
         }
     }
@@ -98,9 +107,15 @@ namespace World{
     }
 
     Dir Node::relDestDir(Node *dest, Node *start){
+        Serial.print(start->id); Serial.print(" ");Serial.print(id); Serial.print(" "); Serial.println(dest->id);
         Dir startDir = DirINVALID;
+        Serial.println(dest->id);
         for(int i=0; i<4; i++){
+            Serial.println("find");
+            Serial.println(linked[i]->id);
             if(linked[i]==start){
+                Serial.println("found");
+                Serial.println(i);
                 startDir = (Dir) i;
                 break;
             }
@@ -109,7 +124,10 @@ namespace World{
             return DirINVALID;
         }
         for(int i=0; i<4; i++){
+            Serial.println("fin");
+            Serial.println(linked[i]->id);
             if(linked[i]==dest){
+                Serial.println("foun");
                 return rotate( (Dir) i, 4-startDir);
             }
         }
@@ -163,12 +181,14 @@ namespace World{
             trackBack = prev[trackBack];
             pathLength += 1;
         }
-        
+        tempPath[pathLength] = nodes[src]; 
+
         // tempPath is reversed since we started from the end, we should invert when assigning path
         for (int i = pathLength; i >= 0; i--) {
             HLRobot::path[pathLength-i] = tempPath[i];
         }
-        HLRobot::path[pathLength] = 0;
+        HLRobot::path[pathLength+1] = 0;
+        HLRobot::pathCounter = 0;
     }
 
     int minDistance(uint16_t dist[], bool Q[], uint8_t length){

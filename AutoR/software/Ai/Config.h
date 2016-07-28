@@ -7,8 +7,9 @@ namespace Config{
     // dir-> 0:R 1:T 2:L 3:B
     // static const int links[2][3] = {{1, 0, 1},{1, 2, 0}};
     // static const int linksSize = 2;
-    static const uint8_t linksSize = 48;
-    static const uint8_t links[48][3]{     
+    static const uint8_t driveSpeed = 80;
+    static const uint8_t linksSize = 47;
+    static const uint8_t links[47][3] = { 
         { 0, 1, 0 },
         { 1, 0, 2 },
         { 1, 2, 0 },
@@ -17,7 +18,7 @@ namespace Config{
         { 2, 3, 1 },
         { 3, 2, 3 },
         { 3, 4, 2 },
-        { 3, 9, 1 },
+        { 3, 13, 1 },
         { 4, 1, 3 },
         { 4, 3, 0 },
         { 4, 5, 2 },
@@ -30,8 +31,7 @@ namespace Config{
         { 8, 4, 3 },
         { 8, 18, 0 },
         { 8, 19, 2 },
-        { 9, 3, 3 },
-        { 9, 13, 1 },
+        { 9, 3, 1 },
         { 10, 11, 0 },
         { 11, 10, 2 },
         { 11, 12, 0 },
@@ -40,7 +40,7 @@ namespace Config{
         { 12, 13, 3 },
         { 13, 12, 1 },
         { 13, 14, 2 },
-        { 13, 9, 3 },
+        { 13, 3, 3 },
         { 14, 11, 1 },
         { 14, 13, 0 },
         { 14, 15, 2 },
@@ -56,6 +56,5 @@ namespace Config{
         { 19, 8, 3 },
         { 19, 18, 1 },
         { 19, 20, 2 },
-        { 20, 19, 0 }
-    };
+        { 20, 19, 0 }};
 }

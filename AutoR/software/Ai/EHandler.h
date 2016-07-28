@@ -3,7 +3,7 @@
 #include "LLRobot.h"
 namespace EHandler{
     void intersect(bool left, bool right);
-
+    
     void flip();
 
     void fail(char message[]);

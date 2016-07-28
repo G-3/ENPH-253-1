@@ -27,6 +27,7 @@ namespace Event{
         count+=1;
         //if(count%2==0){
                 checkIntersect();
+                checkBumpers();
         //}
     }
 
@@ -52,7 +53,7 @@ namespace Event{
 
     bool EDetect::checkBumpers(){
         if (readBumper(BF))
-            consecutiveBumps++;
+            consecutiveBumps+=1;
         else{
             consecutiveBumps = 0;
         }
@@ -64,6 +65,7 @@ namespace Event{
         }
         return false;
     }
+
     bool EDetect::checkIR(){
         bool eventDetected = false;
 
