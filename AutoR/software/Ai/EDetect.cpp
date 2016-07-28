@@ -53,7 +53,7 @@ namespace Event{
 
     bool EDetect::checkBumpers(){
         if (readBumper(BF))
-            consecutiveBumps++;
+            consecutiveBumps+=1;
         else{
             consecutiveBumps = 0;
         }

@@ -4,8 +4,6 @@
 namespace EHandler{
     void intersect(bool left, bool right);
     
-    void collision();
-
     void flip();
 
     void fail(char message[]);

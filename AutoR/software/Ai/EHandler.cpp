@@ -45,15 +45,6 @@ namespace EHandler{
          
     }
 
-
-    void collision(){
-        //expected
-        //unexpected
-        HLRobot::curMode = HLRobot::TURN;
-        Control::Controller::getInstance()->setNextController(new Control::TurnAround()); 
-        
-    }
-
     void finishTurnAround(){
         //expected
         //if (HLRobot::baseNode->deadEnd){
@@ -88,7 +79,11 @@ namespace EHandler{
 
     }
     void collisionDetected(LLRobot::Orientation side){
-
+        //expected
+        //unexpected
+        HLRobot::curMode = HLRobot::TURN;
+        Control::Controller::getInstance()->setNextController(new Control::TurnAround()); 
+        
     }
     void dropOffDetected(LLRobot::Orientation side){
 
