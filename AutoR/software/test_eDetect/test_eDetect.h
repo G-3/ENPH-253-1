@@ -90,7 +90,7 @@ void testIR(){
         delay(1);
         counter %= 10;
         int32_t t1 = micros();
-        bool val = Event::EDetect::getInstance()->checkIntersect();
+        bool val = Event::EDetect::getInstance()->checkIR();
         int32_t t2 = micros();
         irDetected |= val;
         if (counter == 0){
@@ -109,8 +109,6 @@ void testIR(){
         if (stopbutton()){
             irDetected = false;
         }
-        
-        Serial.println(val);
         counter++;
     }
     while(startbutton());

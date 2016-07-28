@@ -74,38 +74,28 @@ namespace Event{
         if ((micros()-timestampIR) > IR_TIME_DELAY){
             timestampIR = micros();
 
+            int16_t reading = readCurrentQSD(false);
+            Serial.println(reading);
             switch(irCounter){
                 case 0:
-                    if(readCurrentQSD(false) > 200){
+                    if(reading > 300){
                         EHandler::passengerDetected(LLRobot::RIGHT);
                         eventDetected = true;
                     }
 
                     break;
                 case 1:
-                    if(readCurrentQSD(false) > 200){
+                    if(reading > 300){
                         EHandler::passengerDetected(LLRobot::LEFT);
-                        eventDetected = true;
-                    }
-                    break;
-                case 2:
-                    if(readCurrentQSD(false) > 700){
-                        EHandler::dropOffDetected(LLRobot::RIGHT);
-                        eventDetected = true;
-                    }
-                    break;
-                case 3:
-                    if(readCurrentQSD(false) > 700){
-                        EHandler::dropOffDetected(LLRobot::LEFT);
                         eventDetected = true;
                     }
                     break;
             }
 
 
-            //Switch to next Event
+            //Switch to next qsd 
             irCounter++;
-            irCounter %= 4;
+            irCounter %= 2;
             switch(irCounter){
                 case 0:
                     setCurrentQSD(IRRM,false);
@@ -113,14 +103,7 @@ namespace Event{
                 case 1:
                     setCurrentQSD(IRLM,false);
                     break;
-                case 2:
-                    setCurrentQSD(IRRU,false);
-                    break;
-                case 3:
-                    setCurrentQSD(IRLU,false);
-                    break;
             }
-            
         }
         return eventDetected;
     }
