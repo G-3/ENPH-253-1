@@ -11,7 +11,9 @@ namespace Event{
             static EDetect *main_instance;
             uint16_t count = 0;
             uint32_t timestampIR = 0;
+            uint32_t timestampDropOff = 0;
             const int16_t IR_TIME_DELAY = 10000;
+            const int16_t DROP_OFF_TIME = 2000;
 
             uint8_t consecutiveBumps = 0;
 
@@ -24,6 +26,7 @@ namespace Event{
             bool checkBumpers();
             bool checkIntersect();
             bool checkIR();
+            bool checkDropOff();
             void step();
     };
     

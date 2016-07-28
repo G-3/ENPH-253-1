@@ -5,6 +5,8 @@
 #include "LLRobot.h"
 #include "EHandler.h"
 #include "EDetect.h"
+#include "HLRobot.h"
+#include "World.h"
 
 #include "Debug.h"
 
@@ -106,6 +108,25 @@ namespace Event{
             }
         }
         return eventDetected;
+    }
+
+    bool EDetect::checkDropOff(){
+        if (getPassengerPickup(CL) || getPassengerPickup(CR)){
+            if ((HLRobot::baseNode->id == 13 && HLRobot::lastNode->id == 3)||
+                (HLRobot::baseNode->id == 3 && HLRobot::lastNode->id == 13)){
+                if (timestampDropOff == 0){
+                    timestampDropOff = millis();
+                }
+                else if(millis() - timestampDropOff > DROP_OFF_TIME){
+                    if(HLRobot::baseNode->id == 13){
+                        EHandler::dropOffDetected(LLRobot::RIGHT);
+                    }else{
+                        EHandler::dropOffDetected(LLRobot::LEFT);
+                    }
+                    timestampDropOff = 0;
+                }
+            }
+        }
     }
 }
 
