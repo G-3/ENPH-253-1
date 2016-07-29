@@ -18,6 +18,7 @@
 
 //Test Pickup
 //#include "./test_pickup/test_pickup.h"
+#include "./test_pickup/test_pickupAdvanced.h"
 
 //Test Irs
 //#include "./test_ir/test_ir.h"
@@ -38,7 +39,7 @@
 //#include "./test_turn/test_turn.h"
 
 //Test MasterPath
-#include "./test_masterpath/test_masterpath.h"
+//#include "./test_masterpath/test_masterpath.h"
 
 
 void setup()
