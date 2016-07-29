@@ -118,9 +118,10 @@ namespace Event{
                     timestampDropOff = millis();
                 }
                 else if(millis() - timestampDropOff > DROP_OFF_TIME){
+                    Serial.println("RollOver");
                     if(HLRobot::baseNode->id == 13){
                         EHandler::dropOffDetected(LLRobot::RIGHT);
-                    }else{
+                    }else if(HLRobot::baseNode->id == 3) {
                         EHandler::dropOffDetected(LLRobot::LEFT);
                     }
                     timestampDropOff = 0;
@@ -129,4 +130,3 @@ namespace Event{
         }
     }
 }
-
