@@ -22,7 +22,7 @@ namespace HLRobot{
 
     extern World::Node *path[Config::linksSize];
     
-    enum OpMode {TAPE_FOLLOW, INTER_NAV, PICKUP, DROP_OFF, TURN_AROUND};
+    enum OpMode {TAPE_FOLLOW = 0, INTER_NAV = 1, PICKUP = 2, DROP_OFF = 3, TURN_AROUND = 4};
     // Counts how far along we are on our current path
     extern uint8_t pathCounter;
 

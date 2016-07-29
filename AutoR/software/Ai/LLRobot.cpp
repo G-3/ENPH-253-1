@@ -32,7 +32,7 @@ namespace LLRobot{
         enum SOut {AGL=0, AGR=1,AML=3,AMR=2};
         ServoTINAH * servos[] = {&RCServo0,&RCServo1,&RCServo2,&RCServo3};
         // Digital In
-        enum DIn {pinATL=5,pinATR=4,pinBF=7,pinBB=6};
+        enum DIn {pinATL=4,pinATR=5,pinBF=7,pinBB=6};
 
         //Current orientation
         Orientation orientation = FORWARDS; 
@@ -93,7 +93,7 @@ namespace LLRobot{
         controlLock = value;
     }
     namespace Abs{ enum ArmValues {ExtendRight = 140, ExtendLeft = 140, RetractRight = 0, RetractLeft = 0};
-        enum ClawValues {OpenRight = 0, OpenLeft = 0, CloseRight = 180, CloseLeft = 180};
+        enum ClawValues {OpenRight = 45, OpenLeft = 45, CloseRight = 180, CloseLeft = 180};
 
         void setPassengerPickup(Claw claw,bool state){
             if (claw == CL)

@@ -37,8 +37,8 @@ void setup_m()
     delay(500);
 
     HLRobot::pathCounter = 0;
-    HLRobot::lastNode = World::nodes[1];
-    HLRobot::baseNode = World::nodes[2];
+    HLRobot::lastNode = World::nodes[10];
+    HLRobot::baseNode = World::nodes[11];
     World::updatePath(HLRobot::baseNode->id, ultimateLast); 
     Serial.println(HLRobot::path[0]->id);    
     Serial.println(HLRobot::path[1]->id);    
@@ -83,7 +83,10 @@ void loop_m()
     if( !HLRobot::destNode){ // && (HLRobot::baseNode->id != ultimateLast) ){
         World::updatePath(HLRobot::baseNode->id, ultimateLast); 
         HLRobot::destNode = HLRobot::getNextDest(HLRobot::baseNode);
-    }   
+    }
+    //if(HLRobot::baseNode == World::nodes[ultimateBase] && HLRobot::lastNode == World::nodes[ultimateLast]){
+    //    HLRobot::destNode
+    //} 
     //Serial.println("Testing3");    
     //Serial.println(HLRobot::destNode->id);    
     Control::Controller::getInstance()->step();

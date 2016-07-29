@@ -26,11 +26,10 @@ namespace Event{
     }
 
     void EDetect::step(){
-        count+=1;
-        //if(count%2==0){
-                checkIntersect();
-                checkBumpers();
-        //}
+        checkIntersect();
+        checkBumpers();
+        checkIR();
+        checkDropOff();
     }
 
     bool EDetect::checkIntersect(){
@@ -79,21 +78,22 @@ namespace Event{
             timestampIR = micros();
 
             int16_t reading = readCurrentQSD(false);
-            Serial.println(reading);
-            switch(irCounter){
-                case 0:
-                    if(reading > 300){
-                        EHandler::passengerDetected(LLRobot::RIGHT);
-                        eventDetected = true;
-                    }
+            if ((!getPassengerPickup(CL)) || (!getPassengerPickup(CR))){
+                switch(irCounter){
+                    case 0:
+                        if(reading > QRD_THRESH){
+                            EHandler::passengerDetected(LLRobot::RIGHT);
+                            eventDetected = true;
+                        }
 
-                    break;
-                case 1:
-                    if(reading > 300){
-                        EHandler::passengerDetected(LLRobot::LEFT);
-                        eventDetected = true;
-                    }
-                    break;
+                        break;
+                    case 1:
+                        if(reading > QRD_THRESH){
+                            EHandler::passengerDetected(LLRobot::LEFT);
+                            eventDetected = true;
+                        }
+                        break;
+                }
             }
 
 
@@ -122,7 +122,7 @@ namespace Event{
                 else if(millis() - timestampDropOff > DROP_OFF_TIME){
                     if(HLRobot::baseNode->id == 13){
                         EHandler::dropOffDetected(LLRobot::RIGHT);
-                    }else{
+                    }else if(HLRobot::baseNode->id == 3) {
                         EHandler::dropOffDetected(LLRobot::LEFT);
                     }
                     timestampDropOff = 0;
@@ -131,4 +131,3 @@ namespace Event{
         }
     }
 }
-

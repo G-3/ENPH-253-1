@@ -43,6 +43,7 @@ namespace Control{
         driveMotors(-60,60);
         if( readQRD(TFLF) > 250 || readQRD(TFRF) > 250 ){
            currentPhase = ALIGMENT; 
+           motorDirection = false;
         }
         
     }
@@ -68,11 +69,13 @@ namespace Control{
             bS = IRLB;
         }
         if (!getPassengerPickup(claw)){
-            currentPhase = EXTENSION;
+            driveMotors(motorAmplitude,motorAmplitude);
+            currentPhase = ALIGMENT;
         }
         else if (!getPassengerPickup(altClaw)){
             LLRobot::flip();
             currentPhase = ONE_EIGHTY_P1;
+            //currentPhase = FAIL;
         }
         else{
             //TODO:Event Handler screwed up
@@ -82,64 +85,52 @@ namespace Control{
         driveMotors(0,0);
         LLRobot::setControlLock(true);
         if(setCurrentQSD(mS,true)){
-            driveMotors(motorAmplitude,-motorAmplitude);
+            driveMotors(motorAmplitude,motorAmplitude);
             currentPhase = ALIGMENT;
         }
     }
     void Pickup::alignment(){
         if (aligmentTimestamp  == 0){
             aligmentTimestamp = micros();
+            firstAligmentTimestamp = micros();
         }
 
-        if (aligmentTimestamp - micros() > 3000){
-            int16_t reading = readCurrentQSD(true);
-            setCurrentQSD(mS,true);
-            aligmentTimestamp = micros();
-            //Update Previous Values
-            updatePValues(reading);
-            //Update Maximum Amplitude
-            Serial.println(reading);
-            if (reading > maxAmp)
-                maxAmp = reading;
-            
+        if (switchCounter < iterCount){
 
-            //Check that a couple of previous values are all below the threshold
-            if (motorAmplitude > 30){
-                bool islower = true;
-                for (int16_t i = 0;i < pValuesSize;i++){
-                    //Serial.println("-----");
-                    //Serial.println(reading);
-                    //Serial.println(maxAmp);
-                    //Serial.println(readPValue(i) + THRESHOLD);
-                    //Serial.println("-----");
-                    islower &= (readPValue(i) + THRESHOLD) < maxAmp;
-                }
-                
-                //If the read amplitude is deacreasing, flip directions and lower motor amplitude
-                if(islower){
-                    motorAmplitude -= motorStepDown;
+            if (aligmentTimestamp - micros() > 3000){
+                int16_t reading = readCurrentQSD(true);
 
-                    //flip direction
+                aligmentTimestamp = micros();
+                //Serial.println(reading);
+                //Serial.println(previousReading);
+                //Serial.println((reading + THRESHOLD));
+                //Serial.println((reading + THRESHOLD) < previousReading);
+
+
+                if ((reading + THRESHOLD) < previousReading && reading != -1 && previousReading != -1){
                     motorDirection = !motorDirection;
-                    if (motorDirection)
-                        driveMotors(motorAmplitude,-motorAmplitude);
-                    else {
-                        driveMotors(-motorAmplitude,motorAmplitude);
-                    }
-
-                    //reset maxAmp
-                    maxAmp = reading; 
-
-
-
+                    switchCounter++;
                 }
-            }
-            else{
-                //robot is aligned move to next phase
-                currentPhase = EXTENSION;
+                if (motorDirection){
+
+                    driveMotors(motorAmplitude,motorAmplitude);
+                }
+
+                setCurrentQSD(mS,true);
+                previousReading = reading;
             }
         }
-        if ((micros() - aligmentTimestamp) > ALIGMENT_T){
+        else{
+            currentPhase = EXTENSION;
+        }
+
+        if (motorDirection){
+            driveMotors(motorAmplitude,motorAmplitude);
+        }
+        else{
+            driveMotors(-motorAmplitude,-motorAmplitude);
+        }
+        if ((micros() - firstAligmentTimestamp) > ALIGMENT_T){
             currentPhase = FAIL;
         }
     }
@@ -190,6 +181,7 @@ namespace Control{
         }
     }
     void Pickup::fail(){
+        driveMotors(0,0);
         if (retractionTimestamp == 0){
             retractionTimestamp = millis();
         }
@@ -209,6 +201,7 @@ namespace Control{
         if (readQRD(TFLF) > 250 || readQRD(TFRF) > 250){
             driveMotors(0,0);
             EHandler::finishPickup();
+            motorAmplitude = FIND_TAPE_AMP;
         }
         else{
             if (motorDirection)
@@ -217,9 +210,11 @@ namespace Control{
                 driveMotors(-motorAmplitude,motorAmplitude);
             }
         }
-
-        if (readQRD(IDLF) > 250 || readQRD(IDRF) > 250){
-            motorDirection = !motorDirection;
+        if (readQRD(IDLF) > 250){
+            motorDirection = false;
+        }
+        if (readQRD(IDRF) > 250){
+            motorDirection = true;
         }
     }
 

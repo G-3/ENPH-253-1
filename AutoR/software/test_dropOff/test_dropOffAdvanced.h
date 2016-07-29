@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <LiquidCrystal.h>
@@ -13,6 +12,7 @@
 #include "../Ai/LLRobot.h"
 #include "../Ai/Control/Pickup.h"
 #include "../Ai/HLRobot.h"
+#include "../Ai/World.h"
 
 using namespace LLRobot;
 
@@ -34,6 +34,7 @@ void setup_m(){
     Serial.begin(9600);
    
     initialize();
+    World::setup();
     
     Debug::serialPrint("Initialized. Starting up.", Debug::GENERAL); 
  
@@ -50,7 +51,6 @@ void loop_m(){
     extendArm(AL,0);
     openClaw(CL,true);
     driveMotors(0,0);
-    HLRobot::curMode = HLRobot::TAPE_FOLLOW;
     while(!startbutton()){
         delay(10);
         if(readArmTrip(ATR)){
@@ -67,16 +67,17 @@ void loop_m(){
     }
     while (startbutton());
     delay(1000);
+    HLRobot::lastNode = World::nodes[13];
+    HLRobot::baseNode = World::nodes[3];
     LCD.clear(); LCD.home();
-    LCD.print("Picking Up...");
+    LCD.print("Dropping Off...");
     while(!stopbutton()){
         delay(1);
+        Serial.println((int)HLRobot::curMode);
         Event::EDetect::getInstance()->step();
         Control::Controller::getInstance()->step();
     }
     while(stopbutton()){
-        Rel::openClaw(Rel::CR,true);
-        Rel::openClaw(Rel::CL,true);
         delay(50);
 
     }

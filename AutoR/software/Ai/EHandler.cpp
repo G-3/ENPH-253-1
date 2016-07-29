@@ -11,6 +11,7 @@
 #include "Control/TurnAround.h"
 #include "Control/TapeFollow2.h"
 #include "Control/TurnAround.h"
+#include "Control/DropOff.h"
 
 #include "Debug.h"
 
@@ -18,7 +19,6 @@ using namespace HLRobot;
 
 namespace EHandler{
     void intersect(bool left, bool right){                
-         
         // If so start IntersectNavigation
         
         switch(curMode){
@@ -49,9 +49,8 @@ namespace EHandler{
                     LCD.clear(); LCD.home(); 
                     LCD.print("Inter");LCD.setCursor(0, 1);
                     LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
-                    
-                    break;
                 }
+                break;
         }
     }
  
@@ -114,6 +113,7 @@ namespace EHandler{
     }
     
     void finishPickup(){
+        //Serial.println("Finishing Pickup");
         if (LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CL) || LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CR)){
             if ((baseNode->id == 13 && lastNode->id == 3)||
                 (baseNode->id == 3 && lastNode->id == 13)){
@@ -123,15 +123,19 @@ namespace EHandler{
                     dropOffDetected(LLRobot::LEFT);
                 }
             }
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
         }
+        curMode = TAPE_FOLLOW;
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }
  
     void finishDropOff(){
+        curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }
 
     void passengerDetected(LLRobot::Side side){
+        //Serial.println("Mode: ");
+        //Serial.println((int)curMode);
         switch(curMode){
             case TAPE_FOLLOW:
                 curMode = PICKUP;
@@ -145,6 +149,11 @@ namespace EHandler{
                 Control::Controller::getInstance()->setNextController(new Control::TurnAround());
         }
     }
-    void dropOffDetected(LLRobot::Orientation side){
+    void dropOffDetected(LLRobot::Side side){
+        switch(curMode){
+            case TAPE_FOLLOW:
+                curMode = DROP_OFF;
+                Control::Controller::getInstance()->setNextController(new Control::DropOff(side));
+        }
     }
 } 
