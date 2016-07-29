@@ -4,7 +4,7 @@
 // #include "./test_pathp/test_pathp.h"
 
 // Test LowLevel Robot
-// #include "./test_llrobot/test_llrobot.h"
+//#include "./test_llrobot/test_llrobot.h"
 
 // Test Nav, tests navigation.
 // #include "./test_nav/test_nav.h"
@@ -39,7 +39,11 @@
 //#include "./test_turn/test_turn.h"
 
 //Test MasterPath
-#include "./test_masterpath/test_masterpath.h"
+//#include "./test_masterpath/test_masterpath.h"
+
+//Test MasterPath
+#include "./test_persist/test_persist.h"
+
 
 
 void setup()

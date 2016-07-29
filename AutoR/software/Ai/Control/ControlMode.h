@@ -5,4 +5,4 @@ namespace Control{
         public:
             virtual void step() = 0;
     };
-;}
+}
