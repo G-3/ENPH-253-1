@@ -80,18 +80,19 @@ namespace EHandler{
                     dropOffDetected(LLRobot::LEFT);
                 }
             }
+        }
         curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
-        }
     }
  
     void finishDropOff(){
-        Serial.println("Finishing DropOff");
         curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }
 
     void passengerDetected(LLRobot::Side side){
+        Serial.println("Mode: ");
+        Serial.println((int)curMode);
         switch(curMode){
             case TAPE_FOLLOW:
                 curMode = PICKUP;
@@ -108,7 +109,6 @@ namespace EHandler{
     void dropOffDetected(LLRobot::Side side){
         switch(curMode){
             case TAPE_FOLLOW:
-                Serial.println("DropOff Detected");
                 curMode = DROP_OFF;
                 Control::Controller::getInstance()->setNextController(new Control::DropOff(side));
         }

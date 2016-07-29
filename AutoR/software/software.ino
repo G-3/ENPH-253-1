@@ -18,7 +18,7 @@
 
 //Test Pickup
 //#include "./test_pickup/test_pickup.h"
-//#include "./test_pickup/test_pickupAdvanced.h"
+#include "./test_pickup/test_pickupAdvanced.h"
 
 //Test Irs
 //#include "./test_ir/test_ir.h"
@@ -34,7 +34,7 @@
 
 //Test DropOff
 //#include "./test_dropOff/test_dropOff.h"
-#include "./test_dropOff/test_dropOffAdvanced.h"
+//#include "./test_dropOff/test_dropOffAdvanced.h"
 
 //Test TurnAround
 //#include "./test_turn/test_turn.h"

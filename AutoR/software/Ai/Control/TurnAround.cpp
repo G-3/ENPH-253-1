@@ -22,8 +22,6 @@ namespace Control{
             case SETUP:
                 extendArm(AL,false);
                 extendArm(AR,false);
-                openClaw(CL,true);
-                openClaw(CR,true);
                 currentPhase = FIND_LEFT;
                 LLRobot::flip();
                 break;
