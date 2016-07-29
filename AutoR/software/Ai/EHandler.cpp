@@ -71,6 +71,7 @@ namespace EHandler{
     }
     
     void finishPickup(){
+        Serial.println("Finishing Pickup");
         if (LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CL) || LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CR)){
             if ((baseNode->id == 13 && lastNode->id == 3)||
                 (baseNode->id == 3 && lastNode->id == 13)){
@@ -80,11 +81,13 @@ namespace EHandler{
                     dropOffDetected(LLRobot::LEFT);
                 }
             }
+        curMode = PICKUP;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
         }
     }
  
     void finishDropOff(){
+        Serial.println("Finishing DropOff");
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }
 
@@ -102,6 +105,6 @@ namespace EHandler{
                 Control::Controller::getInstance()->setNextController(new Control::TurnAround());
         }
     }
-    void dropOffDetected(LLRobot::Orientation side){
+    void dropOffDetected(LLRobot::Side side){
     }
 } 

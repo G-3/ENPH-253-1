@@ -26,11 +26,10 @@ namespace Event{
     }
 
     void EDetect::step(){
-        count+=1;
-        //if(count%2==0){
-                checkIntersect();
-                checkBumpers();
-        //}
+        checkIntersect();
+        checkBumpers();
+        checkIR();
+        checkDropOff();
     }
 
     bool EDetect::checkIntersect(){
@@ -79,17 +78,16 @@ namespace Event{
             timestampIR = micros();
 
             int16_t reading = readCurrentQSD(false);
-            Serial.println(reading);
             switch(irCounter){
                 case 0:
-                    if(reading > 300){
+                    if(reading > 100){
                         EHandler::passengerDetected(LLRobot::RIGHT);
                         eventDetected = true;
                     }
 
                     break;
                 case 1:
-                    if(reading > 300){
+                    if(reading > 100){
                         EHandler::passengerDetected(LLRobot::LEFT);
                         eventDetected = true;
                     }

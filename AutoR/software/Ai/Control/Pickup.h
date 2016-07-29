@@ -15,13 +15,17 @@ namespace Control{
         private:
             const uint16_t CLAW_DELAY = 500; //milliseconds
             const uint16_t SERVO_RATE = 15; //milliseconds per degree
-            const uint32_t ALIGMENT_T = 2000000; //microsecond
+            const uint32_t ALIGMENT_T = 1500000; //microsecond
             const uint16_t IR_DELAY = 3000;//microseconds
             const int16_t pValuesSize = 3;
-            const uint16_t THRESHOLD = 30;
+            const int16_t iterCount = 2;
+            const int16_t THRESHOLD = 30;
+            int16_t switchCounter = 0;
+            int16_t previousReading = 0;
             int16_t pValues[3] = {0,0,0};
             int16_t currentPointer = 0;
             int16_t maxAmp = 0;
+            bool isIncreasing = true;
 
             uint16_t motorDirection = true;
             uint16_t motorAmplitude = 60;
@@ -38,6 +42,7 @@ namespace Control{
 
 
             uint32_t aligmentTimestamp = 0;
+            uint32_t firstAligmentTimestamp = 0;
             uint32_t extensionTimestamp = 0;
             uint32_t clawTimestamp = 0;
             uint32_t retractionTimestamp = 0;
