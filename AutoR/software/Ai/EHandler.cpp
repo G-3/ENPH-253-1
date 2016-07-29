@@ -11,6 +11,7 @@
 #include "Control/TurnAround.h"
 #include "Control/TapeFollow2.h"
 #include "Control/TurnAround.h"
+#include "Control/DropOff.h"
 
 #include "Debug.h"
 
@@ -18,17 +19,15 @@ using namespace HLRobot;
 
 namespace EHandler{
     void intersect(bool left, bool right){                
-        // Check to make sure this agrees with our internal model for the base node
-         
-        // If so start IntersectNavigation
-        
-        if (curMode != INTER_NAV){
-            LCD.clear(); LCD.home(); // LCD.setCursor(0, 1); 
-            LCD.print("Inter");LCD.setCursor(0, 1);
-            LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
-            curMode = INTER_NAV;
-           // Debug::serialPrint("EHandler.intersect was called. Swapping to IntersectNav Control Mode.", Debug::EHANDLER);
-            Control::Controller::getInstance()->setNextController(new Control::IntersectSimp(lastNode, baseNode,destNode));
+        switch(curMode){
+            case TAPE_FOLLOW:
+                LCD.clear(); LCD.home(); // LCD.setCursor(0, 1); 
+                LCD.print("Inter");LCD.setCursor(0, 1);
+                LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
+                curMode = INTER_NAV;
+               // Debug::serialPrint("EHandler.intersect was called. Swapping to IntersectNav Control Mode.", Debug::EHANDLER);
+                Control::Controller::getInstance()->setNextController(new Control::IntersectSimp(lastNode, baseNode,destNode));
+
         }
     }
  
@@ -81,13 +80,14 @@ namespace EHandler{
                     dropOffDetected(LLRobot::LEFT);
                 }
             }
-        curMode = PICKUP;
+        curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
         }
     }
  
     void finishDropOff(){
         Serial.println("Finishing DropOff");
+        curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }
 
@@ -106,5 +106,11 @@ namespace EHandler{
         }
     }
     void dropOffDetected(LLRobot::Side side){
+        switch(curMode){
+            case TAPE_FOLLOW:
+                Serial.println("DropOff Detected");
+                curMode = DROP_OFF;
+                Control::Controller::getInstance()->setNextController(new Control::DropOff(side));
+        }
     }
 } 

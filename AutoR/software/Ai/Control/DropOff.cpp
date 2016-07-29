@@ -110,21 +110,27 @@ namespace Control{
     void DropOff::step(){
         switch(currentPhase){
             case SETUP:    
+                Serial.println("Setup");
                 setup();
                 break;
             case EXTENSION:
+                Serial.println("Extension");
                 extension();
                 break;
             case RELEASE: 
+                Serial.println("Realease");
                 release();
                 break;
             case RETRACTION:
+                Serial.println("Retraction");
                 retraction();
                 break;
             case ONE_EIGHTY_P1:
+                Serial.println("180 P1");
                 oneEightyP1();
                 break;
             case ONE_EIGHTY_P2:
+                Serial.println("180 P2");
                 oneEightyP2();
                 break;
 
