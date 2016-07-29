@@ -43,6 +43,7 @@ namespace Control{
         driveMotors(-60,60);
         if( readQRD(TFLF) > 250 || readQRD(TFRF) > 250 ){
            currentPhase = ALIGMENT; 
+           motorDirection = false;
         }
         
     }
@@ -72,9 +73,9 @@ namespace Control{
             currentPhase = ALIGMENT;
         }
         else if (!getPassengerPickup(altClaw)){
-            //LLRobot::flip();
-            //currentPhase = ONE_EIGHTY_P1;
-            currentPhase = FAIL;
+            LLRobot::flip();
+            currentPhase = ONE_EIGHTY_P1;
+            //currentPhase = FAIL;
         }
         else{
             //TODO:Event Handler screwed up
@@ -200,6 +201,7 @@ namespace Control{
         if (readQRD(TFLF) > 250 || readQRD(TFRF) > 250){
             driveMotors(0,0);
             EHandler::finishPickup();
+            motorAmplitude = FIND_TAPE_AMP;
         }
         else{
             if (motorDirection)

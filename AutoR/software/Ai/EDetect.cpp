@@ -78,20 +78,23 @@ namespace Event{
             timestampIR = micros();
 
             int16_t reading = readCurrentQSD(false);
-            switch(irCounter){
-                case 0:
-                    if(reading > 100){
-                        EHandler::passengerDetected(LLRobot::RIGHT);
-                        eventDetected = true;
-                    }
+            if ((!getPassengerPickup(CL)) || (!getPassengerPickup(CR))){
+            Serial.println(reading);
+                switch(irCounter){
+                    case 0:
+                        if(reading > QRD_THRESH){
+                            EHandler::passengerDetected(LLRobot::RIGHT);
+                            eventDetected = true;
+                        }
 
-                    break;
-                case 1:
-                    if(reading > 100){
-                        EHandler::passengerDetected(LLRobot::LEFT);
-                        eventDetected = true;
-                    }
-                    break;
+                        break;
+                    case 1:
+                        if(reading > QRD_THRESH){
+                            EHandler::passengerDetected(LLRobot::LEFT);
+                            eventDetected = true;
+                        }
+                        break;
+                }
             }
 
 

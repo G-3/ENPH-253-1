@@ -12,6 +12,7 @@
 #include "../Ai/Debug.h"
 #include "../Ai/LLRobot.h"
 #include "../Ai/Control/Pickup.h"
+#include "../Ai/HLRobot.h"
 
 using namespace LLRobot;
 
@@ -49,6 +50,7 @@ void loop_m(){
     extendArm(AL,0);
     openClaw(CL,true);
     driveMotors(0,0);
+    HLRobot::curMode = HLRobot::TAPE_FOLLOW;
     while(!startbutton()){
         delay(10);
         if(readArmTrip(ATR)){
