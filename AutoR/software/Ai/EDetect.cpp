@@ -78,8 +78,6 @@ namespace Event{
             timestampIR = micros();
 
             int16_t reading = readCurrentQSD(false);
-            Serial.print("Bla:");
-            Serial.println(reading);
             switch(irCounter){
                 case 0:
                     if ((getPassengerPickup(CL)) || (getPassengerPickup(CR))){
@@ -146,7 +144,6 @@ namespace Event{
                     timestampDropOff = millis();
                 }
                 else if(millis() - timestampDropOff > DROP_OFF_TIME){
-                    Serial.println("RollOver");
                     if(HLRobot::baseNode->id == 13){
                         EHandler::dropOffDetected(LLRobot::RIGHT);
                     }else if(HLRobot::baseNode->id == 3) {
