@@ -4,7 +4,7 @@
 // #include "./test_pathp/test_pathp.h"
 
 // Test LowLevel Robot
-// #include "./test_llrobot/test_llrobot.h"
+//#include "./test_llrobot/test_llrobot.h"
 
 // Test Nav, tests navigation.
 // #include "./test_nav/test_nav.h"
@@ -18,7 +18,7 @@
 
 //Test Pickup
 //#include "./test_pickup/test_pickup.h"
-#include "./test_pickup/test_pickupAdvanced.h"
+//#include "./test_pickup/test_pickupAdvanced.h"
 
 //Test Irs
 //#include "./test_ir/test_ir.h"
@@ -34,7 +34,7 @@
 
 //Test DropOff
 //#include "./test_dropOff/test_dropOff.h"
-//#include "./test_dropOff/test_dropOffAdvanced.h"
+#include "./test_dropOff/test_dropOffAdvanced.h"
 
 //Test TurnAround
 //#include "./test_turn/test_turn.h"

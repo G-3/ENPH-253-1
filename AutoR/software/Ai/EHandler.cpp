@@ -71,16 +71,6 @@ namespace EHandler{
     
     void finishPickup(){
         Serial.println("Finishing Pickup");
-        if (LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CL) || LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CR)){
-            if ((baseNode->id == 13 && lastNode->id == 3)||
-                (baseNode->id == 3 && lastNode->id == 13)){
-                if(baseNode->id == 13){
-                    dropOffDetected(LLRobot::RIGHT);
-                }else{
-                    dropOffDetected(LLRobot::LEFT);
-                }
-            }
-        }
         curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }

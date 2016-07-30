@@ -73,7 +73,6 @@ void loop_m(){
     LCD.print("Dropping Off...");
     while(!stopbutton()){
         delay(1);
-        Serial.println((int)HLRobot::curMode);
         Event::EDetect::getInstance()->step();
         Control::Controller::getInstance()->step();
     }

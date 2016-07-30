@@ -12,9 +12,10 @@ namespace Event{
             uint16_t count = 0;
             uint32_t timestampIR = 0;
             uint32_t timestampDropOff = 0;
-            const int16_t IR_TIME_DELAY = 10000;
+            const int16_t IR_TIME_DELAY = 3000;
             const int16_t DROP_OFF_TIME = 4000;
             const int16_t QRD_THRESH = 400;
+            const int16_t QRD_THRESH2 = 200;
 
             uint8_t consecutiveBumps = 0;
 
