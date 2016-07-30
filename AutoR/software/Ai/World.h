@@ -21,6 +21,7 @@ namespace World{
             };
             Node *linked[4] = {};
             uint16_t weights[4];
+            bool setEdgeWeight(Node* link, uint8_t weight);
             void relLinkDirs(bool expectTapeDir[4], Node *start);
             Dir relDestDir(Node *dest, Node *start);
 	};

@@ -19,15 +19,38 @@ using namespace HLRobot;
 
 namespace EHandler{
     void intersect(bool left, bool right){                
+        // If so start IntersectNavigation
+        
         switch(curMode){
             case TAPE_FOLLOW:
-                LCD.clear(); LCD.home(); // LCD.setCursor(0, 1); 
-                LCD.print("Inter");LCD.setCursor(0, 1);
-                LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
-                curMode = INTER_NAV;
-               // Debug::serialPrint("EHandler.intersect was called. Swapping to IntersectNav Control Mode.", Debug::EHANDLER);
-                Control::Controller::getInstance()->setNextController(new Control::IntersectSimp(lastNode, baseNode,destNode));
+                // TODO: Check to make sure left right agrees with our internal model for the base node
+                /*
+                if (!destNode) {
+                    // If we have no more destination to turn towards in this intersection, stall
+                    LLRobot::Rel::driveMotors(0,0); 
+                    curMode = TAPE_FOLLOW;
+                    Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,0));
+                    
+                    LCD.clear(); LCD.home(); 
+                    LCD.print("I'm done");LCD.setCursor(0, 1);
+                    LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
+                    delay(20);
+                }*/
+                if(destNode == lastNode){
+                    // We actually want to be turning around
+                    curMode = TURN_AROUND;
+                    Control::Controller::getInstance()->setNextController(new Control::TurnAround());
+                }
+                else{
+                    // Otherwise navigate the intersection
+                    curMode = INTER_NAV;
+                    Control::Controller::getInstance()->setNextController(new Control::IntersectSimp(lastNode, baseNode,destNode));
 
+                    LCD.clear(); LCD.home(); 
+                    LCD.print("Inter");LCD.setCursor(0, 1);
+                    LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
+                }
+                break;
         }
     }
  
@@ -35,12 +58,25 @@ namespace EHandler{
         lastNode = baseNode;
         baseNode = destNode;
         destNode = getNextDest(baseNode);
-        if (destNode) { 
-            curMode = TAPE_FOLLOW;
-            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
-        } else{
-            LLRobot::Rel::driveMotors(0,0);
+        
+        LCD.clear(); LCD.home();  
+        LCD.print("FInter");LCD.setCursor(0, 1);
+        LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); 
+        if(destNode){
+            LCD.print(destNode->id);
         }
+        
+        //if (baseNode){
+        curMode = TAPE_FOLLOW;
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
+        //}
+        //else {
+            // This should never happen
+        //    LCD.clear(); LCD.home(); 
+        //    LCD.print("NO BASE");LCD.setCursor(0, 1);
+        //    LCD.print(lastNode->id);
+        //    delay(100000); 
+        //}
     }
 
     void falseIntersect(){
@@ -49,11 +85,18 @@ namespace EHandler{
 
     void finishTurnAround(){
         //expected
-        //if (HLRobot::baseNode->deadEnd){
-        flip();
-        destNode = getNextDest(baseNode); 
-        //}
-        //unexpected
+        //TODO: Add case for intentional turn arounds.
+        if (HLRobot::baseNode->deadEnd){
+            flip();
+            destNode = getNextDest(baseNode); 
+        }
+        //unexpected collision
+        else{
+            lastNode->World::Node::setEdgeWeight(HLRobot::baseNode, 10);
+            baseNode->World::Node::setEdgeWeight(HLRobot::lastNode, 10);
+            flip();
+            destNode = 0;
+        }
         curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }
@@ -81,8 +124,8 @@ namespace EHandler{
     }
 
     void passengerDetected(LLRobot::Side side){
-        Serial.println("Mode: ");
-        Serial.println((int)curMode);
+        //Serial.println("Mode: ");
+        //Serial.println((int)curMode);
         switch(curMode){
             case TAPE_FOLLOW:
                 curMode = PICKUP;

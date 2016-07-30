@@ -1,4 +1,4 @@
-#include "IntersectSimp.h"
+#include "IntersectCheck.h"
 
 #include "TapeFollow2.h"
 #include "../World.h"
@@ -17,7 +17,7 @@ namespace Control{
     /*
      * Tape Following Mode
      */
-    IntersectSimp::IntersectSimp(World::Node *start, World::Node *base, World::Node *dest): start(start), dest(dest), base(base){
+    IntersectCheck::IntersectCheck(World::Node *start, World::Node *base, World::Node *dest): start(start), dest(dest), base(base){
         /*
         Serial.println("Nodes");
         Serial.println(start->id);
@@ -32,6 +32,10 @@ namespace Control{
         base->relLinkDirs(expectTapeDir, start);
         //LCD.print("Intersecting2");LCD.setCursor(0, 1);
         destDir = base->relDestDir(dest, start);
+        // There has to be tape where we are coming from
+        seenTapeDir[World::DirB] = true;
+        // Assume there is tape in front until proven otherwise
+        seenTapeDir[World::DirF] = true;  
         /*
         LCD.print((int)destDir);
         Debug::serialPrint("Direction . Exp Tape \n", Debug::INTERSECT_DB);
@@ -46,13 +50,13 @@ namespace Control{
         */
     }
 
-    IntersectSimp::~IntersectSimp(){
+    IntersectCheck::~IntersectCheck(){
        delete tapeFollower; 
     }
 
     // Note error is defined in the x direction with a robot to the right
     // of the tape having positive error.
-    void IntersectSimp::step(){
+    void IntersectCheck::step(){
         bool xl = expectTapeDir[World::DirL];
         bool xr = expectTapeDir[World::DirR];
         bool xf = expectTapeDir[World::DirF];
@@ -66,15 +70,28 @@ namespace Control{
             switch(curPhase){
                 case DRIVE_THRU:
                 {
+                    // Update seen directions as we go
+                    // Check for left and right turns
+                    if(readQRD(IDLF, true)){
+                        seenTapeDir[World::DirL] = true;
+                    }
+                    if(readQRD(IDRF, true)){
+                        seenTapeDir[World::DirR] = true;
+                    }
                     // Check our aligners
-                    bool l = readQRD(INL, true);
-                    bool r = readQRD(INR, true);
+                    bool ln = readQRD(INL, true);
+                    bool rn = readQRD(INR, true);
 
-                    if (l || r){
+                    if (ln || rn){
                         // We are done
                         curPhase = END;
                     }
                     tapeFollower->step();
+
+                    // check if there is tape in front
+                    if(!(readQRD(TFRF, true) || readQRD(TFLF, true))){
+                        seenTapeDir[World::DirF] = false;  
+                    }
                     break;
                 }
 
@@ -84,94 +101,7 @@ namespace Control{
                     break;
             }
         }
-
-        // Turning right or left with no tape to follow
-        //else 
-        else if(!xf){
-            switch(curPhase){
-                case DRIVE_THRU:
-                {
-                    driveMotors(speed, speed);
-                    bool l = readQRD(INL, true);
-                    bool r = readQRD(INR, true);
-
-                    if (l || r){
-                        driveMotors(0, 0);
-                        curPhase = TRIP_INTER;
-                        return;
-                    }
-                    break;
-                }
-                
-                case TRIP_INTER:
-                {
-                    // Turn until we trip the intersection detectors
-                    if (destDir == World::DirL) {
-                        driveMotors(-speed, speed);
-                        // turning left
-                        bool l = readQRD(IDLF, true);
-                        if (l) {
-                            // We tripped, move on
-                            driveMotors(0, 0);
-                            curPhase = TRIP_FOLLOW;
-                        }
-                    }
-                    else{
-                        driveMotors(speed, -speed);
-                        // turning right
-                        bool r = readQRD(IDRF, true);
-                        if (r) {
-                            // We tripped, move on
-                            driveMotors(0, 0);
-                            curPhase = TRIP_FOLLOW;
-                        }
-                    }
-                    break;
-                }
-
-                case TRIP_FOLLOW:
-                {
-                    // Turn until we trip the tape followers
-                    if (destDir == World::DirL) {
-                        // Check if we trip the TF
-                        bool l = readQRD(TFLF, true);
-                        if (l) {
-                            //Gottem we are done
-                            driveMotors(0, 0);
-                            curPhase = END;
-                            return;
-                        }
-                        else {
-                            driveMotors(-speed, speed);
-                        }
-                    }
-                    else{
-                        // Check if we trip the TF
-                        bool r = readQRD(TFRF, true);
-                        if (r) {
-                            driveMotors(0, 0);
-                            //Gottem we are done
-                            curPhase = END;
-                            return;
-                        }
-                        else {
-                            driveMotors(speed, -speed);
-                        }
-                    }
-                    break;
-                }
-
-                case END:
-                {
-                    driveMotors(0, 0);
-                    //DONE:
-                    finishIntersect();
-                    break;
-                }
-            }
-        }
-
-        // Turn at the intersection and there is a follow through path
+        // Turn 
         else{
             switch (curPhase) {
                 
@@ -188,6 +118,7 @@ namespace Control{
                         return;
                     }
                     tapeFollower->step();
+                    if()
                     break;
                 }
 

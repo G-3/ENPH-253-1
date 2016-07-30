@@ -34,7 +34,7 @@
 
 //Test DropOff
 //#include "./test_dropOff/test_dropOff.h"
-#include "./test_dropOff/test_dropOffAdvanced.h"
+//#include "./test_dropOff/test_dropOffAdvanced.h"
 
 //Test TurnAround
 //#include "./test_turn/test_turn.h"
@@ -42,6 +42,8 @@
 //Test MasterPath
 //#include "./test_masterpath/test_masterpath.h"
 
+//Test PersistPath
+#include "./test_persist/test_persist.h"
 
 void setup()
 {
