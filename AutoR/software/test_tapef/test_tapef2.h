@@ -50,7 +50,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("Base:");
-                val = knob(6)/4;
+                val = knob(7)/4;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -65,7 +65,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("D Gain:");
-                val = knob(6)/16;
+                val = knob(7)/16;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -80,7 +80,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("P Gain:");
-                val = knob(6)/16;
+                val = knob(7)/16;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -95,7 +95,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("E Base:");
-                val = knob(6)/16;
+                val = knob(7)/16;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -110,7 +110,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("E Gain:");
-                val = knob(6)/16;
+                val = knob(7)/16;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -125,7 +125,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("Hyst:");
-                val = knob(6)/16;
+                val = knob(7)/16;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
