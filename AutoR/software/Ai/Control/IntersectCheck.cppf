@@ -32,7 +32,10 @@ namespace Control{
         base->relLinkDirs(expectTapeDir, start);
         //LCD.print("Intersecting2");LCD.setCursor(0, 1);
         destDir = base->relDestDir(dest, start);
+        // There has to be tape where we are coming from
         seenTapeDir[World::DirB] = true;
+        // Assume there is tape in front until proven otherwise
+        seenTapeDir[World::DirF] = true;  
         /*
         LCD.print((int)destDir);
         Debug::serialPrint("Direction . Exp Tape \n", Debug::INTERSECT_DB);
@@ -68,6 +71,7 @@ namespace Control{
                 case DRIVE_THRU:
                 {
                     // Update seen directions as we go
+                    // Check for left and right turns
                     if(readQRD(IDLF, true)){
                         seenTapeDir[World::DirL] = true;
                     }
@@ -83,8 +87,10 @@ namespace Control{
                         curPhase = END;
                     }
                     tapeFollower->step();
-                    if(readQRD(TFRF, true) && readQRD(TFLF, true)){
-                        seenTapeDir[World::DirF] = true;  
+
+                    // check if there is tape in front
+                    if(!(readQRD(TFRF, true) || readQRD(TFLF, true))){
+                        seenTapeDir[World::DirF] = false;  
                     }
                     break;
                 }
