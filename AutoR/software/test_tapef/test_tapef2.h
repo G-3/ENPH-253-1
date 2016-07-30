@@ -59,6 +59,7 @@ void loop_m(){
             }
             base = val;
             while(startbutton());
+            delay(100);
 
             while(!startbutton()){
                 delay(100);
@@ -74,6 +75,7 @@ void loop_m(){
             }
             dGain = val;
             while(startbutton());
+            delay(100);
 
             while(!startbutton()){
                 delay(100);
@@ -89,6 +91,7 @@ void loop_m(){
             }
             pGain = val;
             while(startbutton());
+            delay(100);
 
             while(!startbutton()){
                 delay(100);
@@ -119,6 +122,7 @@ void loop_m(){
             }
             eGain = val;
             while(startbutton());
+            delay(100);
 
             while(!startbutton()){
                 delay(100);
@@ -134,6 +138,7 @@ void loop_m(){
             }
             hysteresis = val;
             while(startbutton());
+            delay(100);
 
             delete tf;
             tf = new Control::TapeFollow2(dGain,pGain,base,eBase,eGain,hysteresis);
