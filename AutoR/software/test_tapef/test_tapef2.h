@@ -38,6 +38,9 @@ void loop_m(){
     int16_t base = 0;
     int16_t dGain = 0;
     int16_t pGain = 0;
+    int16_t eGain = 0;
+    int16_t eBase = 0;
+    int16_t hysteresis = 0;
     Control::TapeFollow2* tf = new Control::TapeFollow2(base,dGain,pGain);
     while(true){
         if (stopbutton()){
@@ -62,7 +65,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("D Gain:");
-                val = knob(6)/32;
+                val = knob(6)/16;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -77,7 +80,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("P Gain:");
-                val = knob(6)/32;
+                val = knob(6)/16;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -87,8 +90,53 @@ void loop_m(){
             pGain = val;
             while(startbutton());
 
+            while(!startbutton()){
+                delay(100);
+                LCD.clear();
+                LCD.setCursor(0,0);
+                LCD.print("E Base:");
+                val = knob(6)/16;
+                LCD.print(val);
+                LCD.setCursor(0,1);
+                LCD.print("Prev:");
+                LCD.print(eBase);
+                
+            }
+            eBase = val;
+
+            while(startbutton());
+            while(!startbutton()){
+                delay(100);
+                LCD.clear();
+                LCD.setCursor(0,0);
+                LCD.print("E Gain:");
+                val = knob(6)/16;
+                LCD.print(val);
+                LCD.setCursor(0,1);
+                LCD.print("Prev:");
+                LCD.print(eGain);
+                
+            }
+            eGain = val;
+            while(startbutton());
+
+            while(!startbutton()){
+                delay(100);
+                LCD.clear();
+                LCD.setCursor(0,0);
+                LCD.print("Hyst:");
+                val = knob(6)/16;
+                LCD.print(val);
+                LCD.setCursor(0,1);
+                LCD.print("Prev:");
+                LCD.print(hysteresis);
+                
+            }
+            hysteresis = val;
+            while(startbutton());
+
             delete tf;
-            tf = new Control::TapeFollow2(dGain,pGain,base);
+            tf = new Control::TapeFollow2(dGain,pGain,base,eBase,eGain,hysteresis);
 
             LCD.clear();
             LCD.print("Following tape");

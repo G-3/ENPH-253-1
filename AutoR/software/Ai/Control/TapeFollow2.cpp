@@ -4,10 +4,13 @@
 #include "../HLRobot.h"
 using namespace LLRobot::Rel;
 namespace Control{
-    TapeFollow2::TapeFollow2(int16_t dGain, int16_t pGain, int16_t base){
+    TapeFollow2::TapeFollow2(int16_t dGain, int16_t pGain, int16_t base,int16_t eBase,int16_t eGain,int16_t hysteresis){
         this->base = base;
         this->dGain = dGain;
         this->pGain = pGain;
+        this->eGain = eGain;
+        this->eBase = eBase;
+        this->hysteresis = hysteresis;
         transitionTime = 0;
         timestamp = 0;
     }
@@ -16,18 +19,28 @@ namespace Control{
     void TapeFollow2::step(){
         int sensorL = LLRobot::Rel::readQRD(LLRobot::Rel::TFLF, false);
         int sensorR = LLRobot::Rel::readQRD(LLRobot::Rel::TFRF, false);
+        bool idlf = LLRobot::Rel::readQRD(LLRobot::Rel::IDLF, true);
+        bool idrf = LLRobot::Rel::readQRD(LLRobot::Rel::IDRF, true);
         
         int32_t time = millis();
         int16_t right = base;
         int16_t left = base;
+
+        if (idlf){
+            currentSide = LLRobot::RIGHT;
+        }
+        else if(idrf){
+            currentSide = LLRobot::LEFT;
+        }
+
         if (currentSide == LLRobot::RIGHT){
             //Serial.println("right");
             if (sensorL < THLD_RIGHT && sensorR < THLD_LEFT){
                 //tape lost
-                left = base - pGain*2;
-                right = base + pGain*2;
+                left = eBase - pGain*2;
+                right = eBase + pGain*2;
             }
-            else if (sensorL + HYSTERESIS < sensorR){
+            else if (sensorL + hysteresis < sensorR){
                 //transition detected to the left side
                 left = base + dGain + pGain;
                 right = base - dGain - pGain;
@@ -61,10 +74,10 @@ namespace Control{
             //Serial.println("left");
             if (sensorL < THLD_RIGHT && sensorR < THLD_LEFT){
                 //tape lost
-                left = base + pGain*2;
-                right = base - pGain*2;
+                left = eBase + pGain*2;
+                right = eBase - pGain*2;
             }
-            else if (sensorR + HYSTERESIS < sensorL){
+            else if (sensorR + hysteresis < sensorL){
                 //transition detected to the right side
                 left = base - dGain - pGain;
                 right = base + dGain + pGain;

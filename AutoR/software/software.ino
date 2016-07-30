@@ -18,7 +18,7 @@
 
 //Test Pickup
 //#include "./test_pickup/test_pickup.h"
-#include "./test_pickup/test_pickupAdvanced.h"
+//#include "./test_pickup/test_pickupAdvanced.h"
 
 //Test Irs
 //#include "./test_ir/test_ir.h"
@@ -27,7 +27,7 @@
 //#include "./test_speed/test_speed.h"
 
 //Test Tape Follow
-//#include "./test_tapef/test_tapef2.h"
+#include "./test_tapef/test_tapef2.h"
 
 //Test EDetect
 //#include "./test_eDetect/test_eDetect.h"
