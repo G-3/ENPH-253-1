@@ -29,7 +29,7 @@ namespace Event{
         checkIntersect();
         checkBumpers();
         checkIR();
-        checkDropOff();
+        //checkDropOff();
     }
 
     bool EDetect::checkIntersect(){
@@ -78,33 +78,57 @@ namespace Event{
             timestampIR = micros();
 
             int16_t reading = readCurrentQSD(false);
-            if ((!getPassengerPickup(CL)) || (!getPassengerPickup(CR))){
-                switch(irCounter){
-                    case 0:
+            switch(irCounter){
+                case 0:
+                    if ((getPassengerPickup(CL)) || (getPassengerPickup(CR))){
+                        if(reading > QRD_THRESH2){
+                            EHandler::dropOffDetected(LLRobot::RIGHT);
+                            eventDetected = true;
+                        }
+                    }
+                    break;
+                case 1:
+                    if ((!getPassengerPickup(CL)) || (!getPassengerPickup(CR))){
                         if(reading > QRD_THRESH){
                             EHandler::passengerDetected(LLRobot::RIGHT);
                             eventDetected = true;
                         }
-
-                        break;
-                    case 1:
+                    }
+                    break;
+                case 2:
+                    if ((getPassengerPickup(CL)) || (getPassengerPickup(CR))){
+                        if(reading > QRD_THRESH2){
+                            EHandler::dropOffDetected(LLRobot::LEFT);
+                            eventDetected = true;
+                        }
+                    }
+                    break;
+                case 3:
+                    if ((!getPassengerPickup(CL)) || (!getPassengerPickup(CR))){
                         if(reading > QRD_THRESH){
                             EHandler::passengerDetected(LLRobot::LEFT);
                             eventDetected = true;
                         }
-                        break;
-                }
+                    }
+                    break;
             }
+            
 
 
             //Switch to next qsd 
             irCounter++;
-            irCounter %= 2;
+            irCounter %= 4;
             switch(irCounter){
                 case 0:
-                    setCurrentQSD(IRRM,false);
+                    setCurrentQSD(IRRU,false);
                     break;
                 case 1:
+                    setCurrentQSD(IRRM,false);
+                    break;
+                case 2:
+                    setCurrentQSD(IRLU,false);
+                    break;
+                case 3:
                     setCurrentQSD(IRLM,false);
                     break;
             }

@@ -24,7 +24,7 @@ namespace EHandler{
         switch(curMode){
             case TAPE_FOLLOW:
                 // TODO: Check to make sure left right agrees with our internal model for the base node
-               
+                /*
                 if (!destNode) {
                     // If we have no more destination to turn towards in this intersection, stall
                     LLRobot::Rel::driveMotors(0,0); 
@@ -35,8 +35,8 @@ namespace EHandler{
                     LCD.print("I'm done");LCD.setCursor(0, 1);
                     LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
                     delay(20);
-                }
-                else if(destNode == lastNode){
+                }*/
+                if(destNode == lastNode){
                     // We actually want to be turning around
                     curMode = TURN_AROUND;
                     Control::Controller::getInstance()->setNextController(new Control::TurnAround());
@@ -66,17 +66,17 @@ namespace EHandler{
             LCD.print(destNode->id);
         }
         
-        if (baseNode){
-            curMode = TAPE_FOLLOW;
-            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
-        }
-        else {
+        //if (baseNode){
+        curMode = TAPE_FOLLOW;
+        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
+        //}
+        //else {
             // This should never happen
-            LCD.clear(); LCD.home(); 
-            LCD.print("NO BASE");LCD.setCursor(0, 1);
-            LCD.print(lastNode->id);
-            delay(100000); 
-        }
+        //    LCD.clear(); LCD.home(); 
+        //    LCD.print("NO BASE");LCD.setCursor(0, 1);
+        //    LCD.print(lastNode->id);
+        //    delay(100000); 
+        //}
     }
 
     void falseIntersect(){
@@ -113,17 +113,7 @@ namespace EHandler{
     }
     
     void finishPickup(){
-        //Serial.println("Finishing Pickup");
-        if (LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CL) || LLRobot::Rel::getPassengerPickup(LLRobot::Rel::CR)){
-            if ((baseNode->id == 13 && lastNode->id == 3)||
-                (baseNode->id == 3 && lastNode->id == 13)){
-                if(baseNode->id == 13){
-                    dropOffDetected(LLRobot::RIGHT);
-                }else{
-                    dropOffDetected(LLRobot::LEFT);
-                }
-            }
-        }
+        Serial.println("Finishing Pickup");
         curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }

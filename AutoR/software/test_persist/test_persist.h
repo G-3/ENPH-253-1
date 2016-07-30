@@ -37,8 +37,8 @@ void setup_m()
     delay(500);
 
     HLRobot::pathCounter = 0;
-    HLRobot::lastNode = World::nodes[10];
-    HLRobot::baseNode = World::nodes[11];
+    HLRobot::lastNode = World::nodes[1];
+    HLRobot::baseNode = World::nodes[2];
     World::updatePath(HLRobot::baseNode->id, ultimateLast); 
     Serial.println(HLRobot::path[0]->id);    
     Serial.println(HLRobot::path[1]->id);    
