@@ -38,6 +38,7 @@ void loop_m(){
     int16_t base = 0;
     int16_t dGain = 0;
     int16_t pGain = 0;
+    int16_t iGain = 0;
     int16_t eGain = 0;
     int16_t eBase = 0;
     int16_t hysteresis = 0;
@@ -66,7 +67,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("D Gain:");
-                val = knob(7)/16;
+                val = knob(7)/8;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -82,7 +83,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("P Gain:");
-                val = knob(7)/16;
+                val = knob(7)/8;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -90,6 +91,22 @@ void loop_m(){
                 
             }
             pGain = val;
+            while(startbutton());
+            delay(100);
+
+            while(!startbutton()){
+                delay(100);
+                LCD.clear();
+                LCD.setCursor(0,0);
+                LCD.print("I Gain:");
+                val = knob(7)/8;
+                LCD.print(val);
+                LCD.setCursor(0,1);
+                LCD.print("Prev:");
+                LCD.print(iGain);
+                
+            }
+            iGain = val;
             while(startbutton());
             delay(100);
 
@@ -141,7 +158,7 @@ void loop_m(){
             delay(100);
 
             delete tf;
-            tf = new Control::TapeFollow2(dGain,pGain,base,eBase,eGain,hysteresis);
+            tf = new Control::TapeFollow2(dGain,pGain,base,iGain,eBase,eGain,hysteresis);
 
             LCD.clear();
             LCD.print("Following tape");

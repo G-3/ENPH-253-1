@@ -4,15 +4,18 @@
 #include "../HLRobot.h"
 using namespace LLRobot::Rel;
 namespace Control{
-    TapeFollow2::TapeFollow2(int16_t dGain, int16_t pGain, int16_t base,int16_t eBase,int16_t eGain,int16_t hysteresis){
+    TapeFollow2::TapeFollow2(int16_t dGain, int16_t pGain, int16_t base,int16_t iGain, int16_t eBase,int16_t eGain,int16_t hysteresis){
         this->base = base;
         this->dGain = dGain;
         this->pGain = pGain;
+        this->iGain = iGain;
         this->eGain = eGain;
         this->eBase = eBase;
         this->hysteresis = hysteresis;
-        transitionTime = 0;
+        transitionTimeRight = 0;
+        transitionTimeLeft = 0;
         timestamp = 0;
+        integral = 0;
     }
     TapeFollow2::~TapeFollow2(){
     }
@@ -46,19 +49,19 @@ namespace Control{
                 right = base - dGain - pGain;
 
                 //restimate transition time
-                transitionTime = time-timestamp;
+                transitionTimeRight = time-timestamp;
                 timestamp = time;
 
                 //switch sides
                 currentSide = LLRobot::LEFT;
             }
             else{
-                if (time > timestamp+transitionTime){
+                if (time > timestamp+transitionTimeRight){
                     //Serial.println("00000000");
                     left = base - pGain;
                     right = base + pGain;
                 }
-                else if (time > (timestamp+transitionTime/2)){
+                else if (time > (timestamp+transitionTimeRight/2)){
                     //Serial.println("--------");
                     left = base + dGain - pGain;
                     right = base - dGain + pGain;
@@ -83,19 +86,19 @@ namespace Control{
                 right = base + dGain + pGain;
 
                 //restimate transition time
-                transitionTime = time-timestamp;
+                transitionTimeLeft = time-timestamp;
                 timestamp = time;
 
                 //switch sides
                 currentSide = LLRobot::RIGHT;
             }
             else{
-                if (time > timestamp+transitionTime){
+                if (time > timestamp+transitionTimeLeft){
                     //Serial.println("00000000");
                     left = base + pGain;
                     right = base - pGain;
                 }
-                else if (time > (timestamp+transitionTime/2)){
+                else if (time > (timestamp+transitionTimeLeft/2)){
                     //Serial.println("--------");
                     left = base - dGain + pGain;
                     right = base + dGain - pGain;
@@ -107,9 +110,15 @@ namespace Control{
                 }
             }
         }
-        //Serial.println(left);
-        //Serial.println(right);
-        //Serial.println(base);
+        integral += (float)transitionTimeLeft/(transitionTimeRight+transitionTimeLeft) - 0.5;
+        left += (int16_t)(integral*iGain);
+        right -= (int16_t)(integral*iGain);
+
+        if (integral > 3)
+            integral = 3;
+        if (integral < -3)
+            integral = -3;
+
         driveMotors(left,right);
     }
 }
