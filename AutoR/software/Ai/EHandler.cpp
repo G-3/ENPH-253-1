@@ -46,6 +46,11 @@ namespace EHandler{
     void falseIntersect(){
          
     }
+    void reverseIntersect(){
+        World::Node *oldLastNode = lastNode;
+        lastNode = destNode;
+        destNode = oldLastNode;
+    }
 
     void finishTurnAround(){
         //expected
