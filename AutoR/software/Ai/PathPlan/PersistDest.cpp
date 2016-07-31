@@ -35,8 +35,9 @@ namespace PathPlan{
         if (baseNode == ultimateLast){
             destNode = ultimateBase;   
         }
-        // if we are heading towards ultimateBase, there is no more destination
-        else if(baseNode == ultimateBase){
+        // if we are heading towards ultimateBase from ultimateLast, 
+        // there is no more destination
+        else if(baseNode == ultimateBase && lastNode == ultimateLast){
             destNode = 0;
         }
         // otherwise just keep on following the path
@@ -50,16 +51,19 @@ namespace PathPlan{
         if(lastNode == currentPath[baseCounter + 1]){
             // shift to the next base
             baseCounter += 1;
+            
             // we are going to where we were coming from
+            Node *oldLastNode = lastNode;
             lastNode = baseNode;
-            baseNode = lastNode;
+            baseNode = oldLastNode;
             destNode = getNextDest(baseNode);
         }
         // if it was unintentional we want to remap
         else{
+            Node *oldLastNode = lastNode;
             lastNode = baseNode;
-            baseNode = lastNode;
-           
+            baseNode = oldLastNode;
+            destNode = getNextDest(baseNode);
             // TODO: decay these values
             // Update the edge weights so that we are discouraged from traversing
             lastNode->World::Node::setEdgeWeight(HLRobot::baseNode, 10);

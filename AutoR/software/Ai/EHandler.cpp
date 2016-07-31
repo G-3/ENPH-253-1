@@ -30,8 +30,6 @@ namespace EHandler{
                     // If we have no more destination to turn towards in this intersection, stall
                     LLRobot::Rel::driveMotors(0,0); 
                     curMode = TAPE_FOLLOW;
-                    Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,0));
-                    
                     LCD.clear(); LCD.home(); 
                     LCD.print("I'm done");LCD.setCursor(0, 1);
                     LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);

@@ -23,8 +23,8 @@ ServoTINAH RCServo1;
 ServoTINAH RCServo2;
 ServoTINAH RCServo3;
 
-uint8_t initialLast = 1;
-uint8_t initialBase = 2;
+uint8_t initialLast = 10;
+uint8_t initialBase = 11;
 
 uint8_t ultimateLast = 13;
 uint8_t ultimateBase = 3;
@@ -57,9 +57,9 @@ int counter = 0;
 
 void loop_m()
 {
+    Serial.println();
     Event::EDetect::getInstance()->step();
     Control::Controller::getInstance()->step();
-
     // TODO: Add reliable reset to the test case and tunable start and end destinations
     /*
     counter += 1;
