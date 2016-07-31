@@ -134,7 +134,7 @@ namespace World{
         return DirINVALID;
     }
 
-    void updatePath(uint8_t src, uint8_t target){
+    void updatePath(uint8_t src, uint8_t target, World::Node* pathp[]){
         uint8_t n = NUM_NODES;
         uint8_t prev[n];    // previous node in optimal path from source
         uint16_t dist[n];    // distance from source to i
@@ -185,10 +185,9 @@ namespace World{
 
         // tempPath is reversed since we started from the end, we should invert when assigning path
         for (int i = pathLength; i >= 0; i--) {
-            HLRobot::path[pathLength-i] = tempPath[i];
+            pathp[pathLength-i] = tempPath[i];
         }
-        HLRobot::path[pathLength+1] = 0;
-        HLRobot::pathCounter = 0;
+        pathp[pathLength+1] = 0;
     }
 
     int minDistance(uint16_t dist[], bool Q[], uint8_t length){

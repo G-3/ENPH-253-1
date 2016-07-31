@@ -80,6 +80,7 @@ namespace Control{
 
                 case END:
                     // DONE:
+                    driveMotors(0, 0);
                     finishIntersect();
                     break;
             }

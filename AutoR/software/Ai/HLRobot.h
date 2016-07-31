@@ -20,14 +20,8 @@ namespace HLRobot{
     // After the baseNode is navigated, this becomes the new basenode.
     extern World::Node *destNode;
 
-    extern World::Node *path[Config::linksSize];
-    
     enum OpMode {TAPE_FOLLOW = 0, INTER_NAV = 1, PICKUP = 2, DROP_OFF = 3, TURN_AROUND = 4};
-    // Counts how far along we are on our current path
-    extern uint8_t pathCounter;
-
+    
     extern OpMode curMode;
-
-    World::Node *getNextDest(World::Node* base);
 }
 
