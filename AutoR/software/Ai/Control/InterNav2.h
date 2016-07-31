@@ -30,12 +30,16 @@ namespace Control{
             bool rightBackTrip = false;
             bool motorDirection = false;
 
+            //Phase functions;
             void setup();
             void alignNavigators();
             void turnPhase1();
             void turnPhase2();
             void goStraight();
             void exitInter();
+
+            //for detetecting collisions mid intersection
+            void checkBumpers();
         public:
             InterNav2(bool expectedTapeDir[],World::Dir direction,int16_t ss1,int16_t ss2,int16_t ds);
             ~InterNav2();

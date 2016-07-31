@@ -1,5 +1,6 @@
 #include "Internav2.h"
-#include "../Edetect.h"
+#include "../EDetect.h"
+#include "../EHandler.h"
 #include "../World.h"
 
 using namespace LLRobot::Rel;
@@ -103,10 +104,10 @@ namespace Control{
                 bool idlb = readQRD(IDLB,true);
                 switch(direction){
                     case World::DirR:
-                        doneIntersection = irlb;
+                        doneIntersection = idrb;
                         break;
                     case World::DirL:
-                        doneIntersection = irlb;
+                        doneIntersection = idlb;
                         break;
                     case World::DirF:
                         //Wait for both intersection detectors to go off;
@@ -116,7 +117,7 @@ namespace Control{
                         break;
                 }
                 if (doneIntersection){
-                    finishIntersect();
+                    EHandler::finishIntersect();
                 }
             }
 
@@ -144,7 +145,7 @@ namespace Control{
                 checkBumpers();
             }
             void InterNav2::checkBumpers(){
-                if (EDetect::checkBumpers()){
+                if (Event::EDetect::getInstance()->checkBumpers()){
                     //reset variables
                     leftBackTrip = false;
                     rightBackTrip = false;
@@ -158,10 +159,10 @@ namespace Control{
 
                     //Flip direction through an intersection
                     if (direction == World::DirR){
-                        direction = World::DirL
+                        direction = World::DirL;
                     }
                     else if (direction == World::DirL){
-                        direction = World::DirR
+                        direction = World::DirR;
                     }
 
                     switch(currentPhase){
