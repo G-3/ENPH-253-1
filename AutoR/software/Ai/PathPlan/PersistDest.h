@@ -23,11 +23,16 @@ namespace PathPlan{
             // destNode -> NULL
             World::Node *ultimateLast = 0; 
             World::Node *ultimateBase = 0; 
-
+            World::Node *currentPath[100] = {};
         public:
             PersistDest(World::Node *destLast, World::Node *destBase);
             ~PersistDest();
-            World::Node *getNextDest(World::Node* base);
+            World::Node *getNextDest(World::Node *base);
+
+            /*
+             * Ensures that the planner is up to date
+             */
+            void update();
 
             /*
              * Handels completion of intersection.

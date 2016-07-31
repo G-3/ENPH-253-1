@@ -6,8 +6,13 @@ namespace World{
 
 namespace PathPlan{
     class PathMode{
-        public:
+        public:            
             virtual World::Node *getNextDest(World::Node *base) = 0;
+            
+            /*
+             * Assures that the path planner is up to date  
+             */
+            virtual void update() = 0; 
 
             /*
              * Handels completion of intersection.

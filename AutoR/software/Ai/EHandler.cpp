@@ -4,6 +4,7 @@
 #include "World.h"
 #include "LLRobot.h"
 #include "Config.h"
+#include "PathPlan/Planner.h"
 #include "Control/Controller.h"
 #include "Control/Pickup.h"
 #include "Control/IntersectNav.h"
@@ -24,7 +25,7 @@ namespace EHandler{
         switch(curMode){
             case TAPE_FOLLOW:
                 // TODO: Check to make sure left right agrees with our internal model for the base node
-                /*
+                PathPlan::Planner::getInstance()->update();
                 if (!destNode) {
                     // If we have no more destination to turn towards in this intersection, stall
                     LLRobot::Rel::driveMotors(0,0); 
@@ -35,7 +36,7 @@ namespace EHandler{
                     LCD.print("I'm done");LCD.setCursor(0, 1);
                     LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
                     delay(20);
-                }*/
+                }
                 if(destNode == lastNode){
                     // We actually want to be turning around
                     curMode = TURN_AROUND;
@@ -55,9 +56,7 @@ namespace EHandler{
     }
  
     void finishIntersect(){
-        lastNode = baseNode;
-        baseNode = destNode;
-        destNode = getNextDest(baseNode);
+        PathPlan::Planner::getInstance()->finishedIntersect();
         
         LCD.clear(); LCD.home();  
         LCD.print("FInter");LCD.setCursor(0, 1);
@@ -84,19 +83,7 @@ namespace EHandler{
     }
 
     void finishTurnAround(){
-        //expected
-        //TODO: Add case for intentional turn arounds.
-        if (HLRobot::baseNode->deadEnd){
-            flip();
-            destNode = getNextDest(baseNode); 
-        }
-        //unexpected collision
-        else{
-            lastNode->World::Node::setEdgeWeight(HLRobot::baseNode, 10);
-            baseNode->World::Node::setEdgeWeight(HLRobot::lastNode, 10);
-            flip();
-            destNode = 0;
-        }
+        PathPlan::Planner::getInstance()->finishedTurnAround();
         curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }

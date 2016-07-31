@@ -26,7 +26,7 @@ namespace World{
             Dir relDestDir(Node *dest, Node *start);
 	};
 
-    void updatePath(uint8_t src, uint8_t target);
+    void updatePath(uint8_t src, uint8_t target, World::Node* pathp[]);
 
     int minDistance(uint16_t dist[], bool Q[], uint8_t length);
 
