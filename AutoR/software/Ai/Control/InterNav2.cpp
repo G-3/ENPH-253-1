@@ -65,7 +65,7 @@ namespace Control{
                         }
                         break;
                     case World::DirL:
-                        driveMotors(spinSpeed1,-spinSpeed1);
+                        driveMotors(-spinSpeed1,spinSpeed1);
                         if (idlf){
                             currentPhase = TURN_P2;
                         }
@@ -125,24 +125,30 @@ namespace Control{
                 switch(currentPhase){
                     case SETUP:
                         setup();
+                        Serial.println("S");
                         break;
                     case ALIGN_NAVIGATORS:
                         alignNavigators();
+                        Serial.println("AN");
                         break;
                     case TURN_P1:
                         turnPhase1();
+                        Serial.println("TP1");
                         break;
                     case TURN_P2:
                         turnPhase2();
+                        Serial.println("TP2");
                         break;
                     case GO_STRAIGHT:
                         goStraight();
+                        Serial.println("GS");
                         break;
                     case EXIT_INTER:
+                        Serial.println("EI");
                         exitInter();
                         break;
                 }
-                checkBumpers();
+                //checkBumpers();
             }
             void InterNav2::checkBumpers(){
                 if (Event::EDetect::getInstance()->checkBumpers()){
