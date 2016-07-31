@@ -1,4 +1,4 @@
-#include "PersistDest.h"
+#include "RegionWalk.h"
 #include "../World.h"
 #include "../HLRobot.h"
 
@@ -6,13 +6,13 @@ using namespace World;
 using namespace HLRobot;
 
 namespace PathPlan{
-    PersistDest::PersistDest(World::Node *destLast, World::Node *destBase) : ultimateLast(destLast), ultimateBase(destBase){
+    RegionWalk::RegionWalk(World::Node *destLast, World::Node *destBase) : ultimateLast(destLast), ultimateBase(destBase){
         baseCounter = 0;
         World::updatePath(baseNode->id, ultimateLast->id, currentPath);
         destNode = getNextDest(baseNode);
     }
 
-    Node *PersistDest::getNextDest(Node *base){
+    Node *RegionWalk::getNextDest(Node *base){
         Node *dest = 0;
         if(base == currentPath[baseCounter]){
             dest = currentPath[baseCounter + 1];
@@ -20,7 +20,7 @@ namespace PathPlan{
         return dest;
     }
     
-    void PersistDest::update(){
+    void RegionWalk::update(){
         // if we entered the last stretch towards ultimateLast 
         // set destination to ultimateBase
         if (baseNode == ultimateLast){
@@ -37,7 +37,7 @@ namespace PathPlan{
         }    
     }
 
-    void PersistDest::finishedIntersect(){
+    void RegionWalk::finishedIntersect(){
         baseCounter += 1;
         
         lastNode = baseNode;
@@ -59,7 +59,7 @@ namespace PathPlan{
         }
     }
 
-    void PersistDest::finishedTurnAround(){
+    void RegionWalk::finishedTurnAround(){
         // if the node we were coming from was our destination, it was intended
         if(lastNode == currentPath[baseCounter + 1]){
             // shift to the next base

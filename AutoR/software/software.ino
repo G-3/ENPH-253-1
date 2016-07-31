@@ -1,10 +1,12 @@
+//#include "./test_print/test_print.h"
+
 // This include statement should be changed to whatever we want to be running 
 
 // Test PathPlanning
 // #include "./test_pathp/test_pathp.h"
 
 // Test LowLevel Robot
-//#include "./test_llrobot/test_llrobot.h"
+#include "./test_llrobot/test_llrobot.h"
 
 // Test Nav, tests navigation.
 // #include "./test_nav/test_nav.h"
@@ -43,7 +45,7 @@
 //#include "./test_masterpath/test_masterpath.h"
 
 //Test PersistPath
-#include "./test_persist/test_persist.h"
+//#include "./test_persist/test_persist.h"
 
 void setup()
 {
