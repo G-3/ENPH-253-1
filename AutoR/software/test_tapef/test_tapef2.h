@@ -98,7 +98,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("E Base:");
-                val = knob(7)/16;
+                val = knob(7)/8;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
@@ -113,7 +113,7 @@ void loop_m(){
                 LCD.clear();
                 LCD.setCursor(0,0);
                 LCD.print("E Gain:");
-                val = knob(7)/16;
+                val = knob(7)/8;
                 LCD.print(val);
                 LCD.setCursor(0,1);
                 LCD.print("Prev:");
