@@ -6,7 +6,7 @@
 // #include "./test_pathp/test_pathp.h"
 
 // Test LowLevel Robot
-#include "./test_llrobot/test_llrobot.h"
+// #include "./test_llrobot/test_llrobot.h"
 
 // Test Nav, tests navigation.
 // #include "./test_nav/test_nav.h"
@@ -46,6 +46,9 @@
 
 //Test PersistPath
 //#include "./test_persist/test_persist.h"
+
+//Test RegionWalk path planning algorithm
+#include "./test_regionw/test_regionw.h"
 
 void setup()
 {

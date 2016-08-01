@@ -20,7 +20,7 @@ namespace HLRobot{
     // After the baseNode is navigated, this becomes the new basenode.
     extern World::Node *destNode;
 
-    enum OpMode {TAPE_FOLLOW = 0, INTER_NAV = 1, PICKUP = 2, DROP_OFF = 3, TURN_AROUND = 4};
+    enum OpMode {TAPE_FOLLOW = 0, INTER_NAV = 1, PICKUP = 2, DROP_OFF = 3, TURN_AROUND = 4, IDLE = 5};
     
     extern OpMode curMode;
 }

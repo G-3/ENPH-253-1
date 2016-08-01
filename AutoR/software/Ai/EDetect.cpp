@@ -13,9 +13,6 @@
 using namespace LLRobot::Rel;
 
 namespace Event{
-
-
-
     EDetect *EDetect::main_instance = 0;
     
     EDetect *EDetect::getInstance(){
@@ -36,8 +33,16 @@ namespace Event{
         bool interL = 0;
         bool interR = 0;
 
+        // Debouncing
         interL = readQRD(IDLF, true);
+        interL &= readQRD(IDLF, true);
+        interL &= readQRD(IDLF, true);
+        interL &= readQRD(IDLF, true);
+        
         interR = readQRD(IDRF, true);	
+        interL &= readQRD(IDLF, true);
+        interL &= readQRD(IDLF, true);
+        interL &= readQRD(IDLF, true);
         
         if(interL || interR) {
             //char msg [100];

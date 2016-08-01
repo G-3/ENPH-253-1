@@ -6,6 +6,7 @@
 #include "Config.h"
 #include "PathPlan/Planner.h"
 #include "Control/Controller.h"
+#include "Control/Idle.h"
 #include "Control/Pickup.h"
 #include "Control/IntersectNav.h"
 #include "Control/IntersectSimp.h"
@@ -26,16 +27,19 @@ namespace EHandler{
             case TAPE_FOLLOW:
                 // TODO: Check to make sure left right agrees with our internal model for the base node
                 PathPlan::Planner::getInstance()->update();
-                if (!destNode) {
+                if (destNode == 0) {
                     // If we have no more destination to turn towards in this intersection, stall
                     LLRobot::Rel::driveMotors(0,0); 
-                    curMode = TAPE_FOLLOW;
-                    LCD.clear(); LCD.home(); 
+                    curMode = IDLE;
+                    Control::Controller::getInstance()->setNextController(new Control::Idle());
+                    /*
+                    LCD.clear(); 
+                    LCD.home(); 
                     LCD.print("I'm done");LCD.setCursor(0, 1);
                     LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
-                    delay(20);
+                    */
                 }
-                if(destNode == lastNode){
+                else if(destNode == lastNode){
                     // We actually want to be turning around
                     curMode = TURN_AROUND;
                     Control::Controller::getInstance()->setNextController(new Control::TurnAround());
@@ -55,13 +59,13 @@ namespace EHandler{
  
     void finishIntersect(){
         PathPlan::Planner::getInstance()->finishedIntersect();
-        
+        /*
         LCD.clear(); LCD.home();  
         LCD.print("FInter");LCD.setCursor(0, 1);
         LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); 
         if(destNode){
             LCD.print(destNode->id);
-        }
+        }*/
         
         //if (baseNode){
         curMode = TAPE_FOLLOW;
