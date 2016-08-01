@@ -49,11 +49,17 @@ void setup_m()
 void loop_m()
 {   
     setOrientation();
+    delay(200);
     testQRD();
+    delay(200);
     testQSD();
+    delay(200);
     testTripSensors();
+    delay(200);
     testArms();
+    delay(200);
     testClaws();
+    delay(200);
     testMotors();
 
     LCD.clear(); LCD.home();
@@ -89,7 +95,6 @@ void testQRD(){
     while(!startbutton()){
         delay(100);
         
-        Rel::driveMotors(speed, speed);
         if (stopbutton()){
             stage++;
             stage %=3;
