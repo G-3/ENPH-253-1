@@ -7,6 +7,7 @@ namespace Control{
     class TapeFollow2: public ControlMode{
         private:
             LLRobot::Side currentSide = LLRobot::LEFT;
+            uint8_t lcdCount=0;
             int16_t dGain;
             int16_t pGain;
             int16_t iGain;
@@ -14,9 +15,9 @@ namespace Control{
             int16_t eGain;
             int16_t eBase;
             int16_t hysteresis;
-            int32_t transitionTimeRight;
-            int32_t transitionTimeLeft;
-            int32_t timestamp;
+            uint32_t transitionTimeRight;
+            uint32_t transitionTimeLeft;
+            uint32_t timestamp;
             float integral;
         public:
             const int THLD_LEFT = 200;

@@ -25,7 +25,7 @@ namespace Control{
         bool idlf = LLRobot::Rel::readQRD(LLRobot::Rel::IDLF, true);
         bool idrf = LLRobot::Rel::readQRD(LLRobot::Rel::IDRF, true);
         
-        int32_t time = millis();
+        uint32_t time = micros();
         int16_t right = base;
         int16_t left = base;
 
@@ -51,6 +51,8 @@ namespace Control{
                 //restimate transition time
                 transitionTimeRight = time-timestamp;
                 timestamp = time;
+
+                integral += (float)transitionTimeLeft/(transitionTimeRight+transitionTimeLeft) - 0.5;
 
                 //switch sides
                 currentSide = LLRobot::LEFT;
@@ -89,6 +91,8 @@ namespace Control{
                 transitionTimeLeft = time-timestamp;
                 timestamp = time;
 
+                integral += (float)transitionTimeLeft/(transitionTimeRight+transitionTimeLeft) - 0.5;
+
                 //switch sides
                 currentSide = LLRobot::RIGHT;
             }
@@ -110,15 +114,23 @@ namespace Control{
                 }
             }
         }
-        integral += (float)transitionTimeLeft/(transitionTimeRight+transitionTimeLeft) - 0.5;
         left += (int16_t)(integral*iGain);
         right -= (int16_t)(integral*iGain);
 
-        if (integral > 3)
-            integral = 3;
-        if (integral < -3)
-            integral = -3;
+        if (integral > 4)
+            integral = 4;
+        if (integral < -4)
+            integral = -4;
 
         driveMotors(left,right);
+        
+        lcdCount += 1;
+        /*if(lcdCount % 20 == 0){
+            LCD.clear(); LCD.home();
+            LCD.print(transitionTimeRight);
+            LCD.setCursor(0, 1);
+            LCD.print(transitionTimeLeft);
+            lcdCount = 1;
+        }*/
     }
 }

@@ -2,7 +2,7 @@
 #include <LiquidCrystal.h>
 
 #include <phys253.h>
-#include "../Ai/Debug.h"
+//#include "../Ai/Debug.h"
 #include "../Ai/LLRobot.h"
 #include "../Ai/Control/TapeFollow2.h"
 
@@ -25,7 +25,7 @@ void setup_m(){
    
     initialize();
     
-    Debug::serialPrint("Initialized. Starting up.", Debug::GENERAL); 
+    //Debug::serialPrint("Initialized. Starting up.", Debug::GENERAL); 
  
     LCD.clear(); LCD.home();
     LCD.print("Starting up...");
@@ -44,7 +44,7 @@ void loop_m(){
     int16_t hysteresis = 0;
     Control::TapeFollow2* tf = new Control::TapeFollow2(base,dGain,pGain);
     while(true){
-        if (stopbutton()){
+        if (stopbutton() && stopbutton() && stopbutton() && stopbutton()){
             int16_t val;
             while(!startbutton()){
                 delay(100);
@@ -165,11 +165,8 @@ void loop_m(){
         }
 
         tf->step();
-        delay(1);
+        //delay(1);
 
     }
-
-    
-
 }
 
