@@ -27,6 +27,12 @@ uint8_t initialLast = 10;
 uint8_t initialBase = 11;
 using namespace PathPlan;
 
+int freeRam () {
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+
 void setup_m()
 {
     #include <phys253setup.txt>
@@ -53,11 +59,14 @@ void loop_m()
 {
     Event::EDetect::getInstance()->step();
     Control::Controller::getInstance()->step();
+    
     // TODO: Add reliable reset to the test case and tunable start and end destinations
-    /*
     counter += 1;
     if(counter%20 == 0){
         counter = 0;
+        LCD.clear(); LCD.home();
+        LCD.print(freeRam());
+        /*
         if(stopbutton()){
             HLRobot::pathCounter = 0;
             HLRobot::lastNode = World::nodes[0];
@@ -67,7 +76,6 @@ void loop_m()
             HLRobot::curMode = HLRobot::TAPE_FOLLOW;
             Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,100));
             delay(250);
-        }
+        }*/
     }
-    */
 }

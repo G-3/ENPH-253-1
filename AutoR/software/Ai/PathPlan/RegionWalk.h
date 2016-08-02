@@ -68,6 +68,7 @@ namespace PathPlan{
              * Assumes that the base is part of the region.
              */
             void updateRegionPath(uint8_t region, uint8_t base);
+
         public:
             RegionWalk();
             ~RegionWalk();
