@@ -114,8 +114,8 @@ namespace Control{
                 }
             }
         }
-        left += (int16_t)(integral*iGain);
-        right -= (int16_t)(integral*iGain);
+        left -= (int16_t)(integral*iGain);
+        right += (int16_t)(integral*iGain);
 
         if (integral > 4)
             integral = 4;

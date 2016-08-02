@@ -41,7 +41,7 @@ void loop_m(){
     int16_t iGain = 0;
     int16_t eGain = 0;
     int16_t eBase = 0;
-    int16_t hysteresis = 0;
+    int16_t hysteresis = 9;
     Control::TapeFollow2* tf = new Control::TapeFollow2(base,dGain,pGain);
     while(true){
         if (stopbutton() && stopbutton() && stopbutton() && stopbutton()){
@@ -141,7 +141,7 @@ void loop_m(){
             while(startbutton());
             delay(100);
 
-            while(!startbutton()){
+            /*while(!startbutton()){
                 delay(100);
                 LCD.clear();
                 LCD.setCursor(0,0);
@@ -155,7 +155,7 @@ void loop_m(){
             }
             hysteresis = val;
             while(startbutton());
-            delay(100);
+            delay(100);*/
 
             delete tf;
             tf = new Control::TapeFollow2(dGain,pGain,base,iGain,eBase,eGain,hysteresis);
