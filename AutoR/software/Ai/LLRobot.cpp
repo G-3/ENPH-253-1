@@ -66,8 +66,6 @@ namespace LLRobot{
 
     
     int multiplexReadQrd(Orientation direction,int pin){
-        Serial.println((int)direction);
-        Serial.println(pin);
         if(MPQRD_state != direction){
             digitalWrite(pinMPQRD, direction);
             MPQRD_state = direction;
