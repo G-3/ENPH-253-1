@@ -4,7 +4,8 @@ import json
 
 with open('resources/graph.json') as data_file:
     graph_data = json.load(data_file)
-print graph_data
+
+print(graph_data)
 b_graph = Graph.fromData(graph_data)
 
 master = Tk()
@@ -17,5 +18,7 @@ w.update()
 
 w.create_image(board.width()/2, board.height()/2, image=board)
 b_graph.draw(w)
+b_graph.printLinks()
+b_graph.printDeadEnds()
 
 master.mainloop()
