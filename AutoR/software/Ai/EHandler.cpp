@@ -37,7 +37,7 @@ namespace EHandler{
                     LCD.home(); 
                     LCD.print("I'm done");LCD.setCursor(0, 1);
                     LCD.print(lastNode->id); LCD.print(" ");LCD.print(baseNode->id); LCD.print(" "); LCD.print(destNode->id);
-                    */
+                */
                 }
                 else if(destNode == lastNode){
                     // We actually want to be turning around
@@ -124,6 +124,10 @@ namespace EHandler{
     void collisionDetected(LLRobot::Orientation side){
         switch(curMode){
             case TAPE_FOLLOW:
+                LCD.clear(); LCD.home();
+                LCD.print("COLLISION"); 
+                LLRobot::Rel::driveMotors(0,0); 
+                delay(1000);
                 curMode = TURN_AROUND;
                 Control::Controller::getInstance()->setNextController(new Control::TurnAround());
         }

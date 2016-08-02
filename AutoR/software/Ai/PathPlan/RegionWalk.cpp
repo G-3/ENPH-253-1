@@ -19,6 +19,13 @@ namespace PathPlan{
         if(base == currentPath[baseCounter]){
             dest = currentPath[baseCounter + 1];
         }
+        else {
+            LCD.clear(); 
+            LCD.home(); 
+            LCD.print("WrongBase"); 
+        }
+        LCD.setCursor(0, 1);
+        LCD.print(dest->id); 
         return dest;
     }
     
@@ -146,13 +153,14 @@ namespace PathPlan{
             updateRegionPath(curRegion, baseNode->id);
             
             destNode = getNextDest(baseNode);
-            
+           /* 
             LCD.clear(); 
             LCD.home(); 
             LCD.print("nextR");LCD.setCursor(0, 1); 
             LCD.print(destNode->id);LCD.print(" ");LCD.print(curRegion);
             LCD.print(" ");LCD.print(currentPath[0]->id);
             LCD.print(" ");LCD.print(currentPath[1]->id);
+            */
         }
         // otherwise just keep on following the path
         else{
@@ -168,7 +176,6 @@ namespace PathPlan{
     }
 
     void RegionWalk::finishedIntersect(){
-        baseCounter += 1;
         
         lastNode = baseNode;
         baseNode = destNode;
@@ -190,6 +197,7 @@ namespace PathPlan{
         }
         // otherwise just keep on following the path
         else{
+            baseCounter += 1;
             destNode = getNextDest(baseNode);
         }
     }

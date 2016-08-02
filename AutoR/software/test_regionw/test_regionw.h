@@ -61,11 +61,13 @@ void loop_m()
     Control::Controller::getInstance()->step();
     
     // TODO: Add reliable reset to the test case and tunable start and end destinations
+   
+    /*
     counter += 1;
     if(counter%20 == 0){
         counter = 0;
         LCD.clear(); LCD.home();
-        LCD.print(freeRam());
+        LCD.print(freeRam());*/
         /*
         if(stopbutton()){
             HLRobot::pathCounter = 0;
@@ -77,5 +79,5 @@ void loop_m()
             Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,100));
             delay(250);
         }*/
-    }
+    //}
 }

@@ -203,12 +203,33 @@ namespace World{
         return u;
     }
     bool Node::setEdgeWeight(Node* link, uint8_t weight){
-        for(int i = 0; i < 4; i++){     
-            if(linked[i] == link){          
-                weights[i] = weight;            
+        for(int i = 0; i < 4; i++){
+            if(linked[i] == link){
+                weights[i] = weight;
                 return true;
             }
         }
         return false;
+    }
+
+    void decayNodeWeights(uint8_t decay){
+        for(int i = 0; i < NUM_NODES; i++){
+            if(nodes[i]){
+                for(int j = 0; j < 4; j++){     
+                    if(nodes[i]->linked[j]){
+                        int result = (int) nodes[i]->weights[j] - (int) decay;
+                        if (result > 250){
+                            nodes[i]->weights[j] = 250;
+                        }
+                        else if (result < 1){
+                            nodes[i]->weights[j] = 1;
+                        }
+                        else{
+                            nodes[i]->weights[j] = result;
+                        }
+                    }
+                }
+            }
+        } 
     }
 }
