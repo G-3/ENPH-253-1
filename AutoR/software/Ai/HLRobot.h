@@ -23,5 +23,10 @@ namespace HLRobot{
     enum OpMode {TAPE_FOLLOW = 0, INTER_NAV = 1, PICKUP = 2, DROP_OFF = 3, TURN_AROUND = 4, IDLE = 5};
     
     extern OpMode curMode;
+
+    /*
+     * Checks if we are currently carrying a passenger.
+     */
+    bool hasPassenger();
 }
 

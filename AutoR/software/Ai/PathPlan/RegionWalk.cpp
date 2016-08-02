@@ -9,12 +9,22 @@ using namespace HLRobot;
 
 namespace PathPlan{
     RegionWalk::RegionWalk(){
+        dropOffPlanner = new PersistDrop(nodes[3], nodes[13]);
+        if(hasPassenger()){
+            curMode = PERSIST;
+        }
+        else{
+            curMode = WALK;
+        }
         baseCounter = 0;
         curRegion = getNextRegion(baseNode->id);
         updateRegionPath(curRegion, baseNode->id);
    }
+    RegionWalk::~RegionWalk(){
+        delete dropOffPlanner;
+    } 
 
-    Node *RegionWalk::getNextDest(Node *base){
+   Node *RegionWalk::getNextDest(Node *base){
         Node *dest = 0;
         if(base == currentPath[baseCounter]){
             dest = currentPath[baseCounter + 1];
@@ -112,7 +122,7 @@ namespace PathPlan{
         }
         
         // Check if we are at the end, if so travel in reverse
-        if(baseCounter == rl-1){
+        if(regionPos == rl-1){
             // Write region path to current but in reverse
             for(int i = 0; i < rl; i++){
                 currentPath[i] = nodes[rPath[rl-1-i]];
@@ -145,93 +155,174 @@ namespace PathPlan{
         }
     }
     
-    void RegionWalk::update(){
-        // if we are heading towards the final destination of the region
-        // we should update to the next region
-        if(baseNode->id == nextHub){
-            curRegion = getNextRegion(baseNode->id);
-            updateRegionPath(curRegion, baseNode->id);
+    void RegionWalk::decayCosts(){
+        for(int i = 0; i < numRegions; i++){
+            int resultT = (int) traversedCost[i] - 2;
+            if (resultT < 0){
+                traversedCost[i] = 0;
+            }
+            else{
+                traversedCost[i] = resultT;
+            }
             
-            destNode = getNextDest(baseNode);
-           /* 
-            LCD.clear(); 
-            LCD.home(); 
-            LCD.print("nextR");LCD.setCursor(0, 1); 
-            LCD.print(destNode->id);LCD.print(" ");LCD.print(curRegion);
-            LCD.print(" ");LCD.print(currentPath[0]->id);
-            LCD.print(" ");LCD.print(currentPath[1]->id);
-            */
+            int resultC = (int) collisionCost[i] - 2;
+            if (resultC < 0){
+                collisionCost[i] = 0;
+            }
+            else{
+                collisionCost[i] = resultC;
+            }
         }
-        // otherwise just keep on following the path
-        else{
-            destNode = getNextDest(baseNode); 
-           /* 
-            LCD.clear(); 
-            LCD.home(); 
-            LCD.print("goOn");LCD.setCursor(0, 1); 
-            LCD.print(destNode->id);LCD.print(" ");LCD.print(baseNode->id);
-            LCD.print(" ");LCD.print(nextHub);
-            */
-        } 
+    }
+    
+    void RegionWalk::update(){
+         switch(curMode){
+            case PERSIST:
+            {
+                dropOffPlanner->update();
+                break;
+            }
+            
+            case WALK:
+            {
+                // if we are heading towards the final destination of the region
+                // we should update to the next region
+                if(baseNode->id == nextHub && getNextDest(baseNode) == 0){
+                    traversedCost[curRegion] = 10;
+                    curRegion = getNextRegion(baseNode->id);
+                    updateRegionPath(curRegion, baseNode->id);
+                    
+                    destNode = getNextDest(baseNode);
+                   /* 
+                    LCD.clear(); 
+                    LCD.home(); 
+                    LCD.print("nextR");LCD.setCursor(0, 1); 
+                    LCD.print(destNode->id);LCD.print(" ");LCD.print(curRegion);
+                    LCD.print(" ");LCD.print(currentPath[0]->id);
+                    LCD.print(" ");LCD.print(currentPath[1]->id);
+                    */
+                }
+                // otherwise just keep on following the path
+                else{
+                    destNode = getNextDest(baseNode); 
+                   /* 
+                    LCD.clear(); 
+                    LCD.home(); 
+                    LCD.print("goOn");LCD.setCursor(0, 1); 
+                    LCD.print(destNode->id);LCD.print(" ");LCD.print(baseNode->id);
+                    LCD.print(" ");LCD.print(nextHub);
+                    */
+                } 
+                break;
+            }
+        }
     }
 
     void RegionWalk::finishedIntersect(){
-        
-        lastNode = baseNode;
-        baseNode = destNode;
-        
-        // if we are heading towards the final destination of the region
-        // we should update to the next region
-        if(baseNode->id == nextHub){
-            curRegion = getNextRegion(baseNode->id);
-            updateRegionPath(curRegion, baseNode->id);
+        switch(curMode){
+            case PERSIST:
+            {
+                dropOffPlanner->finishedIntersect();
+                break;
+            }
+            
+            case WALK:
+            {
+                lastNode = baseNode;
+                baseNode = destNode;
+                
+                // if we are heading towards the final destination of the region
+                // and this is the last destination on our path
+                // we should update to the next region
+                if( baseNode->id == nextHub && getNextDest(baseNode) == 0 ){
+                    traversedCost[curRegion] = 10;
+                    curRegion = getNextRegion(baseNode->id);
+                    updateRegionPath(curRegion, baseNode->id);
 
-            destNode = getNextDest(baseNode);
-            LCD.clear(); 
-            LCD.home(); 
-            LCD.print("fnextR");LCD.setCursor(0, 1); 
-            LCD.print(destNode->id);LCD.print(" ");LCD.print(curRegion);
-            LCD.print(" ");LCD.print(currentPath[0]->id);
-            LCD.print(" ");LCD.print(currentPath[1]->id);
-            LCD.print(" ");LCD.print(baseCounter);
-        }
-        // otherwise just keep on following the path
-        else{
-            baseCounter += 1;
-            destNode = getNextDest(baseNode);
+                    destNode = getNextDest(baseNode);
+                    LCD.clear(); 
+                    LCD.home(); 
+                    LCD.print("fnextR");LCD.setCursor(0, 1); 
+                    LCD.print(destNode->id);LCD.print(" ");LCD.print(curRegion);
+                    LCD.print(" ");LCD.print(currentPath[0]->id);
+                    LCD.print(" ");LCD.print(currentPath[1]->id);
+                    LCD.print(" ");LCD.print(baseCounter);
+                }
+                // otherwise just keep on following the path
+                else{
+                    baseCounter += 1;
+                    destNode = getNextDest(baseNode);
+                    decayCosts();
+                }
+                break;
+            }
         }
     }
 
     void RegionWalk::finishedTurnAround(){
-        // if the node we were coming from was our destination, it was intended
-        if(lastNode == currentPath[baseCounter + 1]){
-            // shift to the next base
-            baseCounter += 1;
+        // Switch between our walk and the dropOffPlanner
+        switch(curMode){
+            case PERSIST:
+            {
+                dropOffPlanner->finishedTurnAround();
+                break;
+            }
             
-            // we are going to where we were coming from
-            Node *oldLastNode = lastNode;
-            lastNode = baseNode;
-            baseNode = oldLastNode;
-            destNode = getNextDest(baseNode);
-        }
-        // if it was unintentional we want to remap
-        else{
-            Node *oldLastNode = lastNode;
-            lastNode = baseNode;
-            baseNode = oldLastNode;
-            // TODO: decay these values
-            // Update the edge weights so that we are discouraged from traversing
-            lastNode->World::Node::setEdgeWeight(HLRobot::baseNode, 10);
-            baseNode->World::Node::setEdgeWeight(HLRobot::lastNode, 10);
+            case WALK:
+            {
+                // if the node we were coming from was our destination, it was intended
+                if(lastNode == currentPath[baseCounter + 1]){
+                    // shift to the next base
+                    baseCounter += 1;
+                    decayCosts();
+                    
+                    // we are going to where we were coming from
+                    Node *oldLastNode = lastNode;
+                    lastNode = baseNode;
+                    baseNode = oldLastNode;
+                    destNode = getNextDest(baseNode);
+                }
+                // if it was unintentional we want to remap
+                else{
+                    Node *oldLastNode = lastNode;
+                    lastNode = baseNode;
+                    baseNode = oldLastNode;
+                    
+                    collisionCost[curRegion] = 10;
+                    // TODO: decay these values
+                    // Update the edge weights so that we are discouraged from traversing
+                    lastNode->World::Node::setEdgeWeight(HLRobot::baseNode, 10);
+                    baseNode->World::Node::setEdgeWeight(HLRobot::lastNode, 10);
 
-            // We want to find a new path to the lastHub we were at 
-            World::updatePath(baseNode->id, lastHub, currentPath);
-            
-            // set the counter to point to 0th element in the path which is now our base
-            baseCounter = 0;
-            
-            // get the new destination
-            destNode = getNextDest(baseNode); 
+                    // We want to find a new path to the lastHub we were at 
+                    World::updatePath(baseNode->id, lastHub, currentPath);
+                    nextHub = lastHub; 
+                    // set the counter to point to 0th element in the path which is now our base
+                    baseCounter = 0;
+                    
+                    // get the new destination
+                    destNode = getNextDest(baseNode); 
+                }
+                break;
+            }
         }
+    }
+
+    void RegionWalk::finishedPickUp(){
+        if(hasPassenger()){
+            curMode = PERSIST;
+        }
+        else{
+            curMode = WALK;
+        } 
+    }
+
+    void RegionWalk::finishedDropOff(){
+        if(hasPassenger()){
+            curMode = PERSIST;
+        }
+        else{
+            curMode = WALK;
+        }   
     }
 }

@@ -28,5 +28,9 @@ namespace PathPlan{
              * @modify baseNode : The exit node of the edge where we turned around
              */
             virtual void finishedTurnAround() = 0;
+            
+            virtual void finishedPickUp() = 0;
+            
+            virtual void finishedDropOff() = 0;
     };
 }

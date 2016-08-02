@@ -134,7 +134,7 @@ namespace World{
         return DirINVALID;
     }
 
-    void updatePath(uint8_t src, uint8_t target, World::Node* pathp[]){
+    uint16_t updatePath(uint8_t src, uint8_t target, World::Node* pathp[]){
         uint8_t n = NUM_NODES;
         uint8_t prev[n];    // previous node in optimal path from source
         uint16_t dist[n];    // distance from source to i
@@ -188,6 +188,7 @@ namespace World{
             pathp[pathLength-i] = tempPath[i];
         }
         pathp[pathLength+1] = 0;
+        return dist[target];
     }
 
     int minDistance(uint16_t dist[], bool Q[], uint8_t length){

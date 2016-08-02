@@ -47,6 +47,9 @@
 //Test PersistPath
 //#include "./test_persist/test_persist.h"
 
+//Test PersistDrop
+//#include "./test_persist/test_persistDrop.h"
+
 //Test RegionWalk path planning algorithm
 #include "./test_regionw/test_regionw.h"
 

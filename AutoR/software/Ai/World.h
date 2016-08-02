@@ -29,7 +29,7 @@ namespace World{
     // Decays the weights associated with all nodes
     void decayNodeWeights(uint8_t decay);
 
-    void updatePath(uint8_t src, uint8_t target, World::Node* pathp[]);
+    uint16_t updatePath(uint8_t src, uint8_t target, World::Node* pathp[]);
 
     int minDistance(uint16_t dist[], bool Q[], uint8_t length);
 

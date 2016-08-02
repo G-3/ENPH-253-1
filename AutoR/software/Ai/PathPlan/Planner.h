@@ -20,7 +20,13 @@ namespace PathPlan{
             void setNextPlanner(PathMode *newPlanner);
 
             void update();
+
+            /*
+             * EHandler signal rerouting.
+             */
             void finishedTurnAround();
             void finishedIntersect();
+            void finishedPickUp();
+            void finishedDropOff();
     }; 
 };

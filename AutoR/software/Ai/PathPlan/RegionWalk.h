@@ -1,6 +1,7 @@
 #pragma once 
 #include <Arduino.h>
 #include "PathMode.h"
+#include "PersistDrop.h"
 
 namespace World{
     class Node;
@@ -13,10 +14,21 @@ namespace PathPlan{
      */
     class RegionWalk : public PathMode{
         private:
+            /*
+             * The current plan mode.
+             * In WALK mode we wander trying to find a passenger.
+             * In PERSIST mode we persist towards the dropOff area.
+             */
+            enum PlanMode {WALK, PERSIST};
+            
+            PlanMode curMode; 
+
+            PersistDrop *dropOffPlanner;
+
             uint8_t curRegion;
             uint8_t nextRegion;
             uint8_t lastHub;
-            uint8_t nextHub; 
+            uint8_t nextHub;
 
             World::Node *currentPath[30] = {};
             uint8_t baseCounter = 0;
@@ -69,6 +81,11 @@ namespace PathPlan{
              */
             void updateRegionPath(uint8_t region, uint8_t base);
 
+            /*
+             * Decays all the costs on the regions. Should be called everytime
+             * we cross an intersection.
+             */
+            void decayCosts();
         public:
             RegionWalk();
             ~RegionWalk();
@@ -90,7 +107,18 @@ namespace PathPlan{
              * @modify baseNode : The exit node of the edge where we turned around
              */
             void finishedTurnAround();
+            
+            /*
+             * Handels completion of pickups.
+             * Check if we should enter persist mode.
+             */
+            void finishedPickUp();
 
+            /*
+             * Handels completion of dropOffs.
+             * Check if we should enter walk mode.
+             */
+            void finishedDropOff();
     };
 /*
     class Region{

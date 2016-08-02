@@ -48,4 +48,12 @@ namespace PathPlan{
     void Planner::finishedIntersect(){
         curPlanner->finishedIntersect();
     }
+    
+    void Planner::finishedPickUp(){
+        curPlanner->finishedPickUp();
+    } 
+
+    void Planner::finishedDropOff(){
+        curPlanner->finishedDropOff();
+    }   
 }
