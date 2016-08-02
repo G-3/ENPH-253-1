@@ -66,7 +66,6 @@ void testIntersect(){
     LCD.print("Navigating Intersect...");
     while(!stopbutton()){
         in2->step();
-        bool vals[4] = {0,0,0,0};
     }
     while (!stopbutton());
 }

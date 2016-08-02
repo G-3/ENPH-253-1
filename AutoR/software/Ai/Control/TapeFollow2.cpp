@@ -21,7 +21,9 @@ namespace Control{
         int16_t right = base;
         int16_t left = base;
         if (currentSide == LLRobot::RIGHT){
-            //Serial.println("right");
+            Serial.println("right");
+            Serial.println(sensorL);
+            Serial.println(sensorR);
             if (sensorL < THLD_RIGHT && sensorR < THLD_LEFT){
                 //tape lost
                 left = base - pGain*2;
@@ -41,24 +43,24 @@ namespace Control{
             }
             else{
                 if (time > timestamp+transitionTime){
-                    //Serial.println("00000000");
+                    Serial.println("00000000");
                     left = base - pGain;
                     right = base + pGain;
                 }
                 else if (time > (timestamp+transitionTime/2)){
-                    //Serial.println("--------");
+                    Serial.println("--------");
                     left = base + dGain - pGain;
                     right = base - dGain + pGain;
                 }
                 else{
-                    //Serial.println("++++++++");
+                    Serial.println("++++++++");
                     left = base - dGain - pGain;
                     right = base + dGain + pGain;
                 }
             }
         }
         else{
-            //Serial.println("left");
+            Serial.println("left");
             if (sensorL < THLD_RIGHT && sensorR < THLD_LEFT){
                 //tape lost
                 left = base + pGain*2;
@@ -78,17 +80,17 @@ namespace Control{
             }
             else{
                 if (time > timestamp+transitionTime){
-                    //Serial.println("00000000");
+                    Serial.println("00000000");
                     left = base + pGain;
                     right = base - pGain;
                 }
                 else if (time > (timestamp+transitionTime/2)){
-                    //Serial.println("--------");
+                    Serial.println("--------");
                     left = base - dGain + pGain;
                     right = base + dGain - pGain;
                 }
                 else{
-                    //Serial.println("++++++++");
+                    Serial.println("++++++++");
                     left = base + dGain + pGain;
                     right = base - dGain - pGain;
                 }

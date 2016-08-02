@@ -24,12 +24,13 @@ namespace Control{
             }
             void InterNav2::alignNavigators(){
 
-                bool idrb = readQRD(IDRF,true);
-                bool idlb = readQRD(IDLF,true);
+                bool idrb = readQRD(IDRB,true);
+                bool idlb = readQRD(IDLB,true);
                 bool inl = readQRD(INL,true);
                 bool inr = readQRD(INR,true);
 
                 motorDirection |= (idrb || idlb);
+                Serial.println(motorDirection);
                 int16_t ds = motorDirection ? -driveSpeed : driveSpeed;
 
                 switch(direction){
@@ -98,6 +99,7 @@ namespace Control{
 
             }
             void InterNav2::exitInter(){
+                //driveMotors(driveSpeed,driveSpeed);
                 tapeFollower->step();
                 bool doneIntersection = false;
                 bool idrb = readQRD(IDRB,true);
