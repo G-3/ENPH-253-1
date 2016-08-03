@@ -33,6 +33,8 @@ namespace Event{
         bool interL = 0;
         bool interR = 0;
 
+        bool tfL = readQRD(TFLF, true);
+        bool tfR = readQRD(TFRF, true);
         // Debouncing
         interL = readQRD(IDLF, true);
         interL &= readQRD(IDLF, true);
@@ -44,7 +46,7 @@ namespace Event{
         interL &= readQRD(IDLF, true);
         interL &= readQRD(IDLF, true);
         
-        if(interL || interR) {
+        if((interL || interR) && (tfL || tfR)) {
             //char msg [100];
             //sprintf(msg, "checkIntersect OK - R: %s L: %s", (interL?"true":"false"), (interR?"true":"false") );
             //Debug::serialPrint(msg, Debug::EDETECT);
