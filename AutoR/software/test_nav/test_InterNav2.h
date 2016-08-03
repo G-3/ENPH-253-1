@@ -53,6 +53,7 @@ void testIntersect(){
     bool vals[4] = {0,0,0,0};
     Control::InterNav2* in2 = new Control::InterNav2(vals,World::DirL,80,80,80);
     while(!startbutton());
+    LLRobot::flip();
 
     LCD.clear(); LCD.home();
     LCD.print("TapeFollowing...");

@@ -79,13 +79,16 @@ namespace Control{
                 switch(direction){
                     case World::DirR:
                         driveMotors(spinSpeed2,-spinSpeed2);
+                        if (tfrf){
+                            currentPhase = EXIT_INTER;
+                        }
                         break;
                     case World::DirL:
                         driveMotors(-spinSpeed2,spinSpeed2);
+                        if (tflf){
+                            currentPhase = EXIT_INTER;
+                        }
                         break;
-                }
-                if (tflf || tfrf){
-                    currentPhase = EXIT_INTER;
                 }
 
             }
@@ -99,10 +102,14 @@ namespace Control{
 
             }
             void InterNav2::exitInter(){
+                readQRD(TFRF);
+                readQRD(TFLF);
+                delay(1);
                 tapeFollower->step();
                 bool doneIntersection = false;
-                Serial.println(readQRD(IDRB));
-                Serial.println(readQRD(IDLB));
+                readQRD(IDRB);
+                readQRD(IDLB);
+                delay(1);
                 bool idrb = readQRD(IDRB,false) > 150;
                 bool idlb = readQRD(IDLB,false) > 150;
                 switch(direction){
@@ -116,47 +123,56 @@ namespace Control{
                         //Wait for both intersection detectors to go off;
                         rightBackTrip |= idrb; 
                         leftBackTrip |= idrb;
-                        doneIntersection = (rightBackTrip && leftBackTrip);
+                        doneIntersection = (idrb || idlb);//(rightBackTrip && leftBackTrip);
                         break;
                 }
                 if (doneIntersection){
-
                     LCD.clear();LCD.home();
                     LCD.print("Done!");
                     EHandler::finishIntersect();
                 }
-                Serial.println(readQRD(TFRF));
-                Serial.println(readQRD(TFLF));
             }
 
             void InterNav2::step(){
                 switch(currentPhase){
                     case SETUP:
                         setup();
-                        Serial.println("S");
+                        LCD.clear();LCD.home();
+                        LCD.print("S");
+                        delay(30);
                         break;
                     case ALIGN_NAVIGATORS:
                         alignNavigators();
-                        Serial.println("AN");
+                        LCD.clear();LCD.home();
+                        LCD.print("AN");
+                        delay(30);
                         break;
                     case TURN_P1:
                         turnPhase1();
-                        Serial.println("TP1");
+                        LCD.clear();LCD.home();
+                        LCD.print("TP1");
+                        delay(30);
                         break;
                     case TURN_P2:
                         turnPhase2();
-                        Serial.println("TP2");
+                        LCD.clear();LCD.home();
+                        LCD.print("TP2");
+                        delay(30);
                         break;
                     case GO_STRAIGHT:
                         goStraight();
-                        Serial.println("GS");
+                        LCD.clear();LCD.home();
+                        LCD.print("GS");
+                        delay(30);
                         break;
                     case EXIT_INTER:
-                        Serial.println("EI");
+                        LCD.clear();LCD.home();
+                        LCD.print("EI");
+                        delay(30);
                         exitInter();
                         break;
                 }
-                //checkBumpers();
+                checkBumpers();
             }
             void InterNav2::checkBumpers(){
                 if (Event::EDetect::getInstance()->checkBumpers()){
@@ -184,7 +200,7 @@ namespace Control{
                             EHandler::finishIntersect();
                             break;
                         case ALIGN_NAVIGATORS:
-                            EHandler::finishIntersect();
+                            currentPhase = EXIT_INTER;
                             break;
                         case TURN_P1:
                             currentPhase = TURN_P2;
