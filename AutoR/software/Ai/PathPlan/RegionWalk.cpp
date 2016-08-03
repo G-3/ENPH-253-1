@@ -8,9 +8,10 @@ using namespace World;
 using namespace HLRobot;
 
 namespace PathPlan{
-    RegionWalk::RegionWalk(){
+    RegionWalk::RegionWalk(uint8_t firstHub){
         dropOffPlanner = new PersistDrop(nodes[3], nodes[13]);
-        reinitialize(); 
+        nextHub = lastHub = firstHub;
+        remap(); 
    }
     RegionWalk::~RegionWalk(){
         delete dropOffPlanner;
@@ -236,6 +237,8 @@ namespace PathPlan{
     }
 
     void RegionWalk::finishedIntersect(){
+        decayCosts();
+        decayNodeWeights(2);
         switch(curMode){
             case PERSIST:
             {
@@ -269,7 +272,6 @@ namespace PathPlan{
                 else{
                     baseCounter += 1;
                     destNode = getNextDest(baseNode);
-                    decayCosts();
                 }
                 if(destNode == 0){
                     // Remap
@@ -293,9 +295,9 @@ namespace PathPlan{
             {
                 // if the node we were coming from was our destination, it was intended
                 if(lastNode == currentPath[baseCounter + 1]){
+                    decayCosts();
                     // shift to the next base
                     baseCounter += 1;
-                    decayCosts();
                     
                     // we are going to where we were coming from
                     Node *oldLastNode = lastNode;

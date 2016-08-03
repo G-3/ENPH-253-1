@@ -23,8 +23,14 @@ ServoTINAH RCServo1;
 ServoTINAH RCServo2;
 ServoTINAH RCServo3;
 
-uint8_t initialLast = 10;
-uint8_t initialBase = 11;
+const uint8_t initialLastR = 10;
+const uint8_t initialBaseR = 11;
+const uint8_t firstHubR = 14;
+
+const uint8_t initialLastL = 0;
+const uint8_t initialBaseL = 1;
+const uint8_t firstHubL = 4;
+
 using namespace PathPlan;
 
 int freeRam () {
@@ -42,15 +48,43 @@ void setup_m()
     World::setup(); 
     LLRobot::initialize(); 
    
+
+
+    uint8_t firstHub;
+    uint8_t initialLast;
+    uint8_t initialBase;
+    
+    LCD.clear(); LCD.home();
+    LCD.print("10:STOP");
+    LCD.setCursor(0, 1);
+    LCD.print("1:START");   
+    
+    while(true){
+        if(stopbutton() && stopbutton()){
+            initialLast = initialLastR; 
+            initialBase = initialBaseR;
+            firstHub = firstHubR;
+            break;
+        }
+        else if(startbutton() && startbutton()){
+            initialLast = initialLastL; 
+            initialBase = initialBaseL;
+            firstHub = firstHubL;
+            break; 
+        }
+        delay(10);
+    }
+
     LCD.clear(); LCD.home();
     LCD.print("RegionW");
+    LCD.print(firstHub);
     delay(500);
 
     // Initialize starting positions 
     HLRobot::lastNode = World::nodes[initialLast];
     HLRobot::baseNode = World::nodes[initialBase];
     
-    Planner::getInstance()->setNextPlanner(new RegionWalk());
+    Planner::getInstance()->setNextPlanner(new RegionWalk(firstHub));
 }
 
 int counter = 0;

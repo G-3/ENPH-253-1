@@ -97,7 +97,7 @@ namespace PathPlan{
              */
             void remap();
         public:
-            RegionWalk();
+            RegionWalk(uint8_t firstHub);
             ~RegionWalk();
             World::Node *getNextDest(World::Node* base);
             
