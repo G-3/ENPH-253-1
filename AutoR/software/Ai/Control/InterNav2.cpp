@@ -2,7 +2,7 @@
 #include "../EDetect.h"
 #include "../EHandler.h"
 #include "../World.h"
-
+#include <phys253.h>
 using namespace LLRobot::Rel;
 namespace Control{
             InterNav2::InterNav2(bool expectedTapeDir[],World::Dir direction,int16_t ss1,int16_t ss2,int16_t ds){
@@ -99,11 +99,12 @@ namespace Control{
 
             }
             void InterNav2::exitInter(){
-                //driveMotors(driveSpeed,driveSpeed);
                 tapeFollower->step();
                 bool doneIntersection = false;
-                bool idrb = readQRD(IDRB,true);
-                bool idlb = readQRD(IDLB,true);
+                Serial.println(readQRD(IDRB));
+                Serial.println(readQRD(IDLB));
+                bool idrb = readQRD(IDRB,false) > 150;
+                bool idlb = readQRD(IDLB,false) > 150;
                 switch(direction){
                     case World::DirR:
                         doneIntersection = idrb;
@@ -119,8 +120,13 @@ namespace Control{
                         break;
                 }
                 if (doneIntersection){
+
+                    LCD.clear();LCD.home();
+                    LCD.print("Done!");
                     EHandler::finishIntersect();
                 }
+                Serial.println(readQRD(TFRF));
+                Serial.println(readQRD(TFLF));
             }
 
             void InterNav2::step(){
