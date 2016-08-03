@@ -39,7 +39,11 @@ namespace PathPlan{
         // otherwise just keep on following the path
         else{
             destNode = getNextDest(baseNode); 
-        }    
+        }
+        if(destNode == 0){
+            reroute();
+            destNode = getNextDest(baseNode);
+        }
     }
 
     void PersistDrop::finishedIntersect(){
@@ -62,6 +66,10 @@ namespace PathPlan{
         else{
             destNode = getNextDest(baseNode); 
         }
+        if(destNode == 0){
+            reroute();
+            destNode = getNextDest(baseNode);
+        } 
     }
 
     void PersistDrop::finishedTurnAround(){
@@ -95,12 +103,17 @@ namespace PathPlan{
             // get the new destination
             destNode = getNextDest(baseNode);
         }
+        if(destNode == 0){
+            reroute();
+            destNode = getNextDest(baseNode);
+        }
     }
     
     void PersistDrop::reroute(){
         //Store paths for 3 and 13 then pick the shorter one
         uint16_t cost3 = World::updatePath(baseNode->id, ultimateLast->id, path3);
         uint16_t cost13 = World::updatePath(baseNode->id, ultimateBase->id, path13);
+        baseCounter = 0;
         if(cost13 < cost3){
             // Node 13 provides the better path navigate towards it
             // Copy path 13 over

@@ -10,15 +10,7 @@ using namespace HLRobot;
 namespace PathPlan{
     RegionWalk::RegionWalk(){
         dropOffPlanner = new PersistDrop(nodes[3], nodes[13]);
-        if(hasPassenger()){
-            curMode = PERSIST;
-        }
-        else{
-            curMode = WALK;
-        }
-        baseCounter = 0;
-        curRegion = getNextRegion(baseNode->id);
-        updateRegionPath(curRegion, baseNode->id);
+        reinitialize(); 
    }
     RegionWalk::~RegionWalk(){
         delete dropOffPlanner;
@@ -174,7 +166,28 @@ namespace PathPlan{
             }
         }
     }
-    
+
+    void RegionWalk::reinitialize(){
+        if(hasPassenger()){
+            curMode = PERSIST;
+        }
+        else{
+            curMode = WALK;
+        }
+        baseCounter = 0;
+        curRegion = getNextRegion(baseNode->id);
+        updateRegionPath(curRegion, baseNode->id);
+    }
+
+    void RegionWalk::remap(){
+        World::updatePath(baseNode->id, lastHub, currentPath);
+        nextHub = lastHub; 
+        // set the counter to point to 0th element in the path which is now our base
+        baseCounter = 0;
+        // get the new destination
+        destNode = getNextDest(baseNode); 
+    }
+
     void RegionWalk::update(){
          switch(curMode){
             case PERSIST:
@@ -213,6 +226,10 @@ namespace PathPlan{
                     LCD.print(" ");LCD.print(nextHub);
                     */
                 } 
+                if(destNode == 0){
+                    // Remap
+                    remap();
+                }
                 break;
             }
         }
@@ -253,6 +270,10 @@ namespace PathPlan{
                     baseCounter += 1;
                     destNode = getNextDest(baseNode);
                     decayCosts();
+                }
+                if(destNode == 0){
+                    // Remap
+                    remap();
                 }
                 break;
             }
@@ -302,6 +323,10 @@ namespace PathPlan{
                     
                     // get the new destination
                     destNode = getNextDest(baseNode); 
+                }
+                if(destNode == 0){
+                    // Remap
+                    remap();
                 }
                 break;
             }

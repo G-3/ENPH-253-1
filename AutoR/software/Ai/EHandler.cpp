@@ -103,11 +103,13 @@ namespace EHandler{
     
     void finishPickup(){
         Serial.println("Finishing Pickup");
+        PathPlan::Planner::getInstance()->finishedPickUp();
         curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }
  
     void finishDropOff(){
+        PathPlan::Planner::getInstance()->finishedDropOff();
         curMode = TAPE_FOLLOW;
         Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
     }

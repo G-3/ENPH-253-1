@@ -86,6 +86,16 @@ namespace PathPlan{
              * we cross an intersection.
              */
             void decayCosts();
+
+            /*
+             * Reinitializes our region path planner.
+             */
+            void reinitialize();
+        
+            /*
+             * Map a course to the last hub.
+             */
+            void remap();
         public:
             RegionWalk();
             ~RegionWalk();
