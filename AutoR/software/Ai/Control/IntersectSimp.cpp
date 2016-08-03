@@ -114,6 +114,7 @@ namespace Control{
                         if (l) {
                             // We tripped, move on
                             driveMotors(0, 0);
+                            delay(1);
                             curPhase = TRIP_FOLLOW;
                         }
                     }
@@ -124,6 +125,7 @@ namespace Control{
                         if (r) {
                             // We tripped, move on
                             driveMotors(0, 0);
+                            delay(1);
                             curPhase = TRIP_FOLLOW;
                         }
                     }
@@ -139,6 +141,7 @@ namespace Control{
                         if (l) {
                             //Gottem we are done
                             driveMotors(0, 0);
+                            delay(1);
                             curPhase = END;
                             return;
                         }
@@ -151,6 +154,7 @@ namespace Control{
                         bool r = readQRD(TFRF, true);
                         if (r) {
                             driveMotors(0, 0);
+                            delay(1);
                             //Gottem we are done
                             curPhase = END;
                             return;

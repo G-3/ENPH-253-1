@@ -22,6 +22,8 @@ namespace Control{
             case SETUP:
                 extendArm(AL,false);
                 extendArm(AR,false);
+                driveMotors(-80, -80);
+                delay(100);
                 currentPhase = FIND_LEFT;
                 LLRobot::flip();
                 break;

@@ -25,11 +25,12 @@ namespace EHandler{
         
         switch(curMode){
             case TAPE_FOLLOW:
+                LLRobot::Rel::driveMotors(-20,-20); 
+                delay(5);
                 // TODO: Check to make sure left right agrees with our internal model for the base node
                 PathPlan::Planner::getInstance()->update();
                 if (destNode == 0) {
                     // If we have no more destination to turn towards in this intersection, stall
-                    LLRobot::Rel::driveMotors(0,0); 
                     curMode = IDLE;
                     Control::Controller::getInstance()->setNextController(new Control::Idle());
                     /*
@@ -128,8 +129,8 @@ namespace EHandler{
             case TAPE_FOLLOW:
                 LCD.clear(); LCD.home();
                 LCD.print("COLLISION"); 
-                LLRobot::Rel::driveMotors(0,0); 
-                delay(1000);
+                LLRobot::Rel::driveMotors(-20,-20); 
+                delay(100);
                 curMode = TURN_AROUND;
                 Control::Controller::getInstance()->setNextController(new Control::TurnAround());
         }

@@ -9,6 +9,7 @@ using namespace HLRobot;
 
 namespace PathPlan{
     RegionWalk::RegionWalk(uint8_t firstHub){
+        curMode = WALK; 
         dropOffPlanner = new PersistDrop(nodes[3], nodes[13]);
         nextHub = lastHub = firstHub;
         remap(); 
@@ -202,7 +203,7 @@ namespace PathPlan{
                 // if we are heading towards the final destination of the region
                 // we should update to the next region
                 if(baseNode->id == nextHub && getNextDest(baseNode) == 0){
-                    traversedCost[curRegion] = 10;
+                    traversedCost[curRegion] = TRAVERSE_COST;
                     curRegion = getNextRegion(baseNode->id);
                     updateRegionPath(curRegion, baseNode->id);
                     
@@ -255,7 +256,7 @@ namespace PathPlan{
                 // and this is the last destination on our path
                 // we should update to the next region
                 if( baseNode->id == nextHub && getNextDest(baseNode) == 0 ){
-                    traversedCost[curRegion] = 10;
+                    traversedCost[curRegion] = TRAVERSE_COST;
                     curRegion = getNextRegion(baseNode->id);
                     updateRegionPath(curRegion, baseNode->id);
 
@@ -311,7 +312,7 @@ namespace PathPlan{
                     lastNode = baseNode;
                     baseNode = oldLastNode;
                     
-                    collisionCost[curRegion] = 10;
+                    collisionCost[curRegion] = COLLIDE_COST;
                     // TODO: decay these values
                     // Update the edge weights so that we are discouraged from traversing
                     lastNode->World::Node::setEdgeWeight(HLRobot::baseNode, 10);

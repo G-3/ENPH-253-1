@@ -15,7 +15,7 @@ namespace Event{
             const int16_t IR_TIME_DELAY = 3000;
             const int16_t DROP_OFF_TIME = 4000;
             const int16_t QRD_THRESH = 400;
-            const int16_t QRD_THRESH2 = 200;
+            const int16_t QRD_THRESH2 = 300;
 
             uint8_t consecutiveBumps = 0;
 
