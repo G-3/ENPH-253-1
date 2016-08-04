@@ -51,7 +51,7 @@ void loop_m(){
 void testIntersect(){
     Control::TapeFollow2* tf = new Control::TapeFollow2(17,25,100);
     bool vals[4] = {0,0,0,0};
-    Control::InterNav2* in2 = new Control::InterNav2(vals,World::DirL,80,80,80);
+    Control::InterNav2* in2 = new Control::InterNav2(vals,World::DirF,80,80,80);
     while(!startbutton());
     LLRobot::flip();
 

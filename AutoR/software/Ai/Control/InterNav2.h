@@ -40,6 +40,8 @@ namespace Control{
 
             //for detetecting collisions mid intersection
             void checkBumpers();
+            uint32_t bumperTimestamp = 0;
+            const uint16_t BUMPER_DELAY = 700;
         public:
             InterNav2(bool expectedTapeDir[],World::Dir direction,int16_t ss1,int16_t ss2,int16_t ds);
             ~InterNav2();

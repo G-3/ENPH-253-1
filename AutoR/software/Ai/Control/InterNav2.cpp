@@ -38,12 +38,14 @@ namespace Control{
                         driveMotors(ds,ds);
                         if (inr){
                             currentPhase = TURN_P1;
+                            LLRobot::flip();
                         }
                         break;
                     case World::DirL:
                         driveMotors(ds,ds);
                         if (inl){
                             currentPhase = TURN_P1;
+                            LLRobot::flip();
                         }
                         break;
                     case World::DirF:
@@ -60,14 +62,14 @@ namespace Control{
                 bool idlf = readQRD(IDLF,true);
                 switch(direction){
                     case World::DirR:
-                        driveMotors(spinSpeed1,-spinSpeed1);
-                        if (idrf){
+                        driveMotors(-spinSpeed1,spinSpeed1);
+                        if (idlf){
                             currentPhase = TURN_P2;
                         }
                         break;
                     case World::DirL:
-                        driveMotors(-spinSpeed1,spinSpeed1);
-                        if (idlf){
+                        driveMotors(spinSpeed1,-spinSpeed1);
+                        if (idrf){
                             currentPhase = TURN_P2;
                         }
                         break;
@@ -78,17 +80,14 @@ namespace Control{
                 bool tflf = readQRD(TFLF,true);
                 switch(direction){
                     case World::DirR:
-                        driveMotors(spinSpeed2,-spinSpeed2);
-                        if (tfrf){
-                            currentPhase = EXIT_INTER;
-                        }
+                        driveMotors(-spinSpeed2,spinSpeed2);
                         break;
                     case World::DirL:
-                        driveMotors(-spinSpeed2,spinSpeed2);
-                        if (tflf){
-                            currentPhase = EXIT_INTER;
-                        }
+                        driveMotors(spinSpeed2,-spinSpeed2);
                         break;
+                }
+                if (tflf || tfrf){
+                    currentPhase = EXIT_INTER;
                 }
 
             }
@@ -107,6 +106,7 @@ namespace Control{
                 delay(1);
                 tapeFollower->step();
                 bool doneIntersection = false;
+                //Do not remove!
                 readQRD(IDRB);
                 readQRD(IDLB);
                 delay(1);
@@ -137,52 +137,60 @@ namespace Control{
                 switch(currentPhase){
                     case SETUP:
                         setup();
-                        LCD.clear();LCD.home();
+                        /*LCD.clear();LCD.home();
                         LCD.print("S");
-                        delay(30);
+                        delay(30);*/
                         break;
                     case ALIGN_NAVIGATORS:
                         alignNavigators();
-                        LCD.clear();LCD.home();
+                        /*LCD.clear();LCD.home();
                         LCD.print("AN");
-                        delay(30);
+                        delay(30);*/
                         break;
                     case TURN_P1:
                         turnPhase1();
-                        LCD.clear();LCD.home();
+                        /*LCD.clear();LCD.home();
                         LCD.print("TP1");
-                        delay(30);
+                        delay(30);*/
                         break;
                     case TURN_P2:
                         turnPhase2();
-                        LCD.clear();LCD.home();
+                        /*LCD.clear();LCD.home();
                         LCD.print("TP2");
-                        delay(30);
+                        delay(30);*/
                         break;
                     case GO_STRAIGHT:
                         goStraight();
-                        LCD.clear();LCD.home();
+                        /*LCD.clear();LCD.home();
                         LCD.print("GS");
-                        delay(30);
+                        delay(30);*/
                         break;
                     case EXIT_INTER:
-                        LCD.clear();LCD.home();
+                        /*LCD.clear();LCD.home();
                         LCD.print("EI");
-                        delay(30);
+                        delay(30);*/
                         exitInter();
                         break;
                 }
                 checkBumpers();
             }
             void InterNav2::checkBumpers(){
-                if (Event::EDetect::getInstance()->checkBumpers()){
+                if (Event::EDetect::getInstance()->checkBumpers() && (millis()-bumperTimestamp > BUMPER_DELAY) ){
                     //reset variables
                     leftBackTrip = false;
                     rightBackTrip = false;
                     motorDirection = false;
 
-                    //Logically flip the robot
-                    LLRobot::flip();
+                    switch (currentPhase){
+                        case EXIT_INTER:
+                        case ALIGN_NAVIGATORS:
+                        case GO_STRAIGHT:
+                            LLRobot::flip();
+                            break;
+                        default:
+                            break;
+                    }
+
 
                     //Flip high level nodes
                     EHandler::reverseIntersect();
@@ -215,6 +223,9 @@ namespace Control{
                             currentPhase = ALIGN_NAVIGATORS;
                             break;
                     }
+
+                    //Reset Bumpertimestamp;
+                    bumperTimestamp = millis();
                 }
             }
     
