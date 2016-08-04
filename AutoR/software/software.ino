@@ -8,6 +8,7 @@
 
 // Test Nav, tests navigation.
 // #include "./test_nav/test_nav.h"
+#include "./test_nav/test_InterNav2.h"
 
 // Test the QRDs listing them on the LCD one by one
 // Multi-paged, use START button to switch between.
@@ -27,7 +28,7 @@
 //#include "./test_speed/test_speed.h"
 
 //Test Tape Follow
-#include "./test_tapef/test_tapef2.h"
+//#include "./test_tapef/test_tapef2.h"
 
 //Test EDetect
 //#include "./test_eDetect/test_eDetect.h"
@@ -43,7 +44,7 @@
 //#include "./test_masterpath/test_masterpath.h"
 
 //Test PersistPath
-#include "./test_persist/test_persist.h"
+//#include "./test_persist/test_persist.h"
 
 void setup()
 {

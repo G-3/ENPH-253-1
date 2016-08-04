@@ -12,8 +12,9 @@ namespace EHandler{
     void fail(char message[]);
         
     void finishIntersect();
-	
+    void reverseIntersect();
     void falseIntersect();
+
     void finishPickup();
 
     void finishTurnAround();
