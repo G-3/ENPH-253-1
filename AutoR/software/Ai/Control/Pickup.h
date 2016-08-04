@@ -18,8 +18,8 @@ namespace Control{
             const uint32_t ALIGMENT_T = 1500000; //microsecond
             const uint16_t IR_DELAY = 3000;//microseconds
             const int16_t pValuesSize = 3;
-            const int16_t iterCount = 3;
-            const int16_t THRESHOLD = 30;
+            const int16_t iterCount = 4;
+            const int16_t THRESHOLD = 40;
             const int16_t FIND_TAPE_AMP = 80;
             int16_t switchCounter = 0;
             int16_t previousReading = 0;
@@ -28,7 +28,7 @@ namespace Control{
             int16_t maxAmp = 0;
             bool isIncreasing = true;
 
-            uint16_t motorDirection = true;
+            uint16_t motorDirection = false;
             uint16_t motorAmplitude = 60;
             uint16_t motorStepDown = 10;
 

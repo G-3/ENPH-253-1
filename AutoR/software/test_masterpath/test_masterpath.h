@@ -91,7 +91,7 @@ void loop_m()
             Serial.println(World::nodes[11]->linked[0]->id); Serial.println(World::nodes[11]->linked[1]->id); Serial.println(World::nodes[11]->linked[2]->id);Serial.println(World::nodes[11]->linked[3]->id); 
             */
             HLRobot::curMode = HLRobot::TAPE_FOLLOW;
-            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,100));
+            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(false, 17,25,100));
             delay(250);
         }
     }

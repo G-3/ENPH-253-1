@@ -4,7 +4,7 @@
 #include "../HLRobot.h"
 using namespace LLRobot::Rel;
 namespace Control{
-    TapeFollow2::TapeFollow2(int16_t dGain, int16_t pGain, int16_t base,int16_t iGain, int16_t eBase,int16_t eGain,int16_t hysteresis){
+    TapeFollow2::TapeFollow2(bool isIntersect, int16_t base, int16_t dGain, int16_t pGain, int16_t iGain, int16_t eBase,int16_t eGain, int16_t hysteresis){
         this->base = base;
         this->dGain = dGain;
         this->pGain = pGain;
@@ -12,6 +12,7 @@ namespace Control{
         this->eGain = eGain;
         this->eBase = eBase;
         this->hysteresis = hysteresis;
+        this->isIntersect = isIntersect;
         transitionTimeRight = 0;
         transitionTimeLeft = 0;
         timestamp = 0;
@@ -28,12 +29,14 @@ namespace Control{
         uint32_t time = micros();
         int16_t right = base;
         int16_t left = base;
-
-        if (idlf){
-            currentSide = LLRobot::RIGHT;
-        }
-        else if(idrf){
-            currentSide = LLRobot::LEFT;
+        
+        if(!isIntersect){
+            if (idlf){
+                currentSide = LLRobot::RIGHT;
+            }
+            else if(idrf){
+                currentSide = LLRobot::LEFT;
+            }
         }
 
         if (currentSide == LLRobot::RIGHT){

@@ -13,4 +13,14 @@ namespace HLRobot {
     bool hasPassenger(){
         return getPassengerPickup(CL) || getPassengerPickup(CR);
     } 
+
+    bool inCircle(){
+        bool lastCirc =  (lastNode == World::nodes[8]) || 
+                    (lastNode == World::nodes[18]) || 
+                    (lastNode == World::nodes[19]);
+        bool baseCirc =  (baseNode == World::nodes[8]) || 
+                    (baseNode == World::nodes[18]) || 
+                    (baseNode == World::nodes[19]);
+        return lastCirc && baseCirc;
+    }
 }

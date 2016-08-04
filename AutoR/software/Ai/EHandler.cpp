@@ -18,6 +18,7 @@
 #include "Debug.h"
 
 using namespace HLRobot;
+using namespace Config;
 
 namespace EHandler{
     void intersect(bool left, bool right){                
@@ -25,8 +26,9 @@ namespace EHandler{
         
         switch(curMode){
             case TAPE_FOLLOW:
-                LLRobot::Rel::driveMotors(-20,-20); 
-                delay(5);
+                LLRobot::Rel::driveMotors(0,0); 
+                delay(10);
+                //delay(1000);
                 // TODO: Check to make sure left right agrees with our internal model for the base node
                 PathPlan::Planner::getInstance()->update();
                 if (destNode == 0) {
@@ -70,7 +72,20 @@ namespace EHandler{
         
         //if (baseNode){
         curMode = TAPE_FOLLOW;
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
+        if (!inCircle()){
+            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(false));
+        }
+        else{
+            Control::Controller::getInstance()->setNextController(
+                new Control::TapeFollow2(false, TF::Circle::speed, 
+                                                TF::Circle::dGain,
+                                                TF::Circle::pGain,
+                                                TF::Circle::iGain,
+                                                TF::Circle::eBase,
+                                                TF::Circle::eGain,
+                                                TF::Circle::hysterisis)
+            );
+        }
         //}
         //else {
             // This should never happen
@@ -88,7 +103,20 @@ namespace EHandler{
     void finishTurnAround(){
         PathPlan::Planner::getInstance()->finishedTurnAround();
         curMode = TAPE_FOLLOW;
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
+        if (!inCircle()){
+            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(false));
+        }
+        else{
+            Control::Controller::getInstance()->setNextController(
+                new Control::TapeFollow2(false, TF::Circle::speed, 
+                                                TF::Circle::dGain,
+                                                TF::Circle::pGain,
+                                                TF::Circle::iGain,
+                                                TF::Circle::eBase,
+                                                TF::Circle::eGain,
+                                                TF::Circle::hysterisis)
+            );
+        }
     }
  
     void flip(){
@@ -106,18 +134,46 @@ namespace EHandler{
         Serial.println("Finishing Pickup");
         PathPlan::Planner::getInstance()->finishedPickUp();
         curMode = TAPE_FOLLOW;
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
+        if (!inCircle()){
+            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(false));
+        }
+        else{
+            Control::Controller::getInstance()->setNextController(
+                new Control::TapeFollow2(false, TF::Circle::speed, 
+                                                TF::Circle::dGain,
+                                                TF::Circle::pGain,
+                                                TF::Circle::iGain,
+                                                TF::Circle::eBase,
+                                                TF::Circle::eGain,
+                                                TF::Circle::hysterisis)
+            );
+        }
     }
  
     void finishDropOff(){
         PathPlan::Planner::getInstance()->finishedDropOff();
         curMode = TAPE_FOLLOW;
-        Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(17,25,Config::driveSpeed));
+        if (!inCircle()){
+            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(false));
+        }
+        else{
+            Control::Controller::getInstance()->setNextController(
+                new Control::TapeFollow2(false, TF::Circle::speed, 
+                                                TF::Circle::dGain,
+                                                TF::Circle::pGain,
+                                                TF::Circle::iGain,
+                                                TF::Circle::eBase,
+                                                TF::Circle::eGain,
+                                                TF::Circle::hysterisis)
+            );
+        }
     }
 
     void passengerDetected(LLRobot::Side side){
         //Serial.println("Mode: ");
         //Serial.println((int)curMode);
+        LLRobot::Rel::driveMotors(-100,-100); 
+        delay(10);
         switch(curMode){
             case TAPE_FOLLOW:
                 curMode = PICKUP;
@@ -129,8 +185,8 @@ namespace EHandler{
             case TAPE_FOLLOW:
                 LCD.clear(); LCD.home();
                 LCD.print("COLLISION"); 
-                LLRobot::Rel::driveMotors(-20,-20); 
-                delay(100);
+                LLRobot::Rel::driveMotors(0,0); 
+                delay(10);
                 curMode = TURN_AROUND;
                 Control::Controller::getInstance()->setNextController(new Control::TurnAround());
         }

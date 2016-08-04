@@ -28,8 +28,8 @@ namespace PathPlan{
             LCD.home(); 
             LCD.print("WrongBase"); 
         }
-        LCD.setCursor(0, 1);
-        LCD.print(dest->id); 
+        //LCD.setCursor(0, 1);
+        //LCD.print(dest->id); 
         return dest;
     }
     
@@ -261,6 +261,7 @@ namespace PathPlan{
                     updateRegionPath(curRegion, baseNode->id);
 
                     destNode = getNextDest(baseNode);
+                    /*
                     LCD.clear(); 
                     LCD.home(); 
                     LCD.print("fnextR");LCD.setCursor(0, 1); 
@@ -268,6 +269,7 @@ namespace PathPlan{
                     LCD.print(" ");LCD.print(currentPath[0]->id);
                     LCD.print(" ");LCD.print(currentPath[1]->id);
                     LCD.print(" ");LCD.print(baseCounter);
+                    */
                 }
                 // otherwise just keep on following the path
                 else{

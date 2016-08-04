@@ -22,10 +22,11 @@ namespace Control{
             case SETUP:
                 extendArm(AL,false);
                 extendArm(AR,false);
-                driveMotors(-80, -80);
-                delay(100);
+                driveMotors(-120, -120);
+                delay(50);
                 currentPhase = FIND_LEFT;
                 LLRobot::flip();
+                timestamp = millis();
                 break;
             case FIND_LEFT:
                 driveMotors(-ROTATION_SPEED,ROTATION_SPEED);
@@ -34,8 +35,9 @@ namespace Control{
                     currentPhase = SETUP;
                     //TODO: inform event handler that we have turned around
                 }
-                if(readQRD(IDRF)){
+                if( readQRD(IDRF) || (millis() - timestamp > TIMEOUT_MILLIS) ){
                     currentPhase = FIND_RIGHT;
+                    timestamp = millis();
                 }
                 break;
 
@@ -46,8 +48,9 @@ namespace Control{
                     currentPhase = SETUP;
                     //TODO: inform event handler that we have turned around
                 }
-                if(readQRD(IDLF)){
+                if( readQRD(IDLF) || (millis() - timestamp > TIMEOUT_MILLIS) ){
                     currentPhase = FIND_LEFT;
+                    timestamp = millis();
                 }
                 break;
 

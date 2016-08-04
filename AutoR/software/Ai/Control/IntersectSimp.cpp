@@ -24,8 +24,8 @@ namespace Control{
         Serial.println(base->id);
         Serial.println(dest->id);
         */
-        tapeFollower = new TapeFollow2(17,25,80);
-        speed = 70;
+        tapeFollower = new TapeFollow2(true,80, 17,25);
+        speed = 100;
         curPhase = DRIVE_THRU;
         LCD.clear(); LCD.home(); // LCD.setCursor(0, 1); 
         LCD.print("Intersecting1");
@@ -137,7 +137,7 @@ namespace Control{
                     // Turn until we trip the tape followers
                     if (destDir == World::DirL) {
                         // Check if we trip the TF
-                        bool l = readQRD(TFLF, true);
+                        bool l = readQRD(TFRF, true);
                         if (l) {
                             //Gottem we are done
                             driveMotors(0, 0);
@@ -151,7 +151,7 @@ namespace Control{
                     }
                     else{
                         // Check if we trip the TF
-                        bool r = readQRD(TFRF, true);
+                        bool r = readQRD(TFLF, true);
                         if (r) {
                             driveMotors(0, 0);
                             delay(1);
@@ -231,7 +231,7 @@ namespace Control{
                     // Turn until we trip the tape followers
                     if (destDir == World::DirL) {
                         // Check if we trip the TF
-                        bool l = readQRD(TFLF, true);
+                        bool l = readQRD(TFRF, true);
                         if (l) {
                             driveMotors(0, 0);
                             //Gottem we are done
@@ -245,7 +245,7 @@ namespace Control{
                     }
                     else if (destDir == World::DirR) {
                         // Check if we trip the TF
-                        bool r = readQRD(TFRF, true);
+                        bool r = readQRD(TFLF, true);
                         if (r) {
                             //Gottem we are done
                             driveMotors(0, 0);

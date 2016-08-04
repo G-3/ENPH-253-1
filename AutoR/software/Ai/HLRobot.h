@@ -28,5 +28,7 @@ namespace HLRobot{
      * Checks if we are currently carrying a passenger.
      */
     bool hasPassenger();
+    
+    bool inCircle();
 }
 

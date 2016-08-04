@@ -41,9 +41,9 @@ namespace PathPlan{
             // F.e. don't want to traverse the same region back to back
             // Don't want to traverse region we have been bumped into right away
             uint8_t traversedCost[7] = {};
-            static const uint8_t TRAVERSE_COST = 20;
+            static const uint8_t TRAVERSE_COST = 40;
             uint8_t collisionCost[7] = {};
-            static const uint8_t COLLIDE_COST = 20;
+            static const uint8_t COLLIDE_COST = 30;
 
             uint8_t regionLengths[7] = {7, 7, 7, 7, 4, 7, 4};
             

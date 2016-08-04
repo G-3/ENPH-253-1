@@ -7,7 +7,25 @@ namespace Config{
     // dir-> 0:R 1:T 2:L 3:B
     // static const int links[2][3] = {{1, 0, 1},{1, 2, 0}};
     // static const int linksSize = 2;
-    static const uint8_t driveSpeed = 115;
+    static const uint8_t driveSpeed = 122;
+    namespace TF{
+        static const uint8_t dGain = 17;//17;
+        static const uint8_t pGain = 25;//25;
+        static const uint8_t iGain = 15;
+        static const uint8_t eBase = 10;//30;
+        static const uint8_t eGain = 60;
+        static const uint8_t hysterisis = 10;
+        namespace Circle{
+            static const uint8_t speed = 102;
+            static const uint8_t dGain = 17;//17;
+            static const uint8_t pGain = 25;//25;
+            static const uint8_t iGain = 15;
+            static const uint8_t eBase = 10;//30;
+            static const uint8_t eGain = 60;
+            static const uint8_t hysterisis = 10;
+        }
+    }
+
     static const uint8_t deadEndsSize = 21;
     static const bool deadEnds[21] = { 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1 };
     static const uint8_t linksSize = 47;
