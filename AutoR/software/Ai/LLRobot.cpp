@@ -4,7 +4,7 @@
 
 namespace LLRobot{
     //All values are absolute
-    const int QRD_THRESH[] = {250,250,250,250,250,250,250,250,250,250};
+    const int QRD_THRESH[] = {170,170,170,170,170,170,170,170,170,170};
     const int QRD_PEAK[] = {500,500,500,500,500,500,500,500,500,500};
     const int QSD_THRESH[] = {100,100,100,50,100,100,100,50};
     const int QSD_PEAK[] = {1024,1024,1024,1024,1024,1024,1024,1024};

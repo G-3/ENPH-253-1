@@ -26,8 +26,8 @@ namespace EHandler{
         
         switch(curMode){
             case TAPE_FOLLOW:
-                LLRobot::Rel::driveMotors(0,0); 
-                delay(10);
+                LLRobot::Rel::driveMotors(-50,-50); 
+                delay(15);
                 //delay(1000);
                 // TODO: Check to make sure left right agrees with our internal model for the base node
                 PathPlan::Planner::getInstance()->update();

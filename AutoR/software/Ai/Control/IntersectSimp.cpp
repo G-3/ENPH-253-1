@@ -25,7 +25,7 @@ namespace Control{
         Serial.println(dest->id);
         */
         tapeFollower = new TapeFollow2(true,80, 17,25);
-        speed = 100;
+        speed = 90;
         curPhase = DRIVE_THRU;
         LCD.clear(); LCD.home(); // LCD.setCursor(0, 1); 
         LCD.print("Intersecting1");
