@@ -99,6 +99,9 @@ namespace EHandler{
     void falseIntersect(){
          
     }
+    void reverseIntersect(){
+        PathPlan::Planner::getInstance()->reverseIntersect();
+    }
 
     void finishTurnAround(){
         PathPlan::Planner::getInstance()->finishedTurnAround();

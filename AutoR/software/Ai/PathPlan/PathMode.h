@@ -32,5 +32,7 @@ namespace PathPlan{
             virtual void finishedPickUp() = 0;
             
             virtual void finishedDropOff() = 0;
+            
+            virtual void reverseIntersect() = 0;
     };
 }

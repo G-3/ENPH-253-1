@@ -28,7 +28,7 @@ ServoTINAH RCServo3;
 
 void setup_m(){
     #include <phys253setup.txt>
-    Serial.begin(9600);
+    Serial.begin(115200);
    
     initialize();
     

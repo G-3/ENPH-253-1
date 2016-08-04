@@ -56,4 +56,8 @@ namespace PathPlan{
     void Planner::finishedDropOff(){
         curPlanner->finishedDropOff();
     }   
+
+    void Planner::reverseIntersect(){
+        curPlanner->reverseIntersect();
+    }   
 }

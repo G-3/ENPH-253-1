@@ -109,6 +109,22 @@ namespace PathPlan{
         }
     }
     
+    void PersistDrop::reverseIntersect(){
+        Node *oldLastNode = lastNode;
+        lastNode = destNode;
+        destNode = oldLastNode;
+        // TODO: decay these values
+        // Update the edge weights so that we are discouraged from traversing
+        lastNode->World::Node::setEdgeWeight(HLRobot::baseNode, 10);
+        baseNode->World::Node::setEdgeWeight(HLRobot::lastNode, 10);
+
+        // We want to find a new path to the dropOff 
+        reroute();
+
+        // set the counter to point to 0th element in the path which is now our base
+        baseCounter = 0;
+    }
+
     void PersistDrop::reroute(){
         //Store paths for 3 and 13 then pick the shorter one
         uint16_t cost3 = World::updatePath(baseNode->id, ultimateLast->id, path3);

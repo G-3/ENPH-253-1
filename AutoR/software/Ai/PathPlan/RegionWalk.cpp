@@ -337,6 +337,36 @@ namespace PathPlan{
             }
         }
     }
+    
+    void RegionWalk::reverseIntersect(){
+        // Switch between our walk and the dropOffPlanner
+        switch(curMode){
+            case PERSIST:
+            {
+                dropOffPlanner->reverseIntersect();
+                break;
+            }
+            
+            case WALK:
+            {
+                Node *oldLastNode = lastNode;
+                lastNode = baseNode;
+                baseNode = oldLastNode;
+                
+                collisionCost[curRegion] = COLLIDE_COST;
+                // TODO: decay these values
+                // Update the edge weights so that we are discouraged from traversing
+                lastNode->World::Node::setEdgeWeight(HLRobot::baseNode, 10);
+                baseNode->World::Node::setEdgeWeight(HLRobot::lastNode, 10);
+
+                // We want to find a new path to the lastHub we were at 
+                World::updatePath(baseNode->id, lastHub, currentPath);
+                nextHub = lastHub; 
+                // set the counter to point to 0th element in the path which is now our base
+                baseCounter = 0;
+            }
+        }
+    }
 
     void RegionWalk::finishedPickUp(){
         if(hasPassenger()){

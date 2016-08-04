@@ -59,6 +59,8 @@ namespace PathPlan{
             void finishedPickUp(){};
             
             void finishedDropOff(){};
+            
+            void reverseIntersect();
 
     };
 }
