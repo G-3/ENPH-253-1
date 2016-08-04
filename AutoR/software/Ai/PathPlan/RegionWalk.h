@@ -131,6 +131,8 @@ namespace PathPlan{
              * Check if we should enter walk mode.
              */
             void finishedDropOff();
+            
+            void reverseIntersect();
     };
 /*
     class Region{
