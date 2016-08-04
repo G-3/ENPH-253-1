@@ -21,11 +21,12 @@ namespace World{
             };
             Node *linked[4] = {};
             uint16_t weights[4];
+            bool setEdgeWeight(Node* link, uint8_t weight);
             void relLinkDirs(bool expectTapeDir[4], Node *start);
             Dir relDestDir(Node *dest, Node *start);
 	};
 
-    void updatePath(uint8_t src, uint8_t target);
+    void updatePath(uint8_t src, uint8_t target, World::Node* pathp[]);
 
     int minDistance(uint16_t dist[], bool Q[], uint8_t length);
 

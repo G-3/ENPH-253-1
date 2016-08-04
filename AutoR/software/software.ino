@@ -28,7 +28,7 @@
 //#include "./test_speed/test_speed.h"
 
 //Test Tape Follow
-//#include "./test_tapef/test_tapef2.h"
+#include "./test_tapef/test_tapef2.h"
 
 //Test EDetect
 //#include "./test_eDetect/test_eDetect.h"
@@ -43,6 +43,8 @@
 //Test MasterPath
 //#include "./test_masterpath/test_masterpath.h"
 
+//Test PersistPath
+#include "./test_persist/test_persist.h"
 
 void setup()
 {

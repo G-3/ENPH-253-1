@@ -7,7 +7,8 @@
 using namespace LLRobot::Rel;
 
 namespace Control{
-    DropOff::DropOff(LLRobot::Side side){
+    DropOff::DropOff(LLRobot::Side side) : side(side){
+        side = side;
         currentPhase = SETUP;
         extensionTimestamp = 0;
         releaseTimestamp = 0;
@@ -29,7 +30,7 @@ namespace Control{
         }
         else{
             altClaw = CR;
-            altArm = AR;
+            altArm = AL;
             claw = CL;
             arm = AL;
         }
