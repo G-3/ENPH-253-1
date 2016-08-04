@@ -75,6 +75,17 @@ namespace EHandler{
         if (!inCircle()){
             Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(false));
         }
+        else if( (baseNode == World::nodes[0]) ||
+                  (baseNode == World::nodes[10]) ||
+                  (baseNode == World::nodes[20]) ||
+                  (baseNode == World::nodes[17]) ||
+                  (baseNode == World::nodes[16]) ||
+                  (baseNode == World::nodes[6]) ||
+                  (baseNode == World::nodes[7]) ){
+
+            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(false, 65));
+        
+        }
         else{
             Control::Controller::getInstance()->setNextController(
                 new Control::TapeFollow2(false, TF::Circle::speed, 
@@ -105,6 +116,16 @@ namespace EHandler{
         curMode = TAPE_FOLLOW;
         if (!inCircle()){
             Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(false));
+        }
+        else if( (baseNode == World::nodes[0]) ||
+                  (baseNode == World::nodes[10]) ||
+                  (baseNode == World::nodes[20]) ||
+                  (baseNode == World::nodes[17]) ||
+                  (baseNode == World::nodes[16]) ||
+                  (baseNode == World::nodes[6]) ||
+                  (baseNode == World::nodes[7]) ){
+
+            Control::Controller::getInstance()->setNextController(new Control::TapeFollow2(false, 65));
         }
         else{
             Control::Controller::getInstance()->setNextController(
@@ -185,7 +206,7 @@ namespace EHandler{
             case TAPE_FOLLOW:
                 LCD.clear(); LCD.home();
                 LCD.print("COLLISION"); 
-                LLRobot::Rel::driveMotors(0,0); 
+                LLRobot::Rel::driveMotors(-100,-100); 
                 delay(10);
                 curMode = TURN_AROUND;
                 Control::Controller::getInstance()->setNextController(new Control::TurnAround());
