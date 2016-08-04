@@ -104,7 +104,7 @@ namespace Control{
                 }
                 else if (time > (timestamp+transitionTimeLeft/2)){
                     //Serial.println("--------");
-                    eft = base - dGain + pGain;
+                    left = base - dGain + pGain;
                     right = base + dGain - pGain;
                 }
                 else{
