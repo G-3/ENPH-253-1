@@ -10,7 +10,7 @@ namespace Control{
                 xr = expectedTapeDir[World::DirR];
                 xf = expectedTapeDir[World::DirF];
                 this->direction = direction;
-                tapeFollower = new TapeFollow2(17,25,ds);
+                tapeFollower = new TapeFollow2(true, ds);
                 driveSpeed = ds;
                 spinSpeed1 = ss1;
                 spinSpeed2 = ss2;
@@ -127,8 +127,6 @@ namespace Control{
                         break;
                 }
                 if (doneIntersection){
-                    LCD.clear();LCD.home();
-                    LCD.print("Done!");
                     EHandler::finishIntersect();
                 }
             }

@@ -8,8 +8,7 @@
 #include "Control/Controller.h"
 #include "Control/Idle.h"
 #include "Control/Pickup.h"
-#include "Control/IntersectNav.h"
-#include "Control/IntersectSimp.h"
+#include "Control/InterNav2.h"
 #include "Control/TurnAround.h"
 #include "Control/TapeFollow2.h"
 #include "Control/TurnAround.h"
@@ -27,7 +26,6 @@ namespace EHandler{
         switch(curMode){
             case TAPE_FOLLOW:
                 LLRobot::Rel::driveMotors(0,0); 
-                delay(10);
                 //delay(1000);
                 // TODO: Check to make sure left right agrees with our internal model for the base node
                 PathPlan::Planner::getInstance()->update();
@@ -49,8 +47,12 @@ namespace EHandler{
                 }
                 else{
                     // Otherwise navigate the intersection
+                    bool expectedTapeDir[4];
+                    baseNode->relLinkDirs(expectedTapeDir, lastNode);
+                    World::Dir destDir = baseNode->relDestDir(destNode, lastNode);
+ 
                     curMode = INTER_NAV;
-                    Control::Controller::getInstance()->setNextController(new Control::IntersectSimp(lastNode, baseNode,destNode));
+                    Control::Controller::getInstance()->setNextController(new Control::InterNav2(expectedTapeDir, destDir, 80, 80, 80));
 
                     LCD.clear(); LCD.home(); 
                     LCD.print("Inter");LCD.setCursor(0, 1);
@@ -188,8 +190,6 @@ namespace EHandler{
             case TAPE_FOLLOW:
                 LCD.clear(); LCD.home();
                 LCD.print("COLLISION"); 
-                LLRobot::Rel::driveMotors(0,0); 
-                delay(10);
                 curMode = TURN_AROUND;
                 Control::Controller::getInstance()->setNextController(new Control::TurnAround());
         }
